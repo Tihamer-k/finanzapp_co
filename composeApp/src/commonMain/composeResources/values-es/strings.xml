@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FinanzApp</string>
+    <string name="onboarding_button_next">Siguiente</string>
+    <string name="onboarding_title_1">¡Bienvenido a FINANZAPP!</string>
+    <string name="onboarding_description_1">Tu Aliada para la Planificación Financiera. Descubre cómo transformar tus hábitos y tomar el control de tu futuro económico.</string>
+    <string name="onboarding_title_2">Explora nuestras herramientas:</string>
+    <string name="onboarding_description_2">
+        - Registra y categoriza tus gastos e ingresos.
+        - Utiliza simuladores para proyectar tus ahorros.
+        - Aprende con módulos interactivos y dinámicos.</string>
+    <string name="onboarding_title_3">Tu seguridad es primordial</string>
+    <string name="onboarding_description_3">Personaliza tu experiencia, protege tus datos y gestiona tus finanzas de manera segura y única.  FINANZAPP se adapta a ti.</string>
+    <string name="onboarding_title_4">Únete a una comunidad de jóvenes comprometidos</string>
+    <string name="onboarding_description_4">Comparte metas, celebra logros y aprende en conjunto.
+¡Regístrate y comienza a transformar tu futuro financiero hoy!</string>
+</resources>
