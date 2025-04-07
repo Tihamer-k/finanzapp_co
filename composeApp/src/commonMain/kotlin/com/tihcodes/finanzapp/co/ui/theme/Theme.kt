@@ -2,7 +2,7 @@ package com.tihcodes.finanzapp.co.ui.theme
 
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3 .MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -260,10 +260,10 @@ fun Theme(
       else -> lightScheme
   }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = AppTypography(),
-    content = content
-  )
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = AppTypography(),
+        content = content
+    )
 }
 

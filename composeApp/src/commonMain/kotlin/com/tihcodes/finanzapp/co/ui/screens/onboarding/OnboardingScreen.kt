@@ -40,7 +40,8 @@ fun OnboardingScreen(
     currentPage: Int
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+        .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -49,12 +50,12 @@ fun OnboardingScreen(
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(vertical = 24.dp),
         )
-        // Fondo Superior Verde Oscuro
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondary)
-                .padding(vertical = 24.dp),
+                .background(MaterialTheme.colorScheme.onPrimaryContainer)
+                .padding(vertical = 24.dp)
+            .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -68,7 +69,8 @@ fun OnboardingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(vertical = 32.dp),
+                .padding(horizontal = 16.dp)
+                .padding(vertical = 40.dp),
             contentAlignment = Alignment.Center
         ) {
             Spacer(modifier = Modifier.height(16.dp))
@@ -80,43 +82,60 @@ fun OnboardingScreen(
                 color = MaterialTheme.colorScheme.background
             )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Image(
-            painter = painterResource(imageRes),
-            contentDescription = null,
-            contentScale = ContentScale.Fit,
+        Spacer(modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)) // Mover el clip aquí
+            .background(MaterialTheme.colorScheme.background)
+        )
+        Box(
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(280.dp)
-            )
-
-
-        Spacer(modifier = Modifier.weight(1f))
-        Button(
-            onClick = onNextClick,
-            modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(20.dp)
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(Res.string.onboarding_button_next),
-                style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.onPrimary
+            Spacer(modifier = Modifier.height(32.dp))
+            Image(
+                painter = painterResource(imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(280.dp)
             )
+
+        }
+        Spacer(modifier = Modifier.weight(1f).fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Button(
+                onClick = onNextClick,
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Text(
+                    text = stringResource(Res.string.onboarding_button_next),
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
 
-
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(14.dp).fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background))
         // Indicador de Progreso
         indicatorBar(currentPage)
 
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
 
+    }
+
+}
 
 
 @Composable
@@ -124,7 +143,9 @@ fun indicatorBar(currentPage: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 24.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         repeat(4) { index ->

@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
+import com.tihcodes.finanzapp.co.ui.screens.login.PreLoginScreen
 
 @Composable
 fun Navigation() {
@@ -18,7 +19,7 @@ fun Navigation() {
             Onboarding(navController = navController)
         }
         composable("pre-login") {
-            //PreLogin(navController = navController)
+            PreLoginScreen(navController = navController)
         }
 
     }
