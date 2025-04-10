@@ -4,8 +4,7 @@
     <string name="onboarding_title_1">Welcome to FINANZAPP!</string>
     <string name="onboarding_description_1">Your Ally for Financial Planning. Discover how to transform your habits and take control of your economic future.</string>
     <string name="onboarding_title_2">Explore our tools:</string>
-    <string name="onboarding_description_2">
-        - Record and categorize your expenses and income.
+    <string name="onboarding_description_2">- Record and categorize your expenses and income.
         - Use simulators to project your savings.
         - Learn with interactive and dynamic modules.</string>
     <string name="onboarding_title_3">Your security is paramount</string>
@@ -13,4 +12,8 @@
     <string name="onboarding_title_4">Join a community of committed young people</string>
     <string name="onboarding_description_4">Share goals, celebrate achievements, and learn together.
     Register and start transforming your financial future today!</string>
+    <string name="pre-login-text">Tu Aliada para la Planificación Financiera de los Jóvenes.</string>
+    <string name="pre-login-button-login">Login</string>
+    <string name="pre-login-button-sign-up">Sign Up</string>
+    <string name="pre-login-link-forgot-password">Forgot your password?</string>
 </resources>

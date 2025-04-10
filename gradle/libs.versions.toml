@@ -15,6 +15,10 @@ compose-multiplatform = "1.7.3"
 junit = "4.13.2"
 kotlin = "2.1.10"
 navigation-compose = "2.8.0-alpha10"
+runtimeSaveableAndroid = "1.7.8"
+firebaseAuth = "1.11.1"
+firebaseAuthKtx = "23.2.0"
+firebaseCommonKtx = "21.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -32,6 +36,14 @@ androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle
 
 # Navigation
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation-compose" }
+
+androidx-runtime-saveable-android = { group = "androidx.compose.runtime", name = "runtime-saveable-android", version.ref = "runtimeSaveableAndroid" }
+
+# Firebase
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
+firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
+firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebaseAuth" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -15,18 +15,6 @@ import org.jetbrains.compose.resources.Font
 @Composable
 fun AppTypography(): Typography {
     val displayFontFamily = FontFamily(
-        Font(Res.font.LeagueSpartan_Black, FontWeight.Black),
-        Font(Res.font.LeagueSpartan_Bold, FontWeight.Bold),
-        Font(Res.font.LeagueSpartan_ExtraBold, FontWeight.ExtraBold),
-        Font(Res.font.LeagueSpartan_ExtraLight, FontWeight.ExtraLight),
-        Font(Res.font.LeagueSpartan_Light, FontWeight.Light),
-        Font(Res.font.LeagueSpartan_Medium, FontWeight.Medium),
-        Font(Res.font.LeagueSpartan_Regular, FontWeight.Normal),
-        Font(Res.font.LeagueSpartan_SemiBold, FontWeight.SemiBold),
-        Font(Res.font.LeagueSpartan_Thin, FontWeight.Thin),
-    )
-
-    val bodyFontFamily = FontFamily(
         Font(Res.font.Poppins_Bold, FontWeight.Bold),
         Font(Res.font.Poppins_Regular, FontWeight.Normal),
         Font(Res.font.Poppins_Medium, FontWeight.Medium),
@@ -46,10 +34,23 @@ fun AppTypography(): Typography {
         Font(Res.font.Poppins_BlackItalic, FontWeight.Black, FontStyle.Italic),
         Font(Res.font.Poppins_SemiBoldItalic, FontWeight.SemiBold, FontStyle.Italic),
         Font(Res.font.Poppins_BoldItalic, FontWeight.Bold, FontStyle.Italic),
+
+        )
+
+    val bodyFontFamily = FontFamily(
+        Font(Res.font.LeagueSpartan_Black, FontWeight.Black),
+        Font(Res.font.LeagueSpartan_Bold, FontWeight.Bold),
+        Font(Res.font.LeagueSpartan_ExtraBold, FontWeight.ExtraBold),
+        Font(Res.font.LeagueSpartan_ExtraLight, FontWeight.ExtraLight),
+        Font(Res.font.LeagueSpartan_Light, FontWeight.Light),
+        Font(Res.font.LeagueSpartan_Medium, FontWeight.Medium),
+        Font(Res.font.LeagueSpartan_Regular, FontWeight.Normal),
+        Font(Res.font.LeagueSpartan_SemiBold, FontWeight.SemiBold),
+        Font(Res.font.LeagueSpartan_Thin, FontWeight.Thin)
     )
 
     return Typography(
-        displayLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 24.sp),
+        displayLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 28.sp),
         displayMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp),
         displaySmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Medium, fontSize = 16.sp),
         headlineLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 24.sp),
@@ -64,5 +65,6 @@ fun AppTypography(): Typography {
         labelLarge = TextStyle(fontFamily = bodyFontFamily, fontSize = 24.sp, fontWeight = FontWeight.Black),
         labelMedium = TextStyle(fontFamily = bodyFontFamily, fontSize = 16.sp, fontWeight = FontWeight.Bold),
         labelSmall = TextStyle(fontFamily = bodyFontFamily, fontSize = 14.sp, fontWeight = FontWeight.SemiBold),
+
     )
 }

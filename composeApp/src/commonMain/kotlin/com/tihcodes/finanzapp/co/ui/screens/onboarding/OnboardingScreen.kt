@@ -14,7 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,7 +65,7 @@ fun OnboardingScreen(
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 textAlign = TextAlign.Center
             )
         }
@@ -70,10 +74,9 @@ fun OnboardingScreen(
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(horizontal = 16.dp)
-                .padding(vertical = 40.dp),
+                .padding(vertical = 28.dp),
             contentAlignment = Alignment.Center
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
@@ -117,12 +120,16 @@ fun OnboardingScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
                     .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
             ) {
                 Text(
                     text = stringResource(Res.string.onboarding_button_next),
-                    style = MaterialTheme.typography.displaySmall,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
@@ -155,7 +162,7 @@ fun indicatorBar(currentPage: Int) {
                     .padding(4.dp)
                     .clip(RoundedCornerShape(80))
                     .background(
-                        if (index == currentPage) MaterialTheme.colorScheme.primary
+                        if (index == currentPage) MaterialTheme.colorScheme.primaryContainer
                         else MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
                     )
             )

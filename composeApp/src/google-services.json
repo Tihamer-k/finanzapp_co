@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "667767016145",
+    "project_id": "finanzapp-co",
+    "storage_bucket": "finanzapp-co.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667767016145:android:bc8837364fd3fa2d3ad3f0",
+        "android_client_info": {
+          "package_name": "com.tihcodes.finanzapp.co"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtQeVHv2--kicQj_YvT_2a1q5FX16sD-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

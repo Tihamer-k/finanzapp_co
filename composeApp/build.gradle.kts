@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
 }
 
 kotlin {
@@ -41,6 +42,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.firebase.auth.ktx)
+            implementation(libs.firebase.common.ktx)
+            implementation(libs.firebase.auth)
         }
     }
 }
@@ -73,6 +77,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.runtime.saveable.android)
     debugImplementation(compose.uiTooling)
 }
 
