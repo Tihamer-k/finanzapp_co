@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.builtins.serializer
 
@@ -53,6 +54,8 @@ class AuthServiceImpl(
             user.let {
                 val userId = it.user?.uid
                 val database = Firebase.database
+                val usersRef = database.reference("users")
+
                 val userData = mapOf(
                     "name" to name,
                     "surname" to surname,
@@ -61,7 +64,7 @@ class AuthServiceImpl(
                     "email" to email,
                 )
                 if (userId != null) {
-                    database.reference("users").child(userId).setValue(userData)
+                    usersRef.child(userId).setValue(userData)
                 }
             }
         }
@@ -79,6 +82,15 @@ class AuthServiceImpl(
     override suspend fun resetPassword(email: String) {
         launchWithAwait {
             auth.sendPasswordResetEmail(email)
+        }
+    }
+
+    override suspend fun isExistingUser(email: String): Boolean {
+        return try {
+            val signInMethods = auth.fetchSignInMethodsForEmail(email)
+            signInMethods.isNotEmpty() // If there are any sign-in methods, the user exists.
+        } catch (e: Exception) {
+            false // Handle exceptions, possibly network errors or invalid email format.
         }
     }
 }

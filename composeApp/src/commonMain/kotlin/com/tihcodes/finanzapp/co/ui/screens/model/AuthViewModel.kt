@@ -138,8 +138,14 @@ class AuthViewModel(
         launchWithCatchingException {
             _isProcessing.value = true
             try {
-                authService.resetPassword(_uiState.value.email)
-                _authState.value = true
+                // Check if the email is valid before sending the reset password email
+                if (!authService.isExistingUser(uiState.value.email)) {
+                    authService.resetPassword(_uiState.value.email)
+                    _authState.value = true
+                } else {
+                    _authState.value = false
+                    _isProcessing.value = false
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false

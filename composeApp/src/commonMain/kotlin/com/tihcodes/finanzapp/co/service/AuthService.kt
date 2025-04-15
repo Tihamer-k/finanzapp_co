@@ -24,4 +24,5 @@ interface AuthService {
     )
     suspend fun signOut()
     suspend fun resetPassword(email: String)
+    suspend fun isExistingUser(email: String): Boolean
 }

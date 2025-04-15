@@ -57,6 +57,13 @@ fun SignUpScreen(
             .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (showConfetti) {
+            ConfettiAnimation(
+                onAnimationEnd = {
+                    showConfetti = false
+                },
+            )
+        }
         Spacer(
             modifier = Modifier.height(45.dp).fillMaxWidth()
         )
@@ -286,6 +293,7 @@ fun SignUpScreen(
 
             if (clicked) {
                 if (isProcessing) {
+                    Spacer(modifier = Modifier.height(18.dp))
                     Text(
                         text = "Cargando...",
                         style = MaterialTheme.typography.bodyMedium,
@@ -311,18 +319,10 @@ fun SignUpScreen(
                     }
                     clicked = false
                 } else if (authState) {
-                    showSuccessDialog = true
                     showConfetti = true
+                    showSuccessDialog = true
                     clicked = false
                 }
-            }
-
-            if (showConfetti) {
-                ConfettiAnimation(
-                    onAnimationEnd = {
-                        showConfetti = false
-                    },
-                )
             }
 
             if (showSuccessDialog && !showConfetti) {
@@ -358,9 +358,7 @@ fun SignUpScreen(
             }
         }
 
-
     }
-
 
 }
 
