@@ -10,12 +10,14 @@ import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
+import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 
 @Composable
-fun Navigation() {
+fun Navigation(authViewModel: AuthViewModel) {
 
     val navController = rememberNavController()
-    val destination = "onboarding"
+    val currentUser = authViewModel.currentUser.value?.id
+    val destination = if (currentUser.toString().isEmpty() || currentUser == null) "onboarding" else "home"
 
     NavHost(navController = navController, startDestination = destination) {
 
@@ -27,6 +29,7 @@ fun Navigation() {
         }
         composable("register") {
             SignUpScreen(
+                viewModel = authViewModel,
                 onRegisterClick = { navController.navigate("home") },
                 onLoginNavigate = { navController.navigate("login") },
             )
@@ -36,6 +39,8 @@ fun Navigation() {
                 onBackToLogin = { navController.navigate("login") },
                 onContinue = { navController.navigate("login") },
                 onRegister = { navController.navigate("register") },
+                onGoogleLoginClick = { navController.navigate("home") },
+                viewModel = authViewModel,
             )
         }
         composable("login") {
@@ -43,11 +48,15 @@ fun Navigation() {
                 onLoginClick =  { navController.navigate("home") },
                 onGoogleLoginClick = { navController.navigate("home") },
                 onRegisterClick = { navController.navigate("register") },
-                onForgotPasswordClick = { navController.navigate("forgot-password") }
+                onForgotPasswordClick = { navController.navigate("forgot-password") },
+                viewModel = authViewModel,
             )
         }
         composable("home") {
-            HomeScreen()
+            HomeScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+            )
         }
 
     }

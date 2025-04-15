@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
-
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -45,6 +45,8 @@ kotlin {
             implementation(libs.firebase.auth.ktx)
             implementation(libs.firebase.common.ktx)
             implementation(libs.firebase.auth)
+            implementation(libs.firebase.firestore)
+            implementation(libs.firebase.database)
         }
     }
 }

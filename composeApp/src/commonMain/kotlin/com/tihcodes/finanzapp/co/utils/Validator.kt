@@ -1,5 +1,8 @@
 package com.tihcodes.finanzapp.co.utils
 
+import com.tihcodes.finanzapp.co.utils.Validator.isEmailValid
+import com.tihcodes.finanzapp.co.utils.Validator.isPasswordValid
+
 object Validator {
 
     fun isEmailValid(email: String): Boolean {
@@ -7,10 +10,16 @@ object Validator {
         return regex.matches(email)
     }
 
-    fun isPasswordValid(password: String): Boolean {
-        return password.length >= 8 && password.any { it.isDigit() } &&
-                password.any { it.isUpperCase() } && password.any { it.isLowerCase() }
+    fun isPasswordValid(password: String): Pair<Boolean, String?> {
+        return when {
+            password.length < 8 -> Pair(false, "La contraseña debe tener al menos 8 caracteres.")
+            !password.any { it.isDigit() } -> Pair(false, "La contraseña debe contener al menos un número.")
+            !password.any { it.isUpperCase() } -> Pair(false, "La contraseña debe contener al menos una letra mayúscula.")
+            !password.any { it.isLowerCase() } -> Pair(false, "La contraseña debe contener al menos una letra minúscula.")
+            else -> Pair(true, null)
+        }
     }
+
 
     fun doPasswordsMatch(password: String, confirmPassword: String): Boolean {
         return password == confirmPassword
@@ -42,11 +51,12 @@ object Validator {
         password: String,
         confirmPassword: Boolean,
     ): Boolean {
+        val(isValidPass) = isPasswordValid(password)
         return isNameValid(name) &&
                 isNameValid(surname) &&
                 isEmailValid(email) &&
                 isPhoneNumberValid(phone) &&
                 isDateValid(birthDate) &&
-                isPasswordValid(password) && confirmPassword
+                isValidPass && confirmPassword
     }
 }
