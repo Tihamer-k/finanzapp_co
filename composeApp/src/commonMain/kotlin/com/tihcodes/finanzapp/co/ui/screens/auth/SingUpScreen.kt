@@ -57,6 +57,9 @@ fun SignUpScreen(
             .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(
+            modifier = Modifier.height(45.dp).fillMaxWidth()
+        )
         Box(
             modifier = Modifier
                 .fillMaxWidth()

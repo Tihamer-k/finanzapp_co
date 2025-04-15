@@ -71,7 +71,10 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Header
+        Spacer(
+            modifier = Modifier.height(45.dp).fillMaxWidth()
+        )
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -243,8 +246,8 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
+                .padding(horizontal = 60.dp),
+            contentAlignment = Alignment.Center,
         ) {
 
             if (errorMessage.isNotEmpty()) {
@@ -256,7 +259,6 @@ fun LoginScreen(
                     text = errorMessage,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(8.dp)
                 )
             }
         }
