@@ -4,13 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tihcodes.finanzapp.co.ui.screens.HomeScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
 import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
 
 @Composable
 fun Navigation(authViewModel: AuthViewModel) {
@@ -22,7 +26,7 @@ fun Navigation(authViewModel: AuthViewModel) {
     NavHost(navController = navController, startDestination = destination) {
 
         composable("onboarding") {
-            Onboarding(navController = navController)
+            Onboarding(navController = navController,)
         }
         composable("pre-login") {
             PreLoginScreen(navController = navController)
@@ -56,8 +60,39 @@ fun Navigation(authViewModel: AuthViewModel) {
             HomeScreen(
                 onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
+                navController = navController
             )
         }
+        composable("learn") {
+            LearnScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+        composable("records") {
+            RecordsScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+        composable("categories") {
+            CategoryScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+        composable("rewards") {
+            RewardsScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
+
+
 
     }
 
