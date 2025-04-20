@@ -1,61 +1,78 @@
 package com.tihcodes.finanzapp.co.ui.screens.modules.home
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 
 
 @Composable
 fun HomeScreen(
-    viewModel: AuthViewModel,
     onLogoutClick: () -> Unit,
+    viewModel: AuthViewModel,
     navController: NavHostController
 ) {
+    val isLoading = viewModel.isProcessing.collectAsState().value
+    val user = viewModel.currentUser.collectAsState().value ?: User()
 
-    Scaffold(
-        bottomBar = { BottomNavBar(
-            indexIn = 0,
-            onItemClick = navController
-        ) }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Text(
-                text = "Inicio",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-
-            Text(
-                text = viewModel.currentUser.value?.id?.let { "Tú Id: $it" } ?: "Cargando usuario...",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier.padding(16.dp)
-            )
-            Button(
-                onClick = {
-                    viewModel.onSignOut()
-                    onLogoutClick()
-                },
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(text = "Logout")
-            }
-        }
-
+    LaunchedEffect(Unit) {
+        viewModel.syncUserData()
     }
 
+    if (isLoading) {
+        // Mostrar un indicador de carga
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        // Mostrar la pantalla principal
+        Scaffold(
+            bottomBar = {
+                BottomNavBar(
+                    indexIn = 0,
+                    onItemClick = navController
+                )
+            }
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text(
+                    text = "Bienvenido, ${user.name}",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Button(
+                    onClick = {
+                        viewModel.onSignOut()
+                        onLogoutClick()
+                    },
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(text = "Logout")
+                }
+            }
+        }
+    }
 }

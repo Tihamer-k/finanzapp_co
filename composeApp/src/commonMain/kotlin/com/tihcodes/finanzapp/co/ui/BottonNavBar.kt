@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -66,7 +67,7 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items.forEachIndexed {
@@ -77,6 +78,10 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
                         Image(
                             painter = painterResource(item.icon),
                             contentDescription = item.title,
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .height(if (index == indexIn) 34.dp else 28.dp)
+                                .width(if (index == indexIn) 34.dp else 28.dp),
                             colorFilter =
                                 if (index == indexIn) ColorFilter.tint(MaterialTheme.colorScheme.inversePrimary)
                                 else ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),

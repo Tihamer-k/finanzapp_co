@@ -9,13 +9,19 @@ import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.theme.Theme
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.firestore.firestore
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
     Theme {
-        val authViewModel = AuthViewModel(AuthServiceImpl(auth = Firebase.auth))
+        val authViewModel = AuthViewModel(
+            AuthServiceImpl(
+                auth = Firebase.auth,
+                database = Firebase.firestore
+            ),
+        )
         Surface(color = MaterialTheme.colorScheme.background) {
             Navigation(authViewModel)
         }

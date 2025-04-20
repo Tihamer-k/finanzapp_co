@@ -1,27 +1,28 @@
 package com.tihcodes.finanzapp.co.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
-import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
 import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
+import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 
 @Composable
 fun Navigation(authViewModel: AuthViewModel) {
 
     val navController = rememberNavController()
-    val currentUser = authViewModel.currentUser.value?.id
-    val destination = if (currentUser.toString().isEmpty() || currentUser == null) "onboarding" else "home"
+    val isSignIn = authViewModel.isSignIn.collectAsState().value
+    val destination = if (!isSignIn) "onboarding" else "home"
 
     NavHost(navController = navController, startDestination = destination) {
 

@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -27,10 +29,18 @@ kotlin {
     }
     
     sourceSets {
-        
+        iosMain.dependencies {
+            implementation(libs.sqldelight.ios)
+            implementation(libs.ktor.client.darwin)
+        }
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+
+            implementation(libs.sqldelight.android)
+            implementation(libs.ktor.client.android)
+            implementation(libs.koin.android)
+            implementation(project.dependencies.platform(libs.android.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -47,7 +57,20 @@ kotlin {
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.database)
-            implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
+            implementation(libs.accompanist.systemuicontroller)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.kotlinx.datetime)
+
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.no.arg)
         }
     }
 }
@@ -82,5 +105,13 @@ android {
 dependencies {
     implementation(libs.androidx.runtime.saveable.android)
     debugImplementation(compose.uiTooling)
+}
+
+sqldelight {
+    databases {
+        create("UserDatabase") {
+            packageName.set("com.finanzapp")
+        }
+    }
 }
 

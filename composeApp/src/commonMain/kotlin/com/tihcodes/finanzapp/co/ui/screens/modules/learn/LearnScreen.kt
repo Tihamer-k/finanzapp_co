@@ -8,9 +8,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 
@@ -20,6 +22,8 @@ fun LearnScreen(
     onLogoutClick: () -> Unit,
     navController: NavHostController
 ) {
+
+    val user = viewModel.currentUser.collectAsState().value ?: User()
 
     Scaffold(
         bottomBar = {
@@ -41,8 +45,7 @@ fun LearnScreen(
             )
 
             Text(
-                text = viewModel.currentUser.value?.id?.let { "Tú Id: $it" }
-                    ?: "Cargando usuario...",
+                text = "'Bienvenido, ${user.name} con el correo ${user.email}'",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(16.dp)

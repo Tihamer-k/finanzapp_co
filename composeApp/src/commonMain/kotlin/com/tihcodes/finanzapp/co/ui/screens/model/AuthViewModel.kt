@@ -10,9 +10,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-
 class AuthViewModel(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
@@ -35,6 +34,9 @@ class AuthViewModel(
 
     private val _authState = MutableStateFlow(false)
     val authState = _authState.asStateFlow()
+
+    private val _isSignIn = MutableStateFlow(false)
+    val isSignIn = _isSignIn.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -98,9 +100,11 @@ class AuthViewModel(
             try {
                 authService.authenticate(_uiState.value.email, _uiState.value.password)
                 _authState.value = true
+                _isSignIn.value = true
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+                _isSignIn.value = false
             }
             _isProcessing.value = false
         }
@@ -110,6 +114,7 @@ class AuthViewModel(
     fun onSignOut() {
         launchWithCatchingException {
             authService.signOut()
+            _isSignIn.value = false
         }
     }
 
@@ -117,7 +122,7 @@ class AuthViewModel(
         launchWithCatchingException {
             _isProcessing.value = true
             try {
-                authService.createUser(
+                authService.createUserFStore(
                     name = _uiState.value.name,
                     surname = _uiState.value.surname,
                     email = _uiState.value.email,
@@ -126,9 +131,11 @@ class AuthViewModel(
                     date = _uiState.value.date
                 )
                 _authState.value = true
+                _isSignIn.value = true
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+                _isSignIn.value = false
             }
             _isProcessing.value = false
         }
@@ -146,6 +153,31 @@ class AuthViewModel(
                     _authState.value = false
                     _isProcessing.value = false
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _authState.value = false
+            }
+            _isProcessing.value = false
+        }
+    }
+
+    fun syncUserData() {
+        viewModelScope.launch {
+            _isProcessing.value = true
+            try {
+                val userId = authService.currentUserId
+                val userData = authService.getUserData(userId)
+                _currentUser.value = userData
+                _uiState.update {
+                    it.copy(
+                        name = userData.name,
+                        surname = userData.surname,
+                        email = userData.email,
+                        phone = userData.phone,
+                        date = userData.date
+                    )
+                }
+                _authState.value = true
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
