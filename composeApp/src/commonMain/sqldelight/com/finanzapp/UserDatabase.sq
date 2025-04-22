@@ -1,0 +1,24 @@
+CREATE TABLE User (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT,
+    surname TEXT,
+    email TEXT,
+    phone TEXT,
+    date TEXT,
+    isAnonymous INTEGER NOT NULL DEFAULT 0
+);
+
+getUserById:
+SELECT * FROM User WHERE id = ?;
+
+insertUser:
+INSERT INTO User
+(id, name, surname, email, phone, date, isAnonymous)
+VALUES
+(?, ?, ?, ?, ?, ?, ?);
+
+updateUser:
+UPDATE User
+SET name = ?, surname = ?, email = ?, phone = ?, date = ?, isAnonymous = ?
+WHERE id = ?;
+

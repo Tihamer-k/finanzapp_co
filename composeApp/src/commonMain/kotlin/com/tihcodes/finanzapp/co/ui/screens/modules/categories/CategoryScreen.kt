@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
-import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 
 
 @Composable

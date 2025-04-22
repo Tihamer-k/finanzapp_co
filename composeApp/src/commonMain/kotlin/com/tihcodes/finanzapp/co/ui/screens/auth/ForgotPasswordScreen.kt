@@ -38,7 +38,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.style.TextDecoration
-import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.ic_google
 import finanzapp_co.composeapp.generated.resources.pre_login_button_sign_up
 import org.jetbrains.compose.resources.stringResource

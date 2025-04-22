@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.ui.screens.model
+package com.tihcodes.finanzapp.co.ui.model
 
 import androidx.lifecycle.viewModelScope
 import com.tihcodes.finanzapp.co.data.User

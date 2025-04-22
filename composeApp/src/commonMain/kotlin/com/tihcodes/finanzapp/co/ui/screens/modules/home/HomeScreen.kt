@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
-import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 
 
 @Composable

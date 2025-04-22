@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.ui.components.SuccessDialog
 import com.tihcodes.finanzapp.co.ui.components.ConfettiAnimation
-import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
