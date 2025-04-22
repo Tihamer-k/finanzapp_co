@@ -13,6 +13,7 @@ import com.tihcodes.finanzapp.co.ui.screens.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
@@ -22,12 +23,16 @@ fun Navigation(authViewModel: AuthViewModel) {
 
     val navController = rememberNavController()
     val isSignIn = authViewModel.isSignIn.collectAsState().value
-    val destination = if (!isSignIn) "onboarding" else "home"
+    val destination = "pre-login"
+    // val destination = if (!isSignIn) "onboarding" else "home"
 
-    NavHost(navController = navController, startDestination = destination) {
+    NavHost(
+        navController = navController,
+        startDestination = destination,
+    ) {
 
         composable("onboarding") {
-            Onboarding(navController = navController,)
+            Onboarding(navController = navController)
         }
         composable("pre-login") {
             PreLoginScreen(navController = navController)
@@ -92,6 +97,14 @@ fun Navigation(authViewModel: AuthViewModel) {
                 navController = navController
             )
         }
+
+        composable("notifications") {
+            NotificationsScreen(
+                navController = navController
+            )
+        }
+
+
 
 
 

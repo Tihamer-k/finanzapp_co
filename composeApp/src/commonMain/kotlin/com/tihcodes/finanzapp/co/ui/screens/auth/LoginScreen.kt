@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
@@ -78,6 +80,7 @@ fun LoginScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(vertical = 60.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -87,22 +90,15 @@ fun LoginScreen(
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
-
-        Spacer(
-            modifier = Modifier.weight(0.1f).fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp)) // Mover el clip aquí
-                .background(MaterialTheme.colorScheme.background)
-        )
-
-        // Email
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
+                .fillMaxSize()
+                .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.CenterHorizontally
 
+        ) {
+            Spacer(modifier = Modifier.weight(0.1f))
 
             OutlinedTextField(
                 value = uiState.email.lowercase(),
@@ -114,23 +110,13 @@ fun LoginScreen(
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.outline
                     )
-                              },
+                },
                 isError = uiState.email.isNotEmpty() && !isEmailValid,
                 modifier = Modifier
                     .fillMaxWidth(0.95f)
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(20.dp)
             )
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // Password
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = viewModel::onPasswordChange,
@@ -143,6 +129,9 @@ fun LoginScreen(
                     )
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Password,
+                ),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
@@ -158,15 +147,7 @@ fun LoginScreen(
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(20.dp)
             )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-
+            Spacer(modifier = Modifier.height(8.dp))
             if (!isPasswordValid && uiState.password.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 if (errorMessagePassword != null) {
@@ -177,23 +158,8 @@ fun LoginScreen(
                     )
                 }
             }
-
-        }
-        Spacer(
-            modifier = Modifier.height(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            // Botón Login (solo habilitado si es válido)
+            Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
+// Botón Login (solo habilitado si es válido)
             Button(
                 onClick = {
                     viewModel.onSignInClick()
@@ -213,24 +179,18 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Spacer(modifier = Modifier.height(16.dp))
+
             if (clicked) {
                 if (isProcessing) {
+                    Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = "Cargando...",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.primary
                     )
+                    Spacer(modifier = Modifier.height(20.dp))
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(24.dp).padding(top = 8.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else if (!authState) {
@@ -241,15 +201,6 @@ fun LoginScreen(
                     clicked = false
                 }
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 60.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-
             if (errorMessage.isNotEmpty()) {
                 LaunchedEffect(errorMessage) {
                     delay(3000) // 3 segundos
@@ -261,16 +212,6 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.error,
                 )
             }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-
             TextButton(onClick = onForgotPasswordClick) {
                 Text(
                     text = "¿Olvidaste tú contraseña?",
@@ -279,23 +220,7 @@ fun LoginScreen(
                     textDecoration = TextDecoration.Underline
                 )
             }
-        }
-        Spacer(
-            modifier = Modifier.height(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        )
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-
+            Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
             Button(
                 onClick = onRegisterClick,
                 modifier = Modifier
@@ -312,15 +237,8 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
-        }
-        Spacer(
-            modifier = Modifier.height(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        )
 
+            Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
 //        Spacer(modifier = Modifier.height(16.dp))
 
 //        Text(
@@ -328,14 +246,6 @@ fun LoginScreen(
 //            style = MaterialTheme.typography.bodyMedium,
 //            color = MaterialTheme.colorScheme.onBackground
 //        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
@@ -343,23 +253,7 @@ fun LoginScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
-        }
-        Spacer(
-            modifier = Modifier.height(16.dp)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
             IconButton(onClick = onGoogleLoginClick) {
                 Image(
@@ -368,44 +262,9 @@ fun LoginScreen(
                     modifier = Modifier.size(48.dp)
                 )
             }
+
+            Spacer(modifier = Modifier.weight(0.1f).fillMaxWidth())
+
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 26.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "¿No tienes una cuenta?",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                TextButton(onClick = onRegisterClick) {
-                    Text(
-                        text = "Regístrate",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.inversePrimary,
-                        textDecoration = TextDecoration.Underline
-                    )
-                }
-            }
-        }
-
-        Spacer(
-            modifier = Modifier.weight(0.1f)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        )
-
     }
 }

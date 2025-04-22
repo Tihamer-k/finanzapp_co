@@ -1,5 +1,6 @@
 package com.tihcodes.finanzapp.co.ui.screens.onboarding
 
+
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
@@ -7,21 +8,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.data.OnboardingPage
 import com.tihcodes.finanzapp.co.getPlatform
+import com.tihcodes.finanzapp.co.ui.screens.onboarding.OnboardingScreen
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_1_piggy_bank_amico
 import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
 import finanzapp_co.composeapp.generated.resources.onboarding_3_investment_data_amico
 import finanzapp_co.composeapp.generated.resources.onboarding_4_team_goals_amico
 import finanzapp_co.composeapp.generated.resources.onboarding_description_1
-import finanzapp_co.composeapp.generated.resources.onboarding_description_2
+import finanzapp_co.composeapp.generated.resources.onboarding_description_2_a
+import finanzapp_co.composeapp.generated.resources.onboarding_description_2_b
+import finanzapp_co.composeapp.generated.resources.onboarding_description_2_c
 import finanzapp_co.composeapp.generated.resources.onboarding_description_3
 import finanzapp_co.composeapp.generated.resources.onboarding_description_4
 import finanzapp_co.composeapp.generated.resources.onboarding_title_1
 import finanzapp_co.composeapp.generated.resources.onboarding_title_2
 import finanzapp_co.composeapp.generated.resources.onboarding_title_3
 import finanzapp_co.composeapp.generated.resources.onboarding_title_4
-
-
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
@@ -38,7 +40,10 @@ fun Onboarding(navController: NavController) {
         OnboardingPage(
             imageRes = Res.drawable.onboarding_2_business_plan_amico,
             title = stringResource(Res.string.onboarding_title_2),
-            description = stringResource(Res.string.onboarding_description_2)
+            description =
+                stringResource(Res.string.onboarding_description_2_a) + "\n" +
+                        stringResource(Res.string.onboarding_description_2_b) + "\n" +
+                        stringResource(Res.string.onboarding_description_2_c)
         ),
         OnboardingPage(
             imageRes = Res.drawable.onboarding_3_investment_data_amico,

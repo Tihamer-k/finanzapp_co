@@ -62,7 +62,8 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         modifier = Modifier.fillMaxWidth()
             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-            .height(160.dp)
+            .height(160.dp),
+        tonalElevation =  6.dp,
 
     ) {
         Row(
