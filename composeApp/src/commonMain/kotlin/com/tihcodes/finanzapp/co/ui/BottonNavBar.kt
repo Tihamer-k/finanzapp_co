@@ -1,6 +1,7 @@
 package com.tihcodes.finanzapp.co.ui
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,11 +62,12 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
         modifier = Modifier.fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-            .height(160.dp),
+            .height(140.dp),
         tonalElevation =  6.dp,
-
     ) {
+
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp),

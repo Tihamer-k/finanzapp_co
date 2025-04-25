@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -56,6 +55,7 @@ fun HomeScreen(
                     navController = navController,
                     title = "Inicio",
                     notificationsCount = 3,
+                    showBackButton = false,
                     )
             },
 
@@ -88,15 +88,7 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
-                    Button(
-                        onClick = {
-                            viewModel.onSignOut()
-                            onLogoutClick()
-                        },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(text = "Logout")
-                    }
+
                     Spacer(Modifier.weight(0.3f))
                 }
             }

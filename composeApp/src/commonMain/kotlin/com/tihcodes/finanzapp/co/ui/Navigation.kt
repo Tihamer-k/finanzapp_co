@@ -1,30 +1,30 @@
 package com.tihcodes.finanzapp.co.ui
 
+import CategoryDetailScreen
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
-import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.notifications.NotificationsScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.profile.ProfileScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 
 @Composable
-fun Navigation(authViewModel: AuthViewModel) {
+fun Navigation(authViewModel: AuthViewModel, destination: String) {
 
     val navController = rememberNavController()
-    val isSignIn = authViewModel.isSignIn.collectAsState().value
-    val destination = "pre-login"
-    // val destination = if (!isSignIn) "onboarding" else "home"
 
     NavHost(
         navController = navController,
@@ -55,7 +55,7 @@ fun Navigation(authViewModel: AuthViewModel) {
         }
         composable("login") {
             LoginScreen(
-                onLoginClick =  { navController.navigate("home") },
+                onLoginClick = { navController.navigate("home") },
                 onGoogleLoginClick = { navController.navigate("home") },
                 onRegisterClick = { navController.navigate("register") },
                 onForgotPasswordClick = { navController.navigate("forgot-password") },
@@ -90,6 +90,17 @@ fun Navigation(authViewModel: AuthViewModel) {
                 navController = navController
             )
         }
+        composable(
+            "categoryDetail/{categoryName}",
+            arguments = listOf(navArgument("categoryName") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val categoryName = backStackEntry.arguments?.getString("categoryName") ?: ""
+            CategoryDetailScreen(
+                categoryName = categoryName,
+                navController = navController
+            )
+        }
+
         composable("rewards") {
             RewardsScreen(
                 onLogoutClick = { navController.navigate("pre-login") },
@@ -103,9 +114,13 @@ fun Navigation(authViewModel: AuthViewModel) {
                 navController = navController
             )
         }
-
-
-
+        composable("profile") {
+            ProfileScreen(
+                onLogoutClick = { navController.navigate("pre-login") },
+                viewModel = authViewModel,
+                navController = navController
+            )
+        }
 
 
     }

@@ -1,51 +1,8 @@
 package com.tihcodes.finanzapp.co
 
-import com.russhwolf.settings.Settings
-import com.tihcodes.finanzapp.co.data.local.DatabaseDriverFactory
-import com.tihcodes.finanzapp.co.data.local.UserDatabase
-import com.tihcodes.finanzapp.co.service.impl.AuthServiceImpl
-import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.FirebaseAuth
-import dev.gitlive.firebase.auth.auth
-import dev.gitlive.firebase.firestore.FirebaseFirestore
-import dev.gitlive.firebase.firestore.firestore
-import org.koin.core.KoinApplication
-import org.koin.core.context.startKoin
-import org.koin.core.module.Module
-import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.module
-
 interface Platform {
     val name: String
     val osFamily: String
 }
 
 expect fun getPlatform(): Platform
-
-expect val targetModule: Module
-
-val sharedModule = module {
-    single<UserDatabase> { UserDatabase(
-        databaseDriverFactory = get(),
-    ) }
-    single<Settings> { Settings() }
-    single<FirebaseAuth> { Firebase.auth }
-    single<FirebaseFirestore> { Firebase.firestore }
-
-    viewModel { AuthViewModel(
-        authService = AuthServiceImpl(
-            auth = get<FirebaseAuth>(),
-            database = get<FirebaseFirestore>(),
-            settings = get<Settings>(),
-            userDatabase = get<UserDatabase>(),
-        ),
-    ) }
-}
-
-fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
-    startKoin {
-        config?.invoke(this)
-        modules(targetModule, sharedModule)
-    }
-}

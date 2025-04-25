@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tihcodes.finanzapp.co.data.BottomNavItem
 import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_arrow_back
 import finanzapp_co.composeapp.generated.resources.ic_notifications
 import finanzapp_co.composeapp.generated.resources.ic_user
 import org.jetbrains.compose.resources.painterResource
@@ -45,7 +46,7 @@ val itemsTopBar = listOf(
         title = "Notificaciones",
         route = "notifications",
         icon = Res.drawable.ic_notifications
-    ),
+    )
 )
 
 @Composable
@@ -53,7 +54,8 @@ fun TopNavBar(
     navController: NavController,
     title: String,
     notificationsCount: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showBackButton: Boolean
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -93,37 +95,54 @@ fun TopNavBar(
                 modifier = Modifier.align(Alignment.Center)
             )
 
-            // Profile icon (left)
-            profileItem?.let { item ->
-                val isSelected = item.route == currentRoute
-                val iconColor by animateColorAsState(
-                    targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
-                    animationSpec = tween(durationMillis = 300)
-                )
-                val scale by animateFloatAsState(
-                    targetValue = if (isSelected) 1.2f else 1f,
-                    animationSpec = tween(300)
-                )
-
+            if (showBackButton) {
+                // Back button (left)
                 IconButton(
-                    onClick = {
-                        if (!isSelected) {
-                            navController.navigate(item.route) {
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    },
+                    onClick = { navController.popBackStack() },
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .scale(scale)
+                        .padding(start = 8.dp)
                 ) {
                     Image(
-                        painter = painterResource(item.icon),
-                        contentDescription = item.title,
-                        modifier = Modifier.size(24.dp),
-                        colorFilter = ColorFilter.tint(iconColor)
+                        painter = painterResource(Res.drawable.ic_arrow_back),
+                        contentDescription = "Back",
+                        modifier = Modifier.size(20.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
                     )
+                }
+            } else {
+                // Profile icon (left)
+                profileItem?.let { item ->
+                    val isSelected = item.route == currentRoute
+                    val iconColor by animateColorAsState(
+                        targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                    val scale by animateFloatAsState(
+                        targetValue = if (isSelected) 1.2f else 1f,
+                        animationSpec = tween(300)
+                    )
+
+                    IconButton(
+                        onClick = {
+                            if (!isSelected) {
+                                navController.navigate(item.route) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .scale(scale)
+                    ) {
+                        Image(
+                            painter = painterResource(item.icon),
+                            contentDescription = item.title,
+                            modifier = Modifier.size(24.dp),
+                            colorFilter = ColorFilter.tint(iconColor)
+                        )
+                    }
                 }
             }
 

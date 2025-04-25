@@ -1,8 +1,5 @@
 package com.tihcodes.finanzapp.co
 
-import com.tihcodes.finanzapp.co.data.local.DatabaseDriverFactory
-import com.tihcodes.finanzapp.co.data.local.IOSDatabaseDriverFactory
-import org.koin.dsl.module
 import platform.UIKit.UIDevice
 
 class IOSPlatform: Platform {
@@ -11,9 +8,3 @@ class IOSPlatform: Platform {
 }
 
 actual fun getPlatform(): Platform = IOSPlatform()
-
-actual val targetModule = module {
-    single<DatabaseDriverFactory> {
-        IOSDatabaseDriverFactory()
-    }
-}
