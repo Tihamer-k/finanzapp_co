@@ -36,7 +36,6 @@ import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.getSampleCategories
 import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_category
 import finanzapp_co.composeapp.generated.resources.ic_food
 import finanzapp_co.composeapp.generated.resources.ic_gifts
 import org.jetbrains.compose.resources.DrawableResource
