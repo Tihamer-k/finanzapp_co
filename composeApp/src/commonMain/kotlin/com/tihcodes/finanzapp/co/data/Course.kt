@@ -5,5 +5,6 @@ data class Course(
     val title: String,
     val description: String,
     val isCompleted: Boolean = false,
-    val isUnlocked: Boolean = false
+    val isUnlocked: Boolean = false,
+    val rewardId: String? = null // cada curso desbloquea una recompensa
 )

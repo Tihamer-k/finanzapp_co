@@ -55,13 +55,7 @@ fun RecordsScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
             ) {
-                Text(
-                    text = viewModel.currentUser.value?.id?.let { "Tú Id: $it" }
-                        ?: "Cargando usuario...",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(16.dp)
-                )
+
             }
         }
 

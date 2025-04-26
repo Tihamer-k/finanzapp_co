@@ -2,6 +2,8 @@ package com.tihcodes.finanzapp.co.ui.model
 
 import androidx.lifecycle.viewModelScope
 import com.tihcodes.finanzapp.co.data.Course
+import com.tihcodes.finanzapp.co.data.Reward
+import com.tihcodes.finanzapp.co.data.RewardType
 import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.service.AuthService
 import com.tihcodes.finanzapp.co.ui.common.BaseViewModel
@@ -60,20 +62,32 @@ class AuthViewModel(
         }
     }
 
-    private val _courses = MutableStateFlow<List<Course>>(emptyList())
+//    seccion de cursos
+    private val _courses = MutableStateFlow(listOf(
+        Course("1", "Introducción a Finanzas", "Conceptos básicos", isUnlocked = true, rewardId = "medal_1"),
+        Course("2", "Ahorro Inteligente", "Cómo ahorrar mejor", rewardId = "medal_2"),
+        Course("3", "Inversiones Básicas", "Fundamentos de inversión", rewardId = "sim_1"),
+        Course("4", "Planificación Financiera", "Organiza tu futuro", rewardId = "sim_2")
+    ))
     val courses: StateFlow<List<Course>> = _courses
 
-    init {
-        _courses.value = listOf(
-            Course(id = "1", title = "Introducción a Finanzas", description = "Conceptos básicos", isUnlocked = true),
-            Course(id = "2", title = "Ahorro Inteligente", description = "Cómo ahorrar mejor"),
-            Course(id = "3", title = "Inversiones Básicas", description = "Fundamentos de inversión"),
-            Course(id = "4", title = "Planificación Financiera", description = "Organiza tu futuro")
-        )
-    }
+    private val _rewards = MutableStateFlow<List<Reward>>(listOf(
+        Reward("medal_1", "Medalla de Inicio", "Completaste el primer curso", RewardType.MEDAL),
+        Reward("medal_2", "Medalla de Ahorro", "Dominaste el ahorro", RewardType.MEDAL),
+        Reward("sim_1", "Simulador de Inversión", "Prueba escenarios reales", RewardType.SIMULATOR),
+        Reward("sim_2", "Simulador de Finanzas", "Organiza tu futuro financiero", RewardType.SIMULATOR)
+    ))
+    val rewards: StateFlow<List<Reward>> = _rewards
+
+    val progress: StateFlow<Float> = _courses.map { list ->
+        val total = list.size
+        val completed = list.count { it.isCompleted }
+        if (total == 0) 0f else completed.toFloat() / total
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, 0f)
+
 
     fun completeCourse(courseId: String) {
-        val updatedList = _courses.value.mapIndexed { index, course ->
+        val updatedCourses = _courses.value.mapIndexed { index, course ->
             when {
                 course.id == courseId -> course.copy(isCompleted = true)
                 course.id != courseId && index == _courses.value.indexOfFirst { it.id == courseId } + 1 ->
@@ -81,18 +95,19 @@ class AuthViewModel(
                 else -> course
             }
         }
-        _courses.value = updatedList
+
+        val completedCourse = _courses.value.find { it.id == courseId }
+        val unlockedRewardId = completedCourse?.rewardId
+
+        val updatedRewards = _rewards.value.map {
+            if (it.id == unlockedRewardId) it.copy(isUnlocked = true)
+            else it
+        }
+
+        _courses.value = updatedCourses
+        _rewards.value = updatedRewards
     }
 
-    val progress: StateFlow<Float> = _courses.map { list ->
-        val total = list.size
-        val completed = list.count { it.isCompleted }
-        if (total == 0) 0f else completed.toFloat() / total
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.Eagerly,
-        initialValue = 0f
-    )
 
 
     fun onEmailChange(newValue: String) {

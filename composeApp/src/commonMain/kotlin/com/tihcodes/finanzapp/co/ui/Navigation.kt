@@ -19,6 +19,7 @@ import com.tihcodes.finanzapp.co.ui.screens.modules.notifications.NotificationsS
 import com.tihcodes.finanzapp.co.ui.screens.modules.profile.ProfileScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.SimulatorScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
 
 @Composable
@@ -107,6 +108,14 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
                 viewModel = authViewModel,
                 navController = navController
             )
+        }
+
+        composable("simulator/{simulatorName}") { backStack ->
+            val name = backStack.arguments?.getString("simulatorName") ?: "Simulador"
+            SimulatorScreen(
+                simulatorName = name,
+                navController = navController,
+            ) 
         }
 
         composable("notifications") {
