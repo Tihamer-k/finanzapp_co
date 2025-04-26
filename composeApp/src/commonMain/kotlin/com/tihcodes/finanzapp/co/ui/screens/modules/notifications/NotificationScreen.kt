@@ -33,7 +33,7 @@ fun NotificationsScreen(
         topBar = {
             TopNavBar(
                 navController = navController,
-                title = "Categorías",
+                title = "Notificaciones",
                 notificationsCount = 0,
                 showBackButton = true,
             )

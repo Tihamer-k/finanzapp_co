@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,6 +23,7 @@ import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
+import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 
 
@@ -69,7 +71,7 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.onPrimaryContainer)
+                    .background(MaterialTheme.colorScheme.primary)
                     .padding(paddingValues)
             ) {
 
@@ -80,7 +82,7 @@ fun HomeScreen(
                         .background(MaterialTheme.colorScheme.background),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
                         text = "Bienvenido, ${user.name}",
@@ -88,6 +90,12 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    BalanceSummary()
+
+                    Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))
                 }

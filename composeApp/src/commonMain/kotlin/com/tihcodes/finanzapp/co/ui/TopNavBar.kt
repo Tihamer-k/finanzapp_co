@@ -68,7 +68,7 @@ fun TopNavBar(
     val adjustedNotificationsCount = if (currentRoute == "notifications") 0 else notificationsCount
 
     Surface(
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
         shadowElevation = 6.dp,
         shape = RoundedCornerShape(40.dp),
         modifier = modifier
@@ -101,7 +101,6 @@ fun TopNavBar(
                     onClick = { navController.popBackStack() },
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .padding(start = 8.dp)
                 ) {
                     Image(
                         painter = painterResource(Res.drawable.ic_arrow_back),

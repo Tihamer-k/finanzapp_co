@@ -33,7 +33,7 @@ fun CategoryGridItem(item: CategoryItem, onClick: () -> Unit) {
             .background(item.backgroundColor.copy(alpha = 0.2f))
             .padding(12.dp)
             .width(100.dp)
-            .clickable { onClick() } // Hacer el ítem "clickable"
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier

@@ -1,11 +1,16 @@
 package com.tihcodes.finanzapp.co.ui.model
 
 import androidx.lifecycle.viewModelScope
+import com.tihcodes.finanzapp.co.data.Course
 import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.service.AuthService
 import com.tihcodes.finanzapp.co.ui.common.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -37,7 +42,6 @@ class AuthViewModel(
 
     private val _isSignIn = MutableStateFlow(false)
     val isSignIn = _isSignIn.asStateFlow()
-
     init {
         viewModelScope.launch {
             uiState.collect { state ->
@@ -55,6 +59,41 @@ class AuthViewModel(
             }
         }
     }
+
+    private val _courses = MutableStateFlow<List<Course>>(emptyList())
+    val courses: StateFlow<List<Course>> = _courses
+
+    init {
+        _courses.value = listOf(
+            Course(id = "1", title = "Introducción a Finanzas", description = "Conceptos básicos", isUnlocked = true),
+            Course(id = "2", title = "Ahorro Inteligente", description = "Cómo ahorrar mejor"),
+            Course(id = "3", title = "Inversiones Básicas", description = "Fundamentos de inversión"),
+            Course(id = "4", title = "Planificación Financiera", description = "Organiza tu futuro")
+        )
+    }
+
+    fun completeCourse(courseId: String) {
+        val updatedList = _courses.value.mapIndexed { index, course ->
+            when {
+                course.id == courseId -> course.copy(isCompleted = true)
+                course.id != courseId && index == _courses.value.indexOfFirst { it.id == courseId } + 1 ->
+                    course.copy(isUnlocked = true)
+                else -> course
+            }
+        }
+        _courses.value = updatedList
+    }
+
+    val progress: StateFlow<Float> = _courses.map { list ->
+        val total = list.size
+        val completed = list.count { it.isCompleted }
+        if (total == 0) 0f else completed.toFloat() / total
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = 0f
+    )
+
 
     fun onEmailChange(newValue: String) {
         _uiState.update { it.copy(email = newValue) }

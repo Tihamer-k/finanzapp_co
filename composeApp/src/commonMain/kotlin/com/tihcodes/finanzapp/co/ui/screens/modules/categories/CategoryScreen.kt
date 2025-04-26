@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.CategoryItem
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
+import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
@@ -82,42 +83,7 @@ fun CategoryScreen(
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Sección del balance total
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Total Balance",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Text(
-                            text = "$7,783.00",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color(0xfff3194c)
-                        )
-                    }
-                    // Sección de gastos totales
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Total Expense",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
-                        Text(
-                            text = "-$1,187.40",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = Color(0xFF007AFF)
-                        )
-                    }
-                }
+                BalanceSummary()
 
                 Spacer(modifier = Modifier.height(36.dp))
 
@@ -145,14 +111,19 @@ fun CategoryScreen(
 
 fun getSampleCategories(): List<CategoryItem> {
     return listOf(
-        CategoryItem("Food", Res.drawable.ic_food, Color(0xFF007AFF)),
-        CategoryItem("Transport", Res.drawable.ic_transport, Color(0xFF5AC8FA)),
-        CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF34C759)),
-        CategoryItem("Groceries", Res.drawable.ic_groceries, Color(0xFFFF9500)),
-        CategoryItem("Rent", Res.drawable.ic_home_expenses, Color(0xFFFF2D55)),
-        CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFFAF52DE)),
-        CategoryItem("Savings", Res.drawable.ic_savings, Color(0xFFFFCC00)),
-        CategoryItem("Entertainment", Res.drawable.ic_entertainmentame, Color(0xFF5856D6)),
-        CategoryItem("More", Res.drawable.ic_more, Color(0xFF8E8E93))
+        CategoryItem("Food", Res.drawable.ic_food, Color(0xFF007AFF), "Food"),
+        CategoryItem("Transport", Res.drawable.ic_transport, Color(0xFF5AC8FA), "Transport"),
+        CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF34C759), "Medicine"),
+        CategoryItem("Groceries", Res.drawable.ic_groceries, Color(0xFFFF9500), "Groceries"),
+        CategoryItem("Rent", Res.drawable.ic_home_expenses, Color(0xFFFF2D55), "Rent"),
+        CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFFAF52DE), "Gifts"),
+        CategoryItem("Savings", Res.drawable.ic_savings, Color(0xFFFFCC00), "Savings"),
+        CategoryItem(
+            "Entertainment",
+            Res.drawable.ic_entertainmentame,
+            Color(0xFF5856D6),
+            "Entertainment"
+        ),
+        CategoryItem("More", Res.drawable.ic_more, Color(0xFF8E8E93), "More")
     )
 }
