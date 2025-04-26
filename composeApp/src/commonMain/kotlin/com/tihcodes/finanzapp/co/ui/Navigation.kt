@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.ui
 
-import CategoryDetailScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,6 +11,7 @@ import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryDetailScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
@@ -79,7 +79,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
         composable("records") {
             RecordsScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
                 navController = navController
             )

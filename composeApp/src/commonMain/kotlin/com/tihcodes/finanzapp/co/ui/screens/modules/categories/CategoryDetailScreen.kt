@@ -1,3 +1,5 @@
+package com.tihcodes.finanzapp.co.ui.screens.modules.categories
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,12 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.ui.TopNavBar
-import com.tihcodes.finanzapp.co.ui.screens.modules.categories.getSampleCategories
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_food
 import finanzapp_co.composeapp.generated.resources.ic_gifts
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+
 
 @Composable
 fun CategoryDetailScreen(
