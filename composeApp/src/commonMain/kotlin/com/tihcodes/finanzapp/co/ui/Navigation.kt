@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tihcodes.finanzapp.co.data.TransactionType
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
@@ -17,6 +18,7 @@ import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.profile.ProfileScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.records.NewTransactionScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.SimulatorScreen
@@ -83,6 +85,13 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
                 navController = navController
             )
         }
+        composable("new_transaction_income") {
+            NewTransactionScreen(navController, type = TransactionType.INCOME)
+        }
+        composable("new_transaction_expense") {
+            NewTransactionScreen(navController, type = TransactionType.EXPENSE)
+        }
+
         composable("categories") {
             CategoryScreen(
                 onLogoutClick = { navController.navigate("pre-login") },

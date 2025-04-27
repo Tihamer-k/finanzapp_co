@@ -1,5 +1,8 @@
 package com.tihcodes.finanzapp.co.ui.screens.modules.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -7,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +31,7 @@ import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
+import com.tihcodes.finanzapp.co.ui.components.ExpandableFab
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 
 
@@ -35,7 +43,15 @@ fun HomeScreen(
 ) {
     val isLoading = viewModel.isProcessing.collectAsState().value
     val user = viewModel.currentUser.collectAsState().value ?: User()
+    val listState = rememberLazyListState()
 
+    // Detectar si deberíamos mostrar el FAB
+    val isFabVisible by remember {
+        derivedStateOf {
+            listState.firstVisibleItemScrollOffset == 0 ||
+                    listState.isScrollInProgress.not()
+        }
+    }
     LaunchedEffect(Unit) {
         viewModel.syncUserData()
     }
@@ -58,7 +74,7 @@ fun HomeScreen(
                     title = "Inicio",
                     notificationsCount = 3,
                     showBackButton = false,
-                    )
+                )
             },
 
             bottomBar = {
@@ -66,6 +82,22 @@ fun HomeScreen(
                     indexIn = 0,
                     onItemClick = navController
                 )
+            },
+            floatingActionButton = {
+                AnimatedVisibility(
+                    visible = isFabVisible,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    ExpandableFab(
+                        onAddIncome = {
+                            navController.navigate("new_transaction_income")
+                        },
+                        onAddExpense = {
+                            navController.navigate("new_transaction_expense")
+                        }
+                    )
+                }
             }
         ) { paddingValues ->
             Column(
@@ -82,6 +114,7 @@ fun HomeScreen(
                         .background(MaterialTheme.colorScheme.background),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
