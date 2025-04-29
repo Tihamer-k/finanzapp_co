@@ -12,7 +12,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.data.Course
 
@@ -22,7 +21,7 @@ fun CourseItem(
     onClick: () -> Unit
 ) {
     val backgroundColor = when {
-        course.isCompleted -> Color(0xFFDFF6DD) // Verde claro si completado
+        course.isCompleted -> MaterialTheme.colorScheme.primaryContainer // Verde claro si completado
         course.isUnlocked -> MaterialTheme.colorScheme.surface
         else -> MaterialTheme.colorScheme.surfaceVariant
     }
@@ -61,7 +60,7 @@ fun CourseItem(
                 Text(
                     text = "✅ Completado",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color(0xFF1B9C85)
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             } else if (!course.isUnlocked) {
                 Spacer(modifier = Modifier.height(8.dp))

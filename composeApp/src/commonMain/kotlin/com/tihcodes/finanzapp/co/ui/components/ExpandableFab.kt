@@ -1,10 +1,6 @@
 package com.tihcodes.finanzapp.co.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_close
@@ -47,20 +42,6 @@ fun ExpandableFab(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Scrim blur cuando se expande
-        AnimatedVisibility(
-            visible = expanded,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.3f)) // fondo semitransparente
-                    .clickable { expanded = false } // clic fuera cierra
-            )
-        }
-
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.End,
@@ -70,6 +51,7 @@ fun ExpandableFab(
                 SmallActionButton(
                     text = "Ingreso",
                     icon = Res.drawable.ic_income,
+                    color = MaterialTheme.colorScheme.secondary, // Color para Ingreso
                     onClick = {
                         expanded = false
                         onAddIncome()
@@ -81,6 +63,7 @@ fun ExpandableFab(
                 SmallActionButton(
                     text = "Gasto",
                     icon = Res.drawable.ic_expense,
+                    color = MaterialTheme.colorScheme.error, // Color para Gasto
                     onClick = {
                         expanded = false
                         onAddExpense()
@@ -97,25 +80,30 @@ fun ExpandableFab(
                     painter = painterResource(
                         if (expanded) Res.drawable.ic_close else Res.drawable.ic_more
                     ),
-                    contentDescription = if (expanded) "Cerrar" else "Agregar"
+                    contentDescription = if (expanded) "Cerrar" else "Agregar",
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
     }
 }
 
-
 @Composable
 fun SmallActionButton(
     text: String,
     icon: DrawableResource,
+    color: androidx.compose.ui.graphics.Color, // Nuevo parámetro para el color
     onClick: () -> Unit
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
         tonalElevation = 6.dp,
-        color = MaterialTheme.colorScheme.primary,
-        onClick = onClick
+        color = color, // Usar el color especificado
+        onClick = onClick,
+        modifier = Modifier
+            .padding(8.dp)
+            .width(120.dp)
     ) {
         Row(
             modifier = Modifier

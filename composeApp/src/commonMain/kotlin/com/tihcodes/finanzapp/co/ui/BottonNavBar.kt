@@ -83,23 +83,22 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
                             contentDescription = item.title,
                             modifier = Modifier
                                 .padding(4.dp)
-                                .height(if (index == indexIn) 34.dp else 28.dp)
+                                .height(if (index == indexIn) 36.dp else 30.dp)
                                 .width(if (index == indexIn) 34.dp else 28.dp),
                             colorFilter =
-                                if (index == indexIn) ColorFilter.tint(MaterialTheme.colorScheme.inversePrimary)
+                                if (index == indexIn) ColorFilter.tint(MaterialTheme.colorScheme.primary)
                                 else ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
                         )
                     },
-                    label = {
+                    label = if (index == indexIn) {
+                        {
                         Text(
                             text = item.title,
-                            color =
-                                if (index == indexIn) MaterialTheme.colorScheme.inversePrimary
-                                else MaterialTheme.colorScheme.onSecondaryContainer,
+                                color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.labelSmall
-
                         )
-                    },
+                        }
+                    } else null,
                     onClick = {
                         onItemClick.navigate(item.route)
                     }

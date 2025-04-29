@@ -17,31 +17,37 @@ import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.ui.Navigation
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.theme.Theme
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
+private const val ONBOARDING_DESTINATION = "onboarding"
+private const val HOME_DESTINATION = "home"
+
 @Composable
-@Preview
 fun App() {
     Theme {
         val authViewModel = koinViewModel<AuthViewModel>()
         val surfaceColor = MaterialTheme.colorScheme.background
-        val authStateValue = authViewModel.currentUser.collectAsState(initial = null)
-        val authState = authStateValue.value?.id?.isEmpty()
-        println("authState: $authState")
+        val authState = determineAuthState(authViewModel)
 
         Surface(color = surfaceColor) {
             Box(modifier = Modifier.fillMaxSize()) {
                 when (authState) {
                     null -> ShowLoadingIndicator()
-                    else -> {
-                        val destination = getNavigationDestination(authState)
-                        Navigation(authViewModel = authViewModel, destination = destination)
-                    }
+                    else -> Navigation(
+                        authViewModel = authViewModel,
+                        destination = getNavigationDestination(authState)
+                    )
                 }
             }
         }
     }
+}
+
+/** Determine current authentication state */
+@Composable
+private fun determineAuthState(authViewModel: AuthViewModel): Boolean? {
+    val collectedAuthState = authViewModel.currentUser.collectAsState(initial = null)
+    return collectedAuthState.value?.id?.isEmpty()
 }
 
 /** Helper function to show a loading indicator */
@@ -63,6 +69,6 @@ private fun ShowLoadingIndicator() {
 }
 
 /** Determine navigation destination based on authentication state */
-private fun getNavigationDestination(authState: Any?): String {
-    return if (authState == true) "onboarding" else "home"
+private fun getNavigationDestination(authState: Boolean?): String {
+    return if (authState == true) ONBOARDING_DESTINATION else HOME_DESTINATION
 }

@@ -283,6 +283,7 @@ class AuthViewModel(
         launchWithCatchingException {
             authService.signOut()
             _isSignIn.value = false
+            _currentUser.value = User()
         }
     }
 

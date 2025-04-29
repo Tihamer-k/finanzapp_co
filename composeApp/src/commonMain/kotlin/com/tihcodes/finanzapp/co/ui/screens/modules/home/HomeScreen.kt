@@ -37,7 +37,6 @@ import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 
 @Composable
 fun HomeScreen(
-    onLogoutClick: () -> Unit,
     viewModel: AuthViewModel,
     navController: NavHostController
 ) {
