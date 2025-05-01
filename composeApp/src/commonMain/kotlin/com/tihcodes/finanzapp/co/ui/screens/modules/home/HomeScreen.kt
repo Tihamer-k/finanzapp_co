@@ -52,7 +52,7 @@ fun HomeScreen(
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.syncUserData()
+            viewModel.syncUserData()
     }
 
     if (isLoading) {

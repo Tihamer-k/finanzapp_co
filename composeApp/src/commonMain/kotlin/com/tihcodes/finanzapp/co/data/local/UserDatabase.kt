@@ -1,23 +1,23 @@
 package com.tihcodes.finanzapp.co.data.local
 
-import com.finanzapp.UserDatabase
+import com.finanzapp.Database
 import com.tihcodes.finanzapp.co.data.User
 
 class UserDatabase(
     databaseDriverFactory: DatabaseDriverFactory
 ){
-    private val database = UserDatabase(
+    private val database = Database(
         driver = databaseDriverFactory.createDriver()
     )
-    private val userQueries = database.userDatabaseQueries
+    private val userQueries = database.userQueries
 
-    fun getUserById(userId: String) : com.finanzapp.User? {
+    fun getUserById(userId: String) : migrations.User? {
         println("INFO: Reading user data from database")
         return userQueries.getUserById(
             id = userId
         ).executeAsOneOrNull().let { user ->
             if (user != null) {
-                com.finanzapp.User(
+                migrations.User(
                     id = user.id,
                     name = user.name,
                     surname = user.surname,

@@ -109,8 +109,9 @@ dependencies {
 
 sqldelight {
     databases {
-        create("UserDatabase") {
+        create("Database") {
             packageName.set("com.finanzapp")
+            deriveSchemaFromMigrations.set(true)
         }
     }
 }

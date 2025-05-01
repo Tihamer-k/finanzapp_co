@@ -182,7 +182,20 @@ class AuthServiceImpl(
             } else {
                 println("INFO: Usuario local no encontrado, intentando obtener de Firestore")
                 // Si no está en local, intentar obtener de Firestore
-                userRepository.getUserById(userId).first()
+                val user = userRepository.getUserById(userId).first()
+                println("INFO: Usuario encontrado en Firestore: $user")
+                // Guardar el usuario en la base de datos local
+                userDatabaseDriver.insertUser(
+                    User(
+                        id = userId,
+                        name = user.name,
+                        surname = user.surname,
+                        email = user.email,
+                        phone = user.phone,
+                        date = user.date
+                    )
+                )
+                user
             }
         } catch (e: Exception) {
             println("ERROR: Error al obtener datos de usuario: ${e.message}")
