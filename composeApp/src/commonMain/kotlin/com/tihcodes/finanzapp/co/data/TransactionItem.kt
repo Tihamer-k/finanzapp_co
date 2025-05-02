@@ -10,5 +10,6 @@ data class TransactionItem(
     val date: LocalDate,
     val amount: Double,
     val type: TransactionType,
-    val icon: DrawableResource
+    val icon: DrawableResource,
+    val userId: String = "" // Default empty string for backward compatibility
 )

@@ -4,14 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -19,29 +12,35 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.tihcodes.finanzapp.co.data.TransactionItem
 import com.tihcodes.finanzapp.co.data.TransactionType
+import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
+import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.components.ExpandableFab
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
+import org.koin.compose.koinInject
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecordsScreen(
     viewModel: AuthViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    transactionRepository: TransactionRepository = koinInject(),
+    categoryRepository: CategoryRepository = koinInject()
 ) {
-    val transactionsGrouped by viewModel.filteredTransactions.collectAsState()
+    val transactionsGrouped by viewModel.filteredTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
     val filterType by viewModel.filterType.collectAsState()
     val listState = rememberLazyListState()
+    val currentUser by viewModel.currentUser.collectAsState()
+    val userId = currentUser?.id ?: ""
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -74,10 +73,13 @@ fun RecordsScreen(
             ) {
                 ExpandableFab(
                     onAddIncome = {
-                        navController.navigate("new_transaction_income")
+                        navController.navigate("new_transaction_income?userId=$userId")
                     },
                     onAddExpense = {
-                        navController.navigate("new_transaction_expense")
+                        navController.navigate("new_transaction_expense?userId=$userId")
+                    },
+                    onAddBudget = {
+                        navController.navigate("new_transaction_budget?userId=$userId")
                     }
                 )
             }
@@ -101,15 +103,28 @@ fun RecordsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // Balance Summary
+                BalanceSummary(
+                    transactionRepository = transactionRepository,
+                    userId = userId
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
                 // Balance
-                CardBalanceSection()
+                CardBalanceSection(
+                    transactionRepository = transactionRepository,
+                    userId = userId
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Filtro botones
-                Row(
+                FlowRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    maxItemsInEachRow = Int.MAX_VALUE
                 ) {
                     FilterButton(
                         label = "Todos",
@@ -126,15 +141,41 @@ fun RecordsScreen(
                         selected = filterType == TransactionType.EXPENSE,
                         onClick = { viewModel.setFilter(TransactionType.EXPENSE) }
                     )
+                    FilterButton(
+                        label = "Presupuestos",
+                        selected = filterType == TransactionType.BUDGET,
+                        onClick = { viewModel.setFilter(TransactionType.BUDGET) }
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                // Check if we're showing example data
+                val realTransactions = transactionRepository.getAllTransactions(userId)
+
+                // Check and clear example data if needed
+                viewModel.checkAndClearExampleData(realTransactions)
+
+                val isShowingExampleData = realTransactions.isEmpty() && transactionsGrouped.isNotEmpty()
+
+                // Show example data label if needed
+                if (isShowingExampleData) {
+                    Text(
+                        text = "Estos son ejemplos de registros. Se eliminarán cuando agregues tus propios registros.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
 
                 // Lista de transacciones agrupadas
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    transactionsGrouped.forEach { (month, transactions) ->
+                    transactionsGrouped.forEach { entry ->
+                        val month = entry.key
+                        val transactions = entry.value
+
                         item {
                             Text(
                                 text = month,

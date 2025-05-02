@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.tihcodes.finanzapp.co.data.TransactionType
+import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.auth.ForgotPasswordScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.LoginScreen
@@ -25,6 +27,7 @@ import com.tihcodes.finanzapp.co.ui.screens.modules.records.RecordsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.RewardsScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.rewards.SimulatorScreen
 import com.tihcodes.finanzapp.co.ui.screens.onboarding.Onboarding
+import org.koin.compose.koinInject
 
 @Composable
 fun Navigation(authViewModel: AuthViewModel, destination: String) {
@@ -92,11 +95,89 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
                 navController = navController
             )
         }
-        composable("new_transaction_income") {
-            NewTransactionScreen(navController, type = TransactionType.INCOME)
+        composable(
+            "new_transaction_income",
+            arguments = listOf(
+                navArgument("userId") { 
+                    type = NavType.StringType 
+                    defaultValue = ""
+                    nullable = true
+                },
+                navArgument("category") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            val category = backStackEntry.arguments?.getString("category") ?: ""
+            val transactionRepository = koinInject<TransactionRepository>()
+            val categoryRepository = koinInject<CategoryRepository>()
+            NewTransactionScreen(
+                navController = navController, 
+                type = TransactionType.INCOME,
+                transactionRepository = transactionRepository,
+                categoryRepository = categoryRepository,
+                userId = userId,
+                preSelectedCategory = category
+            )
         }
-        composable("new_transaction_expense") {
-            NewTransactionScreen(navController, type = TransactionType.EXPENSE)
+        composable(
+            "new_transaction_expense",
+            arguments = listOf(
+                navArgument("userId") { 
+                    type = NavType.StringType 
+                    defaultValue = ""
+                    nullable = true
+                },
+                navArgument("category") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            val category = backStackEntry.arguments?.getString("category") ?: ""
+            val transactionRepository = koinInject<TransactionRepository>()
+            val categoryRepository = koinInject<CategoryRepository>()
+            NewTransactionScreen(
+                navController = navController, 
+                type = TransactionType.EXPENSE,
+                transactionRepository = transactionRepository,
+                categoryRepository = categoryRepository,
+                userId = userId,
+                preSelectedCategory = category
+            )
+        }
+        composable(
+            "new_transaction_budget",
+            arguments = listOf(
+                navArgument("userId") { 
+                    type = NavType.StringType 
+                    defaultValue = ""
+                    nullable = true
+                },
+                navArgument("category") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            val category = backStackEntry.arguments?.getString("category") ?: ""
+            val transactionRepository = koinInject<TransactionRepository>()
+            val categoryRepository = koinInject<CategoryRepository>()
+            NewTransactionScreen(
+                navController = navController, 
+                type = TransactionType.BUDGET,
+                transactionRepository = transactionRepository,
+                categoryRepository = categoryRepository,
+                userId = userId,
+                preSelectedCategory = category
+            )
         }
 
         composable("categories") {

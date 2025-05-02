@@ -28,11 +28,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.User
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.components.ExpandableFab
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
+import org.koin.compose.koinInject
 
 
 @Composable
@@ -43,6 +45,8 @@ fun HomeScreen(
     val isLoading = viewModel.isProcessing.collectAsState().value
     val user = viewModel.currentUser.collectAsState().value ?: User()
     val listState = rememberLazyListState()
+    val transactionRepository = koinInject<TransactionRepository>()
+    val userId = user.id
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -90,10 +94,13 @@ fun HomeScreen(
                 ) {
                     ExpandableFab(
                         onAddIncome = {
-                            navController.navigate("new_transaction_income")
+                            navController.navigate("new_transaction_income?userId=$userId")
                         },
                         onAddExpense = {
-                            navController.navigate("new_transaction_expense")
+                            navController.navigate("new_transaction_expense?userId=$userId")
+                        },
+                        onAddBudget = {
+                            navController.navigate("new_transaction_budget?userId=$userId")
                         }
                     )
                 }
@@ -125,7 +132,10 @@ fun HomeScreen(
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    BalanceSummary()
+                    BalanceSummary(
+                        transactionRepository = transactionRepository,
+                        userId = userId
+                    )
 
                     Spacer(modifier = Modifier.height(36.dp))
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.CategoryItem
 import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
@@ -38,6 +39,7 @@ fun CategoryScreen(
     navController: NavHostController
 ) {
     val categoryRepository = koinInject<CategoryRepository>()
+    val transactionRepository = koinInject<TransactionRepository>()
     val gridState = rememberLazyGridState()
 
     // Get current user ID
@@ -122,7 +124,10 @@ fun CategoryScreen(
             ) {
                 Spacer(modifier = Modifier.height(40.dp))
 
-                BalanceSummary()
+                BalanceSummary(
+                    transactionRepository = transactionRepository,
+                    userId = userId
+                )
 
                 Spacer(modifier = Modifier.height(36.dp))
 

@@ -1,41 +1,22 @@
 package com.tihcodes.finanzapp.co.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_close
-import finanzapp_co.composeapp.generated.resources.ic_expense
-import finanzapp_co.composeapp.generated.resources.ic_income
-import finanzapp_co.composeapp.generated.resources.ic_more
+import finanzapp_co.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun ExpandableFab(
     onAddIncome: () -> Unit,
-    onAddExpense: () -> Unit
+    onAddExpense: () -> Unit,
+    onAddBudget: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -67,6 +48,18 @@ fun ExpandableFab(
                     onClick = {
                         expanded = false
                         onAddExpense()
+                    }
+                )
+            }
+
+            AnimatedVisibility(visible = expanded) {
+                SmallActionButton(
+                    text = "Presupuesto",
+                    icon = Res.drawable.ic_budget,
+                    color = MaterialTheme.colorScheme.tertiary, // Color para Presupuesto
+                    onClick = {
+                        expanded = false
+                        onAddBudget()
                     }
                 )
             }
@@ -103,7 +96,7 @@ fun SmallActionButton(
         onClick = onClick,
         modifier = Modifier
             .padding(8.dp)
-            .width(120.dp)
+            .width(160.dp)
     ) {
         Row(
             modifier = Modifier

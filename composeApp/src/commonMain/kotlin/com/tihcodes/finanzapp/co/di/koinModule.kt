@@ -2,8 +2,10 @@ package com.tihcodes.finanzapp.co.di
 
 import com.russhwolf.settings.Settings
 import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
+import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import com.tihcodes.finanzapp.co.data.local.UserDatabase
 import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.service.impl.AuthServiceImpl
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import dev.gitlive.firebase.Firebase
@@ -28,7 +30,9 @@ val sharedModule = module {
     single<FirebaseAuth> { Firebase.auth }
     single<FirebaseFirestore> { Firebase.firestore }
     single<CategoryDatabase> { CategoryDatabase(databaseDriverFactory = get()) }
+    single<TransactionDatabase> { TransactionDatabase(databaseDriverFactory = get()) }
     single { CategoryRepository(firestore = get<FirebaseFirestore>(), categoryDatabase = get<CategoryDatabase>()) }
+    single { TransactionRepository(firestore = get<FirebaseFirestore>(), transactionDatabase = get<TransactionDatabase>()) }
 
     viewModel { AuthViewModel(
         authService = AuthServiceImpl(

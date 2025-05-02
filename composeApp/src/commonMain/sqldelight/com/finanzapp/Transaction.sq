@@ -1,0 +1,29 @@
+getTransactionById:
+SELECT * FROM "Transaction" WHERE id = ?;
+
+getAllTransactions:
+SELECT * FROM "Transaction";
+
+getTransactionsByUserId:
+SELECT * FROM "Transaction" WHERE userId = ?;
+
+getTransactionsByCategory:
+SELECT * FROM "Transaction" WHERE category = ? AND userId = ?;
+
+getTransactionsByType:
+SELECT * FROM "Transaction" WHERE type = ? AND userId = ?;
+
+insertTransaction:
+INSERT INTO "Transaction"
+(id, title, category, date, amount, type, icon, userId)
+VALUES
+(?, ?, ?, ?, ?, ?, ?, ?);
+
+updateTransaction:
+UPDATE "Transaction"
+SET title = ?, category = ?, date = ?, amount = ?, type = ?, icon = ?, userId = ?
+WHERE id = ?;
+
+deleteTransaction:
+DELETE FROM "Transaction"
+WHERE id = ?;

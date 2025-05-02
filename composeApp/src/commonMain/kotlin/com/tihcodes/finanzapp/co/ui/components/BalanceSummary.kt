@@ -12,13 +12,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
+import kotlin.math.abs
 
 @Composable
-fun BalanceSummary() {
+fun BalanceSummary(
+    transactionRepository: TransactionRepository,
+    userId: String
+) {
+    // Calculate total balance and expenses
+    val transactions by transactionRepository.transactions.collectAsState()
+    val totalBalance = transactionRepository.calculateTotalBalance(userId)
+    val totalExpenses = transactionRepository.calculateTotalExpenses(userId)
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -42,7 +54,7 @@ fun BalanceSummary() {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "$7,783.00",
+                text = "$$totalBalance",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -63,7 +75,7 @@ fun BalanceSummary() {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "-$1,187.40",
+                text = "-$$totalExpenses",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.error
             )

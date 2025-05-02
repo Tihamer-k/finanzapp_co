@@ -149,52 +149,73 @@ class CategoryRepository(
      * Initialize the repository with sample categories if empty
      */
     fun initialize(userId: String = "") {
+        println("[DEBUG_LOG] Initializing CategoryRepository with userId: $userId")
+        println("[DEBUG_LOG] Current state: isInitialized=$isInitialized, currentUserId=$currentUserId")
+
         if (!isInitialized || currentUserId != userId) {
             currentUserId = userId
+            println("[DEBUG_LOG] Need to initialize categories for userId: $userId")
 
             // Try to load categories from local database first
             scope.launch {
                 try {
                     if (categoryDatabase != null) {
                         // Get categories from SQLDelight
+                        println("[DEBUG_LOG] Getting categories from SQLDelight")
                         val localCategories = categoryDatabase.getAllCategories()
+                        println("[DEBUG_LOG] Found ${localCategories.size} categories in SQLDelight")
 
                         if (localCategories.isNotEmpty()) {
                             // If we have local categories, use them
+                            println("[DEBUG_LOG] Using ${localCategories.size} categories from SQLDelight")
                             _categories.value = localCategories
                             isInitialized = true
+                            println("[DEBUG_LOG] Categories initialized from SQLDelight")
                             return@launch
                         }
                     }
 
                     // If no local categories or database not available, use sample categories
+                    println("[DEBUG_LOG] No local categories found, using sample categories")
                     val sampleCategories = if (userId.isNotEmpty()) {
+                        println("[DEBUG_LOG] Creating sample categories with userId: $userId")
                         getSampleCategories().map { it.copy(userId = userId) }
                     } else {
+                        println("[DEBUG_LOG] Creating sample categories with empty userId")
                         getSampleCategories()
                     }
                     _categories.value = sampleCategories
+                    println("[DEBUG_LOG] Set ${sampleCategories.size} sample categories")
 
                     // Save sample categories to local database if available
                     if (categoryDatabase != null && userId.isNotEmpty()) {
+                        println("[DEBUG_LOG] Saving sample categories to SQLDelight")
                         sampleCategories.forEach { category ->
                             categoryDatabase.insertCategory(category)
                         }
+                        println("[DEBUG_LOG] Saved ${sampleCategories.size} sample categories to SQLDelight")
                     }
 
                     isInitialized = true
+                    println("[DEBUG_LOG] Categories initialized with sample data")
                 } catch (e: Exception) {
-                    println("ERROR: Failed to initialize categories: ${e.message}")
+                    println("[DEBUG_LOG] ERROR: Failed to initialize categories: ${e.message}")
+                    e.printStackTrace()
                     // Fallback to sample categories
                     val sampleCategories = if (userId.isNotEmpty()) {
+                        println("[DEBUG_LOG] Fallback: Creating sample categories with userId: $userId")
                         getSampleCategories().map { it.copy(userId = userId) }
                     } else {
+                        println("[DEBUG_LOG] Fallback: Creating sample categories with empty userId")
                         getSampleCategories()
                     }
                     _categories.value = sampleCategories
                     isInitialized = true
+                    println("[DEBUG_LOG] Categories initialized with fallback sample data")
                 }
             }
+        } else {
+            println("[DEBUG_LOG] Categories already initialized for userId: $userId")
         }
     }
 
@@ -411,64 +432,89 @@ class CategoryRepository(
      * Also saves the merged categories to SQLDelight
      */
     suspend fun syncCategories(userId: String) {
+        println("[DEBUG_LOG] Starting syncCategories for userId: $userId")
+
         if (userId.isEmpty()) {
+            println("[DEBUG_LOG] Empty userId, skipping sync")
             return
         }
 
         try {
-            println("INFO: Syncing categories for user: $userId")
+            println("[DEBUG_LOG] Syncing categories for user: $userId")
 
             // Get default categories with user ID
+            println("[DEBUG_LOG] Getting default categories with userId: $userId")
             val defaultCategories = getSampleCategories().map { it.copy(userId = userId) }
+            println("[DEBUG_LOG] Got ${defaultCategories.size} default categories")
 
             // Start with default categories
             val mergedCategories = defaultCategories.toMutableList()
+            println("[DEBUG_LOG] Starting with ${mergedCategories.size} default categories")
 
             // If SQLDelight is available, get categories from it
             if (categoryDatabase != null) {
                 try {
+                    println("[DEBUG_LOG] Getting categories from SQLDelight")
                     val localCategories = categoryDatabase.getAllCategories()
+                    println("[DEBUG_LOG] Found ${localCategories.size} categories in SQLDelight")
 
                     // Add local categories that don't exist in default categories
+                    var localCategoriesAdded = 0
                     localCategories.forEach { localCategory ->
                         if (localCategory.userId == userId) {
                             val existingIndex = mergedCategories.indexOfFirst { it.name == localCategory.name }
                             if (existingIndex >= 0) {
                                 // Replace existing category
+                                println("[DEBUG_LOG] Replacing existing category: ${localCategory.name}")
                                 mergedCategories[existingIndex] = localCategory
                             } else {
                                 // Add new category
+                                println("[DEBUG_LOG] Adding new local category: ${localCategory.name}")
                                 mergedCategories.add(localCategory)
+                                localCategoriesAdded++
                             }
                         }
                     }
 
-                    println("INFO: Retrieved ${localCategories.size} categories from SQLDelight")
+                    println("[DEBUG_LOG] Added $localCategoriesAdded new categories from SQLDelight")
                 } catch (e: Exception) {
-                    println("ERROR: Failed to get categories from SQLDelight: ${e.message}")
+                    println("[DEBUG_LOG] ERROR: Failed to get categories from SQLDelight: ${e.message}")
+                    e.printStackTrace()
                 }
+            } else {
+                println("[DEBUG_LOG] SQLDelight database is null, skipping local sync")
             }
 
             // If Firestore is available, get categories from it
             if (firestore != null) {
                 try {
-                    println("INFO: Syncing categories from Firestore for user: $userId")
+                    println("[DEBUG_LOG] Syncing categories from Firestore for user: $userId")
 
                     // Get categories from Firestore
+                    println("[DEBUG_LOG] Querying Firestore for categories")
                     val firestoreCategories = firestore.collection("users")
                         .document(userId)
                         .collection("categories")
                         .get()
+                    println("[DEBUG_LOG] Firestore query completed, processing documents")
 
                     val userCategories = mutableListOf<CategoryItem>()
 
                     // Convert Firestore documents to CategoryItems
+                    println("[DEBUG_LOG] Processing ${firestoreCategories.documents.size} Firestore documents")
                     firestoreCategories.documents.forEach { doc ->
                         try {
-                            val name = doc.get("name") as? String ?: return@forEach
+                            val name = doc.get("name") as? String
+                            if (name == null) {
+                                println("[DEBUG_LOG] Skipping document with null name")
+                                return@forEach
+                            }
+
                             val nameReference = doc.get("nameReference") as? String ?: name
                             val iconString = doc.get("icon") as? String
                             val colorString = doc.get("backgroundColor") as? String
+
+                            println("[DEBUG_LOG] Processing Firestore category: $name")
 
                             // Parse icon from string
                             val icon = parseIconFromString(iconString)
@@ -486,39 +532,53 @@ class CategoryRepository(
                                     userId = userId
                                 )
                             )
+                            println("[DEBUG_LOG] Added Firestore category: $name")
                         } catch (e: Exception) {
-                            println("ERROR: Failed to parse category from Firestore: ${e.message}")
+                            println("[DEBUG_LOG] ERROR: Failed to parse category from Firestore: ${e.message}")
+                            e.printStackTrace()
                         }
                     }
 
-                    println("INFO: Retrieved ${userCategories.size} categories from Firestore")
+                    println("[DEBUG_LOG] Retrieved ${userCategories.size} categories from Firestore")
 
                     // Add user categories that don't exist in merged categories
+                    var firestoreCategoriesAdded = 0
                     userCategories.forEach { userCategory ->
                         val existingIndex = mergedCategories.indexOfFirst { it.name == userCategory.name }
                         if (existingIndex >= 0) {
                             // Replace existing category
+                            println("[DEBUG_LOG] Replacing existing category with Firestore data: ${userCategory.name}")
                             mergedCategories[existingIndex] = userCategory
                         } else {
                             // Add new category
+                            println("[DEBUG_LOG] Adding new Firestore category: ${userCategory.name}")
                             mergedCategories.add(userCategory)
+                            firestoreCategoriesAdded++
                         }
                     }
+                    println("[DEBUG_LOG] Added $firestoreCategoriesAdded new categories from Firestore")
                 } catch (e: Exception) {
-                    println("ERROR: Failed to sync categories from Firestore: ${e.message}")
+                    println("[DEBUG_LOG] ERROR: Failed to sync categories from Firestore: ${e.message}")
+                    e.printStackTrace()
                 }
+            } else {
+                println("[DEBUG_LOG] Firestore is null, skipping remote sync")
             }
 
             // Update the categories state
+            println("[DEBUG_LOG] Updating categories state with ${mergedCategories.size} categories")
             _categories.value = mergedCategories
             isInitialized = true
             currentUserId = userId
+            println("[DEBUG_LOG] Categories state updated, isInitialized=$isInitialized, currentUserId=$currentUserId")
 
             // Save merged categories to SQLDelight if available
             if (categoryDatabase != null) {
                 try {
+                    println("[DEBUG_LOG] Saving merged categories to SQLDelight")
                     // Get existing categories from the database
                     val existingCategories = categoryDatabase.getAllCategories()
+                    println("[DEBUG_LOG] Found ${existingCategories.size} existing categories in SQLDelight")
 
                     // Only insert categories that don't already exist
                     val categoriesToInsert = mergedCategories.filter { newCategory ->
@@ -527,22 +587,27 @@ class CategoryRepository(
                             existingCategory.name == newCategory.name && existingCategory.userId == newCategory.userId
                         }
                     }
+                    println("[DEBUG_LOG] Need to insert ${categoriesToInsert.size} new categories to SQLDelight")
 
                     // Insert new categories
                     categoriesToInsert.forEach { category ->
+                        println("[DEBUG_LOG] Inserting category to SQLDelight: ${category.name}")
                         categoryDatabase.insertCategory(category)
                     }
 
-                    println("INFO: Saved ${categoriesToInsert.size} new categories to SQLDelight")
+                    println("[DEBUG_LOG] Saved ${categoriesToInsert.size} new categories to SQLDelight")
                 } catch (e: Exception) {
-                    println("ERROR: Failed to save categories to SQLDelight: ${e.message}")
+                    println("[DEBUG_LOG] ERROR: Failed to save categories to SQLDelight: ${e.message}")
+                    e.printStackTrace()
                 }
             }
 
-            println("INFO: Categories synced successfully. Total categories: ${mergedCategories.size}")
+            println("[DEBUG_LOG] Categories synced successfully. Total categories: ${mergedCategories.size}")
         } catch (e: Exception) {
-            println("ERROR: Failed to sync categories: ${e.message}")
+            println("[DEBUG_LOG] ERROR: Failed to sync categories: ${e.message}")
+            e.printStackTrace()
             // Fall back to default categories
+            println("[DEBUG_LOG] Falling back to initialize method")
             initialize(userId)
         }
     }

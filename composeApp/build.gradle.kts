@@ -71,6 +71,8 @@ kotlin {
 
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.no.arg)
+
+            implementation("network.chaintech:kmp-date-time-picker:1.0.7")
         }
     }
 }

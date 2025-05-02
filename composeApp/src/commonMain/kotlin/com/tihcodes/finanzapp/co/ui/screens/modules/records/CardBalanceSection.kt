@@ -8,12 +8,22 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 
 @Composable
-fun CardBalanceSection() {
+fun CardBalanceSection(
+    transactionRepository: TransactionRepository,
+    userId: String
+) {
+    // Calculate total balance
+    val transactions by transactionRepository.transactions.collectAsState()
+    val totalBalance = transactionRepository.calculateTotalBalance(userId)
+
     Surface(
         shape = RoundedCornerShape(16.dp),
         tonalElevation = 4.dp,
@@ -29,7 +39,7 @@ fun CardBalanceSection() {
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "$6500000.00",
+                text = "$$totalBalance",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )

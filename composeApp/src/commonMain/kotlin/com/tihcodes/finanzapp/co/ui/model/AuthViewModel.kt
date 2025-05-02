@@ -1,28 +1,11 @@
 package com.tihcodes.finanzapp.co.ui.model
 
 import androidx.lifecycle.viewModelScope
-import com.tihcodes.finanzapp.co.data.Course
-import com.tihcodes.finanzapp.co.data.Reward
-import com.tihcodes.finanzapp.co.data.RewardType
-import com.tihcodes.finanzapp.co.data.TransactionItem
-import com.tihcodes.finanzapp.co.data.TransactionType
-import com.tihcodes.finanzapp.co.data.User
+import com.tihcodes.finanzapp.co.data.*
 import com.tihcodes.finanzapp.co.service.AuthService
 import com.tihcodes.finanzapp.co.ui.common.BaseViewModel
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
-import finanzapp_co.composeapp.generated.resources.ic_groceries
-import finanzapp_co.composeapp.generated.resources.ic_home_expenses
-import finanzapp_co.composeapp.generated.resources.ic_savings
-import finanzapp_co.composeapp.generated.resources.ic_transport
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import finanzapp_co.composeapp.generated.resources.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 
@@ -140,67 +123,77 @@ class AuthViewModel(
         _rewards.value = updatedRewards
     }
 
-    //    Sección de registros
-    private val _transactions = MutableStateFlow<List<TransactionItem>>(
-        listOf(
-            TransactionItem(
-                "1",
-                "Salarío",
-                "Ingresos",
-                LocalDate(2024, 4, 30),
-                4500000.0,
-                TransactionType.INCOME,
-                Res.drawable.ic_savings
-            ),
-            TransactionItem(
-                "2",
-                "mercado",
-                "Despensa",
-                LocalDate(2024, 4, 24),
-                -890000.0,
-                TransactionType.EXPENSE,
-                Res.drawable.ic_groceries
-            ),
-            TransactionItem(
-                "3",
-                "Arriendo",
-                "Hogar",//Housing
-                LocalDate(2024, 4, 8),
-                -620000.0,
-                TransactionType.EXPENSE,
-                Res.drawable.ic_home_expenses
-            ),
-            TransactionItem(
-                "4",
-                "Transmilenio",
-                "Transporte",
-                LocalDate(2024, 4, 8),
-                -200000.0,
-                TransactionType.EXPENSE,
-                Res.drawable.ic_transport
-            ),
-            TransactionItem(
-                "5",
-                "Netflix",
-                "Entretenimiento",
-                LocalDate(2024, 3, 31),
-                -26900.0,
-                TransactionType.EXPENSE,
-                Res.drawable.ic_entertainmentame
-            ),
-            TransactionItem(
-                "6",
-                "Horas extras",
-                "Ingresos",
-                LocalDate(2024, 3, 31),
-                200000.0,
-                TransactionType.INCOME,
-                Res.drawable.ic_savings
-            )
-
+    //    Sección de registros - Datos de ejemplo
+    private val exampleTransactions = listOf(
+        TransactionItem(
+            "1",
+            "Salarío",
+            "Ingresos",
+            LocalDate(2024, 4, 30),
+            4500000.0,
+            TransactionType.INCOME,
+            Res.drawable.ic_savings
+        ),
+        TransactionItem(
+            "2",
+            "mercado",
+            "Despensa",
+            LocalDate(2024, 4, 24),
+            -890000.0,
+            TransactionType.EXPENSE,
+            Res.drawable.ic_groceries
+        ),
+        TransactionItem(
+            "3",
+            "Arriendo",
+            "Hogar",//Housing
+            LocalDate(2024, 4, 8),
+            -620000.0,
+            TransactionType.EXPENSE,
+            Res.drawable.ic_home_expenses
+        ),
+        TransactionItem(
+            "4",
+            "Transmilenio",
+            "Transporte",
+            LocalDate(2024, 4, 8),
+            -200000.0,
+            TransactionType.EXPENSE,
+            Res.drawable.ic_transport
+        ),
+        TransactionItem(
+            "5",
+            "Netflix",
+            "Entretenimiento",
+            LocalDate(2024, 3, 31),
+            -26900.0,
+            TransactionType.EXPENSE,
+            Res.drawable.ic_entertainmentame
+        ),
+        TransactionItem(
+            "6",
+            "Horas extras",
+            "Ingresos",
+            LocalDate(2024, 3, 31),
+            200000.0,
+            TransactionType.INCOME,
+            Res.drawable.ic_savings
         )
     )
+
+    private val _transactions = MutableStateFlow<List<TransactionItem>>(exampleTransactions)
     val transactions: StateFlow<List<TransactionItem>> = _transactions
+
+    // Function to check if we should show example data
+    fun checkAndClearExampleData(realTransactions: List<TransactionItem>) {
+        if (realTransactions.isNotEmpty() && _transactions.value == exampleTransactions) {
+            // Clear example data if we have real transactions
+            _transactions.value = emptyList()
+        } else if (realTransactions.isEmpty() && _transactions.value.isEmpty()) {
+            // Restore example data if we have no real transactions and no example data
+            _transactions.value = exampleTransactions
+        }
+    }
 
     private val _filterType = MutableStateFlow<TransactionType?>(null)
     val filterType: StateFlow<TransactionType?> = _filterType
@@ -215,10 +208,11 @@ class AuthViewModel(
                 null -> transactions
                 TransactionType.INCOME -> transactions.filter { it.type == TransactionType.INCOME }
                 TransactionType.EXPENSE -> transactions.filter { it.type == TransactionType.EXPENSE }
+                TransactionType.BUDGET -> transactions.filter { it.type == TransactionType.BUDGET }
             }
         }
         .map { transactions ->
-            transactions.groupBy { it.date.month.name }
+            transactions.groupBy<TransactionItem, String> { it.date.month.name }
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
