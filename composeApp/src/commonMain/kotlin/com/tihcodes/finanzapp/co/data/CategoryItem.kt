@@ -7,6 +7,6 @@ data class  CategoryItem(
     val name: String,
     val icon: DrawableResource,
     val backgroundColor: Color,
-    val nameReference: String
+    val nameReference: String,
+    val userId: String = "" // Default empty string for backward compatibility
 )
-

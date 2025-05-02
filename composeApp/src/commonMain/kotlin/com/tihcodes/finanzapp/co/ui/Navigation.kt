@@ -15,6 +15,7 @@ import com.tihcodes.finanzapp.co.ui.screens.auth.PreLoginScreen
 import com.tihcodes.finanzapp.co.ui.screens.auth.SignUpScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryDetailScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.categories.CategoryScreen
+import com.tihcodes.finanzapp.co.ui.screens.modules.categories.NewCategoryScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.home.HomeScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.learn.LearnScreen
 import com.tihcodes.finanzapp.co.ui.screens.modules.notifications.NotificationsScreen
@@ -145,8 +146,13 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
 
+        composable("new_category") {
+            NewCategoryScreen(
+                navController = navController
+            )
+        }
+
 
     }
 
 }
-

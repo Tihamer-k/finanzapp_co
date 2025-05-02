@@ -1,0 +1,26 @@
+getCategoryById:
+SELECT * FROM Category WHERE id = ?;
+
+getAllCategories:
+SELECT * FROM Category;
+
+getCategoriesByUserId:
+SELECT * FROM Category WHERE userId = ?;
+
+getCategoryByNameAndUserId:
+SELECT * FROM Category WHERE name = ? AND userId = ?;
+
+insertCategory:
+INSERT INTO Category
+(id, name, icon, color, nameReference, userId)
+VALUES
+(?, ?, ?, ?, ?, ?);
+
+updateCategory:
+UPDATE Category
+SET name = ?, icon = ?, color = ?, nameReference = ?, userId = ?
+WHERE id = ?;
+
+deleteCategory:
+DELETE FROM Category
+WHERE id = ?;

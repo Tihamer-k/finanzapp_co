@@ -1,41 +1,34 @@
 package com.tihcodes.finanzapp.co.ui.screens.modules.categories
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.data.CategoryItem
+import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
-import finanzapp_co.composeapp.generated.resources.ic_food
-import finanzapp_co.composeapp.generated.resources.ic_gifts
-import finanzapp_co.composeapp.generated.resources.ic_groceries
-import finanzapp_co.composeapp.generated.resources.ic_home_expenses
-import finanzapp_co.composeapp.generated.resources.ic_medicine
-import finanzapp_co.composeapp.generated.resources.ic_more
-import finanzapp_co.composeapp.generated.resources.ic_savings
-import finanzapp_co.composeapp.generated.resources.ic_transport
+import finanzapp_co.composeapp.generated.resources.*
+import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 
 @Composable
@@ -44,7 +37,34 @@ fun CategoryScreen(
     onLogoutClick: () -> Unit,
     navController: NavHostController
 ) {
-    val categories = remember { getSampleCategories() }
+    val categoryRepository = koinInject<CategoryRepository>()
+    val gridState = rememberLazyGridState()
+
+    // Get current user ID
+    val userId = viewModel.currentUser.collectAsState().value?.id ?: ""
+
+    // Initialize repository if needed with user ID and sync with Firestore
+    LaunchedEffect(userId) {
+        // First initialize with default categories
+        categoryRepository.initialize(userId)
+
+        // Then sync with Firestore to get user-specific categories
+        if (userId.isNotEmpty()) {
+            categoryRepository.syncCategories(userId)
+        }
+    }
+
+    // Get categories from repository filtered by user ID
+    val categories = remember(userId) { categoryRepository.getAllCategories(userId) }
+
+    // Detect if we should show the FAB
+    val isFabVisible by remember {
+        derivedStateOf {
+            gridState.firstVisibleItemScrollOffset == 0 ||
+                    gridState.isScrollInProgress.not()
+        }
+    }
+
     Scaffold(
         topBar = {
             TopNavBar(
@@ -59,6 +79,29 @@ fun CategoryScreen(
                 indexIn = 3,
                 onItemClick = navController
             )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = isFabVisible,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                FloatingActionButton(
+                    onClick = { 
+                        // Navigate to new category screen
+                        navController.navigate("new_category")
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_more),
+                        contentDescription = "Agregar categoría",
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
         }
     ) { paddingValues ->
         // Respetar el espacio de la barra inferior y el TopBar
@@ -85,12 +128,18 @@ fun CategoryScreen(
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
-                    contentPadding = PaddingValues(vertical = 16.dp),
+                    state = gridState,
+                    contentPadding = PaddingValues(vertical = 16.dp, horizontal = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 16.dp) // Add padding at the bottom for better scrolling
                 ) {
-                    items(categories) { category ->
+                    items(
+                        items = categories,
+                        key = { it.name + it.userId } // Use a unique key for better performance
+                    ) { category ->
                         CategoryGridItem(
                             item = category,
                             onClick = {
@@ -107,19 +156,18 @@ fun CategoryScreen(
 
 fun getSampleCategories(): List<CategoryItem> {
     return listOf(
-        CategoryItem("Food", Res.drawable.ic_food, Color(0xFF007AFF), "Food"),
-        CategoryItem("Transport", Res.drawable.ic_transport, Color(0xFF5AC8FA), "Transport"),
-        CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF34C759), "Medicine"),
-        CategoryItem("Groceries", Res.drawable.ic_groceries, Color(0xFFFF9500), "Groceries"),
-        CategoryItem("Rent", Res.drawable.ic_home_expenses, Color(0xFFFF2D55), "Rent"),
-        CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFFAF52DE), "Gifts"),
-        CategoryItem("Savings", Res.drawable.ic_savings, Color(0xFFFFCC00), "Savings"),
+        CategoryItem("Food", Res.drawable.ic_food, Color(0xFF0000FF), "Food"), // blue
+        CategoryItem("Transport", Res.drawable.ic_transport, Color(0xFF00FFFF), "Transport"), // cyan
+        CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF00FF00), "Medicine"), // green
+        CategoryItem("Groceries", Res.drawable.ic_groceries, Color(0xFFFFA500), "Groceries"), // orange
+        CategoryItem("Rent", Res.drawable.ic_home_expenses, Color(0xFFFF0000), "Rent"), // red
+        CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFF800080), "Gifts"), // purple
+        CategoryItem("Savings", Res.drawable.ic_savings, Color(0xFFFFD700), "Savings"), // gold
         CategoryItem(
             "Entertainment",
             Res.drawable.ic_entertainmentame,
-            Color(0xFF5856D6),
+            Color(0xFF40E0D0), // turquoise
             "Entertainment"
-        ),
-        CategoryItem("More", Res.drawable.ic_more, Color(0xFF8E8E93), "More")
+        )
     )
 }
