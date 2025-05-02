@@ -47,7 +47,7 @@ fun App() {
 @Composable
 private fun determineAuthState(authViewModel: AuthViewModel): Boolean? {
     val collectedAuthState = authViewModel.currentUser.collectAsState(initial = null)
-    return collectedAuthState.value?.id?.isEmpty()
+    return collectedAuthState.value?.id?.isNotEmpty()
 }
 
 /** Helper function to show a loading indicator */
@@ -70,5 +70,5 @@ private fun ShowLoadingIndicator() {
 
 /** Determine navigation destination based on authentication state */
 private fun getNavigationDestination(authState: Boolean?): String {
-    return if (authState == true) ONBOARDING_DESTINATION else HOME_DESTINATION
+    return if (authState == true) HOME_DESTINATION else ONBOARDING_DESTINATION
 }

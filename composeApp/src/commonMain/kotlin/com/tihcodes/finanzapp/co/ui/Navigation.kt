@@ -96,7 +96,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
         composable(
-            "new_transaction_income",
+            "new_transaction_income?userId={userId}&category={category}",
             arguments = listOf(
                 navArgument("userId") { 
                     type = NavType.StringType 
@@ -124,7 +124,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
         composable(
-            "new_transaction_expense",
+            "new_transaction_expense?userId={userId}&category={category}",
             arguments = listOf(
                 navArgument("userId") { 
                     type = NavType.StringType 
@@ -152,7 +152,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
         composable(
-            "new_transaction_budget",
+            "new_transaction_budget?userId={userId}&category={category}",
             arguments = listOf(
                 navArgument("userId") { 
                     type = NavType.StringType 

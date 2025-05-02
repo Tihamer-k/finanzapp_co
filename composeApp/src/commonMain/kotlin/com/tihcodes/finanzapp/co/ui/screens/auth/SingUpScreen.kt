@@ -1,6 +1,7 @@
 package com.tihcodes.finanzapp.co.ui.screens.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,9 +43,15 @@ import com.tihcodes.finanzapp.co.ui.components.SuccessDialog
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_calendar
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
 import kotlinx.coroutines.delay
+import kotlinx.datetime.LocalDate
+import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerView
+import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
+import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -70,6 +77,7 @@ fun SignUpScreen(
     val authState by viewModel.authState.collectAsState()
     var errorMessage by rememberSaveable { mutableStateOf("") }
     val isEmailValid = Validator.isEmailValid(uiState.email)
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -187,11 +195,27 @@ fun SignUpScreen(
                 value = uiState.date,
                 onValueChange = viewModel::onDateChange,
                 label = { Text("Date Of Birth") },
-                placeholder = { Text("DD / MM / YYYY") },
+                placeholder = { Text("YYYY - MM - DD") },
                 isError = !Validator.isDateValid(uiState.date) && uiState.date.isNotEmpty(),
                 shape = RoundedCornerShape(20.dp),
-                modifier = modifierField
+                modifier = modifierField,
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_calendar),
+                        contentDescription = "Seleccionar fecha",
+                        modifier = Modifier.background(
+                            MaterialTheme.colorScheme.primaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ).padding(6.dp).size(24.dp)
+                            .clickable {
+                                println("[DEBUG_LOG] Calendar icon clicked")
+                                showDatePicker = true
+                            },
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
             )
+
             if (!Validator.isDateValid(uiState.date) && uiState.date.isNotEmpty()) {
                 Text(
                     text = "La fecha no es válida",
@@ -199,6 +223,35 @@ fun SignUpScreen(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+
+            WheelDatePickerView(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                dateTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                showShortMonths=true,
+                showDatePicker = showDatePicker,
+                title = "Seleccione una fecha",
+                doneLabel = "Aceptar",
+                titleStyle = MaterialTheme.typography.labelMedium,
+                doneLabelStyle = MaterialTheme.typography.labelMedium,
+                startDate = LocalDate.now(),
+                selectorProperties = WheelPickerDefaults. selectorProperties(
+                    borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
+                ),
+                height = 200.dp,
+                dateTimePickerView = DateTimePickerView.BOTTOM_SHEET_VIEW,
+                rowCount = 3,
+                onDoneClick = {
+                    println("[DEBUG_LOG] Date selected: $it")
+                    uiState.date = it.toString()
+                    showDatePicker = false
+                },
+                onDismiss = {
+                    println("[DEBUG_LOG] Date picker dismissed")
+                    showDatePicker = false
+                },
+                yearsRange = IntRange(1920, LocalDate.now().year - 18),
+            )
+
 
 
             OutlinedTextField(

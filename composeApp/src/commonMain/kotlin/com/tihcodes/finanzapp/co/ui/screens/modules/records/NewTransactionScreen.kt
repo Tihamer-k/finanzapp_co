@@ -2,10 +2,33 @@ package com.tihcodes.finanzapp.co.ui.screens.modules.records
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,13 +41,18 @@ import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.getPlatform
 import com.tihcodes.finanzapp.co.ui.TopNavBar
-import finanzapp_co.composeapp.generated.resources.*
+import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_budget
+import finanzapp_co.composeapp.generated.resources.ic_calendar
+import finanzapp_co.composeapp.generated.resources.ic_expense
+import finanzapp_co.composeapp.generated.resources.ic_income
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerView
 import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
+import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
 
@@ -49,7 +77,6 @@ fun NewTransactionScreen(
             Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
         )
     }
-    val platform = getPlatform()
     var showDatePicker by remember { mutableStateOf(false) }
 
     // Use a default userId if the provided userId is empty
@@ -122,9 +149,6 @@ fun NewTransactionScreen(
 
     // Dropdown state
     var expanded by remember { mutableStateOf(false) }
-
-    // Get current date
-    val currentDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
 
     // Get icon based on transaction type
     val icon = when (type) {
@@ -207,7 +231,7 @@ fun NewTransactionScreen(
                                     println("[DEBUG_LOG] Calendar icon clicked")
                                     showDatePicker = true
                                 },
-                            tint = MaterialTheme.colorScheme.onPrimary,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
 
                             )
                     },
@@ -215,7 +239,17 @@ fun NewTransactionScreen(
                 )
 
                 WheelDatePickerView(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    dateTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     showDatePicker = showDatePicker,
+                    title = "Seleccione una fecha",
+                    doneLabel = "Aceptar",
+                    titleStyle = MaterialTheme.typography.labelMedium,
+                    doneLabelStyle = MaterialTheme.typography.labelMedium,
+                    startDate = LocalDate.now(),
+                    selectorProperties = WheelPickerDefaults. selectorProperties(
+                        borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
+                    ),
                     height = 200.dp,
                     dateTimePickerView = DateTimePickerView.BOTTOM_SHEET_VIEW,
                     rowCount = 3,

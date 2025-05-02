@@ -1,7 +1,7 @@
 package com.tihcodes.finanzapp.co.utils
 
-import com.tihcodes.finanzapp.co.utils.Validator.isEmailValid
-import com.tihcodes.finanzapp.co.utils.Validator.isPasswordValid
+import kotlinx.datetime.LocalDate
+import network.chaintech.kmp_date_time_picker.utils.now
 
 object Validator {
 
@@ -35,9 +35,17 @@ object Validator {
     }
 
     fun isDateValid(date: String): Boolean {
-        // Simple check: format DD/MM/YYYY
-        val regex = Regex("^\\d{2}/\\d{2}/\\d{4}$")
-        return regex.matches(date)
+        val actualYear = LocalDate.now().year
+        // Simple check: format YYYY-MM-DD
+        val regex = Regex("^\\d{4}-\\d{2}-\\d{2}$")
+        return regex.matches(date) && date.split("-").let {
+            val year = it[0].toInt()
+            val month = it[1].toInt()
+            val day = it[2].toInt()
+            month in 1..12 && day in 1..31 && (month != 2 || day <= 29) &&
+                    (month != 4 && month != 6 && month != 9 && month != 11 || day <= 30) &&
+                    year <= actualYear - 18
+        }
 
 
     }

@@ -2,10 +2,8 @@ package com.tihcodes.finanzapp.co.ui.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -158,6 +156,20 @@ fun LoginScreen(
                     )
                 }
             }
+            if (errorMessage.isNotEmpty()) {
+                LaunchedEffect(errorMessage) {
+                    delay(4000) // 3 segundos
+                    errorMessage = ""
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
 // Botón Login (solo habilitado si es válido)
             Button(
@@ -201,17 +213,7 @@ fun LoginScreen(
                     clicked = false
                 }
             }
-            if (errorMessage.isNotEmpty()) {
-                LaunchedEffect(errorMessage) {
-                    delay(3000) // 3 segundos
-                    errorMessage = ""
-                }
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-            }
+            Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
             TextButton(onClick = onForgotPasswordClick) {
                 Text(
                     text = "¿Olvidaste tú contraseña?",
