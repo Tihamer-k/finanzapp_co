@@ -4,7 +4,20 @@ import com.tihcodes.finanzapp.co.data.TransactionItem
 import com.tihcodes.finanzapp.co.data.TransactionType
 import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import dev.gitlive.firebase.firestore.FirebaseFirestore
-import finanzapp_co.composeapp.generated.resources.*
+import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_baby
+import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
+import finanzapp_co.composeapp.generated.resources.ic_food
+import finanzapp_co.composeapp.generated.resources.ic_gifts
+import finanzapp_co.composeapp.generated.resources.ic_groceries
+import finanzapp_co.composeapp.generated.resources.ic_home_expenses
+import finanzapp_co.composeapp.generated.resources.ic_medicine
+import finanzapp_co.composeapp.generated.resources.ic_moneysim
+import finanzapp_co.composeapp.generated.resources.ic_savings
+import finanzapp_co.composeapp.generated.resources.ic_savings_pig
+import finanzapp_co.composeapp.generated.resources.ic_transport
+import finanzapp_co.composeapp.generated.resources.ic_travel
+import finanzapp_co.composeapp.generated.resources.ic_work
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -26,11 +39,23 @@ class TransactionRepository(
     private val transactionDatabase: TransactionDatabase? = null,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 ) {
+
     private val _transactions = MutableStateFlow<List<TransactionItem>>(emptyList())
     val transactions: StateFlow<List<TransactionItem>> = _transactions.asStateFlow()
 
     private var isInitialized = false
     private var currentUserId: String = ""
+
+    // Simulación de almacenamiento local (puedes usar Firestore, Room, etc.)
+    private val balanceData = mutableMapOf<String, Pair<Double, Double>>() // userId -> (totalBalance, totalExpenses)
+
+    fun saveBalanceData(userId: String, totalBalance: Double, totalExpenses: Double) {
+        balanceData[userId] = Pair(totalBalance, totalExpenses)
+    }
+
+    fun getBalanceData(userId: String): Pair<Double, Double> {
+        return balanceData[userId] ?: Pair(0.0, 0.0) // Valores predeterminados si no hay datos
+    }
 
     /**
      * Initialize the repository with sample transactions if empty

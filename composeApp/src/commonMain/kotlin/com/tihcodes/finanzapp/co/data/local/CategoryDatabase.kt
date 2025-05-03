@@ -3,8 +3,21 @@ package com.tihcodes.finanzapp.co.data.local
 import androidx.compose.ui.graphics.Color
 import com.finanzapp.Database
 import com.tihcodes.finanzapp.co.data.CategoryItem
-import com.tihcodes.finanzapp.co.ui.screens.modules.categories.getSampleCategories
-import finanzapp_co.composeapp.generated.resources.*
+import com.tihcodes.finanzapp.co.utils.getSampleCategories
+import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_baby
+import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
+import finanzapp_co.composeapp.generated.resources.ic_food
+import finanzapp_co.composeapp.generated.resources.ic_gifts
+import finanzapp_co.composeapp.generated.resources.ic_groceries
+import finanzapp_co.composeapp.generated.resources.ic_home_expenses
+import finanzapp_co.composeapp.generated.resources.ic_medicine
+import finanzapp_co.composeapp.generated.resources.ic_moneysim
+import finanzapp_co.composeapp.generated.resources.ic_savings
+import finanzapp_co.composeapp.generated.resources.ic_savings_pig
+import finanzapp_co.composeapp.generated.resources.ic_transport
+import finanzapp_co.composeapp.generated.resources.ic_travel
+import finanzapp_co.composeapp.generated.resources.ic_work
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.DrawableResource
@@ -82,6 +95,19 @@ class CategoryDatabase(
 
     private fun generateId(): String {
         return Random.nextInt(100000, 999999).toString()
+    }
+
+    fun getCategoryByNameAndUserId(name: String, userId: String): CategoryItem? {
+        return categoryQueries.getCategoryByNameAndUserId(name, userId).executeAsOneOrNull()?.let { category ->
+            println("INFO: Reading category with name $name and userId $userId from database")
+            CategoryItem(
+                name = category.name,
+                icon = parseIconFromString(category.icon),
+                backgroundColor = parseColorFromString(category.color),
+                nameReference = category.nameReference,
+                userId = category.userId
+            )
+        }
     }
 
     private fun parseIconFromString(iconString: String): DrawableResource {

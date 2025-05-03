@@ -4,7 +4,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -12,7 +20,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -41,6 +55,10 @@ fun RecordsScreen(
     val listState = rememberLazyListState()
     val currentUser by viewModel.currentUser.collectAsState()
     val userId = currentUser?.id ?: ""
+    val finalTransactions by viewModel.filteredFinalTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
+    // Check if we're showing example data
+    var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
+    realTransactions = transactionRepository.getAllTransactions(userId)
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -150,13 +168,12 @@ fun RecordsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Check if we're showing example data
-                val realTransactions = transactionRepository.getAllTransactions(userId)
 
                 // Check and clear example data if needed
                 viewModel.checkAndClearExampleData(realTransactions)
 
-                val isShowingExampleData = realTransactions.isEmpty() && transactionsGrouped.isNotEmpty()
+                val isShowingExampleData =
+                    realTransactions.isEmpty() && transactionsGrouped.isNotEmpty()
 
                 // Show example data label if needed
                 if (isShowingExampleData) {
@@ -166,31 +183,54 @@ fun RecordsScreen(
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                }
 
-                // Lista de transacciones agrupadas
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    transactionsGrouped.forEach { entry ->
-                        val month = entry.key
-                        val transactions = entry.value
+                    // Lista de transacciones agrupadas
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        transactionsGrouped.forEach { entry ->
+                            val month = entry.key
+                            val transactions = entry.value
 
-                        item {
-                            Text(
-                                text = month,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                            )
+                            item {
+                                Text(
+                                    text = month,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+
+                            items(transactions) { transaction ->
+                                TransactionItemCard(transaction)
+                            }
                         }
+                    }
+                } else {
+                    // Lista de transacciones agrupadas
+                    LazyColumn(
+                        state = listState,
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        finalTransactions.forEach { entry ->
+                            val month = entry.key
+                            val transactions = entry.value
 
-                        items(transactions) { transaction ->
-                            TransactionItemCard(transaction)
+                            item {
+                                Text(
+                                    text = month,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+
+                            items(transactions) { transaction ->
+                                TransactionItemCard(transaction)
+                            }
                         }
                     }
                 }
             }
-        }
 
+        }
     }
 }

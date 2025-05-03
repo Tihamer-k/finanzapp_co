@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -17,14 +18,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.tihcodes.finanzapp.co.data.CategoryItem
+import com.tihcodes.finanzapp.co.data.TransactionItem
 import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.TopNavBar
@@ -47,6 +50,7 @@ fun CategoryDetailScreen(
     // Get current user ID from AuthViewModel
     val currentUser = authViewModel.currentUser.collectAsState().value
     val userId = currentUser?.id ?: ""
+    val finalTransactions by authViewModel.filteredFinalTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
 
     // Initialize repositories if needed with user ID and sync with Firestore
     LaunchedEffect(userId) {
@@ -69,14 +73,20 @@ fun CategoryDetailScreen(
 
     // Get transactions for this category
     val allTransactions by transactionRepository.transactions.collectAsState()
-    val categoryTransactions = allTransactions.filter { it.category == categoryName }
+    val categoryTransactions by remember { mutableStateOf(allTransactions.filter { it.category == categoryName }) }
+    val listState = rememberLazyListState()
+
 
     // Check if we're showing example data
-    val realTransactions = transactionRepository.getTransactionsByCategory(categoryName, userId)
-    val isShowingExampleData = realTransactions.isEmpty() && categoryTransactions.isNotEmpty()
+    authViewModel.setFinalTransactions(categoryTransactions)
 
-    // Show/hide FAB based on whether we're in the "More" category
-    val showFab = categoryItem != null && categoryItem.nameReference != "More"
+    // Show/hide FAB
+    val isFabVisible by remember {
+        derivedStateOf {
+            listState.firstVisibleItemScrollOffset == 0 ||
+                    listState.isScrollInProgress.not()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -89,7 +99,7 @@ fun CategoryDetailScreen(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = showFab,
+                visible = isFabVisible,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -125,72 +135,42 @@ fun CategoryDetailScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     categoryItem?.let { category ->
-                        if (category.nameReference == "More") {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues)
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = "Agregar nueva categoría",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
-                                NewCategoryForm(
-                                    onCreate = { name, icon, color ->
-                                        println("INFO: Creada nueva categoría: $name con ícono $icon y color $color")
-                                        // Create a new CategoryItem and add it to the repository
-                                        val newCategory = CategoryItem(
-                                            name = name,
-                                            icon = icon,
-                                            backgroundColor = color,
-                                            nameReference = name,
-                                            userId = userId
-                                        )
-                                        categoryRepository.addCategory(newCategory)
-                                        navController.popBackStack()
-                                    },
-                                    onCancel = {
-                                        println("INFO: Formulario cancelado")
-                                        navController.popBackStack()
-                                    }
-                                )
-                            }
-                        } else {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues)
-                                    .padding(16.dp)
-                            ) {
-                                Text(
-                                    text = "Categoría: ${category.name}",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier.padding(bottom = 8.dp)
-                                )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues)
+                                .padding(16.dp)
+                        ) {
+                            Text(
+                                text = "Categoría: ${category.name}",
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
 
-                                // Show example data label if needed
-                                if (isShowingExampleData) {
-                                    Text(
-                                        text = "Estos son ejemplos de registros. Se eliminarán cuando agregues tus propios registros.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.padding(bottom = 8.dp)
-                                    )
-                                }
+                            if (categoryTransactions.isEmpty()) {
+                                Text(
+                                    text = "No hay transacciones para esta categoría",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            } else {
+                                // Display transactions in a list
+                                LazyColumn(
+                                    state = listState,
+                                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    finalTransactions.forEach { entry ->
+                                        val month = entry.key
+                                        val transactions = entry.value
 
-                                if (categoryTransactions.isEmpty()) {
-                                    Text(
-                                        text = "No hay transacciones para esta categoría",
-                                        style = MaterialTheme.typography.bodyMedium
-                                    )
-                                } else {
-                                    // Display transactions in a list
-                                    LazyColumn(
-                                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                                    ) {
-                                        items(categoryTransactions) { transaction ->
+                                        item {
+                                            Text(
+                                                text = month,
+                                                style = MaterialTheme.typography.labelMedium,
+                                                color = MaterialTheme.colorScheme.primary,
+                                            )
+                                        }
+
+                                        items(transactions) { transaction ->
                                             TransactionItemCard(transaction)
                                         }
                                     }
@@ -200,9 +180,9 @@ fun CategoryDetailScreen(
                     }
                 }
             }
+
         }
     )
 }
 
 
-// Form components moved to NewCategoryScreen.kt

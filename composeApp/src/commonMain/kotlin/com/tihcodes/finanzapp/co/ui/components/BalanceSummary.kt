@@ -12,24 +12,35 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
-import kotlin.math.abs
 
 @Composable
 fun BalanceSummary(
     transactionRepository: TransactionRepository,
     userId: String
 ) {
-    // Calculate total balance and expenses
+    // Cargar datos persistidos
+    val (persistedBalance, persistedExpenses) = remember {
+        transactionRepository.getBalanceData(userId)
+    }
+
+    // Calcular balance y gastos actuales
     val transactions by transactionRepository.transactions.collectAsState()
     val totalBalance = transactionRepository.calculateTotalBalance(userId)
     val totalExpenses = transactionRepository.calculateTotalExpenses(userId)
+
+    // Guardar los valores calculados en el repositorio
+    LaunchedEffect(totalBalance, totalExpenses) {
+        transactionRepository.saveBalanceData(userId, totalBalance, totalExpenses)
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -44,9 +55,7 @@ fun BalanceSummary(
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
                 .padding(12.dp)
                 .width(140.dp)
-                .clickable {
-
-                }
+                .clickable { }
         ) {
             Text(
                 text = "Total Balance",
@@ -54,7 +63,7 @@ fun BalanceSummary(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "$$totalBalance",
+                text = "$${if (transactions.isEmpty()) persistedBalance else totalBalance}",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -67,7 +76,7 @@ fun BalanceSummary(
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
                 .padding(12.dp)
                 .width(140.dp)
-                .clickable {  }
+                .clickable { }
         ) {
             Text(
                 text = "Total Expense",
@@ -75,7 +84,7 @@ fun BalanceSummary(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "-$$totalExpenses",
+                text = "-$${if (transactions.isEmpty()) persistedExpenses else totalExpenses}",
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.error
             )

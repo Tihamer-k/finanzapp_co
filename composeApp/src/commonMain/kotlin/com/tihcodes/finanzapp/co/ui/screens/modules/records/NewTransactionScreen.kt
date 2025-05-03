@@ -39,7 +39,6 @@ import com.tihcodes.finanzapp.co.data.TransactionItem
 import com.tihcodes.finanzapp.co.data.TransactionType
 import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.getPlatform
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_budget
@@ -384,7 +383,7 @@ fun NewTransactionScreen(
                             title = title,
                             category = selectedCategory!!.name,
                             date = selectedDate,
-                            amount = if (type == TransactionType.EXPENSE) -amountValue else amountValue,
+                            amount = amountValue,
                             type = type,
                             icon = icon,
                             userId = effectiveUserId

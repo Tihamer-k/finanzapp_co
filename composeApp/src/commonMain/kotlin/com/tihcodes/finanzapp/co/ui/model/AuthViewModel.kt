@@ -25,6 +25,9 @@ class AuthViewModel(
     private val authService: AuthService,
 ) : BaseViewModel() {
 
+    private val _finalTransactions = MutableStateFlow<List<TransactionItem>>(emptyList())
+    val finalTransactions: StateFlow<List<TransactionItem>> = _finalTransactions.asStateFlow()
+
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -40,23 +43,10 @@ class AuthViewModel(
     private val _isProcessing = MutableStateFlow(false)
     val isProcessing = _isProcessing.asStateFlow()
 
-    private val _isButtonEnabled = MutableStateFlow(false)
-    val isButtonEnabled = _isButtonEnabled.asStateFlow()
-
     private val _authState = MutableStateFlow(false)
     val authState = _authState.asStateFlow()
 
     private val _isSignIn = MutableStateFlow(false)
-    val isSignIn = _isSignIn.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            uiState.collect { state ->
-                _isButtonEnabled.value = state.email.isNotBlank()
-                        && state.password.isNotBlank()
-            }
-        }
-    }
 
 
     init {
@@ -145,11 +135,13 @@ class AuthViewModel(
         if (realTransactions.isNotEmpty() && _transactions.value == exampleTransactions) {
             // Clear example data if we have real transactions
             _transactions.value = emptyList()
+            _finalTransactions.value = realTransactions
         } else if (realTransactions.isEmpty() && _transactions.value.isEmpty()) {
             // Restore example data if we have no real transactions and no example data
             _transactions.value = exampleTransactions
         }
     }
+
 
     private val _filterType = MutableStateFlow<TransactionType?>(null)
     val filterType: StateFlow<TransactionType?> = _filterType
@@ -172,6 +164,19 @@ class AuthViewModel(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
+    val filteredFinalTransactions = _finalTransactions
+        .combine(_filterType) { transactions, filter ->
+            when (filter) {
+                null -> transactions
+                TransactionType.INCOME -> transactions.filter { it.type == TransactionType.INCOME }
+                TransactionType.EXPENSE -> transactions.filter { it.type == TransactionType.EXPENSE }
+                TransactionType.BUDGET -> transactions.filter { it.type == TransactionType.BUDGET }
+            }
+        }
+        .map { transactions ->
+            transactions.groupBy<TransactionItem, String> { it.date.month.name }
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
 
     // Sección de autenticación
     fun onEmailChange(newValue: String) {
@@ -303,6 +308,10 @@ class AuthViewModel(
             }
             _isProcessing.value = false
         }
+    }
+
+    fun setFinalTransactions(realTransactions: List<TransactionItem>) {
+        _finalTransactions.value = realTransactions
     }
 }
 
