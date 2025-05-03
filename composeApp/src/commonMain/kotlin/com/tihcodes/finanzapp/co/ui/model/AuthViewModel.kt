@@ -1,13 +1,24 @@
 package com.tihcodes.finanzapp.co.ui.model
 
 import androidx.lifecycle.viewModelScope
-import com.tihcodes.finanzapp.co.data.*
+import com.tihcodes.finanzapp.co.data.Course
+import com.tihcodes.finanzapp.co.data.Reward
+import com.tihcodes.finanzapp.co.data.RewardType
+import com.tihcodes.finanzapp.co.data.TransactionItem
+import com.tihcodes.finanzapp.co.data.TransactionType
+import com.tihcodes.finanzapp.co.data.User
 import com.tihcodes.finanzapp.co.service.AuthService
 import com.tihcodes.finanzapp.co.ui.common.BaseViewModel
-import finanzapp_co.composeapp.generated.resources.*
-import kotlinx.coroutines.flow.*
+import com.tihcodes.finanzapp.co.utils.getSampleTransactions
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
 
 
 class AuthViewModel(
@@ -124,62 +135,7 @@ class AuthViewModel(
     }
 
     //    Sección de registros - Datos de ejemplo
-    private val exampleTransactions = listOf(
-        TransactionItem(
-            "1",
-            "Salarío",
-            "Ingresos",
-            LocalDate(2024, 4, 30),
-            4500000.0,
-            TransactionType.INCOME,
-            Res.drawable.ic_savings
-        ),
-        TransactionItem(
-            "2",
-            "mercado",
-            "Despensa",
-            LocalDate(2024, 4, 24),
-            -890000.0,
-            TransactionType.EXPENSE,
-            Res.drawable.ic_groceries
-        ),
-        TransactionItem(
-            "3",
-            "Arriendo",
-            "Hogar",//Housing
-            LocalDate(2024, 4, 8),
-            -620000.0,
-            TransactionType.EXPENSE,
-            Res.drawable.ic_home_expenses
-        ),
-        TransactionItem(
-            "4",
-            "Transmilenio",
-            "Transporte",
-            LocalDate(2024, 4, 8),
-            -200000.0,
-            TransactionType.EXPENSE,
-            Res.drawable.ic_transport
-        ),
-        TransactionItem(
-            "5",
-            "Netflix",
-            "Entretenimiento",
-            LocalDate(2024, 3, 31),
-            -26900.0,
-            TransactionType.EXPENSE,
-            Res.drawable.ic_entertainmentame
-        ),
-        TransactionItem(
-            "6",
-            "Horas extras",
-            "Ingresos",
-            LocalDate(2024, 3, 31),
-            200000.0,
-            TransactionType.INCOME,
-            Res.drawable.ic_savings
-        )
-    )
+    private val exampleTransactions = getSampleTransactions()
 
     private val _transactions = MutableStateFlow<List<TransactionItem>>(exampleTransactions)
     val transactions: StateFlow<List<TransactionItem>> = _transactions

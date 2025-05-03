@@ -4,7 +4,14 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -14,20 +21,24 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.tihcodes.finanzapp.co.data.CategoryItem
 import com.tihcodes.finanzapp.co.data.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.data.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.ui.BottomNavBar
 import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.BalanceSummary
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
-import finanzapp_co.composeapp.generated.resources.*
+import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_more
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 
@@ -157,22 +168,4 @@ fun CategoryScreen(
             }
         }
     }
-}
-
-fun getSampleCategories(): List<CategoryItem> {
-    return listOf(
-        CategoryItem("Food", Res.drawable.ic_food, Color(0xFF0000FF), "Food"), // blue
-        CategoryItem("Transport", Res.drawable.ic_transport, Color(0xFF00FFFF), "Transport"), // cyan
-        CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF00FF00), "Medicine"), // green
-        CategoryItem("Groceries", Res.drawable.ic_groceries, Color(0xFFFFA500), "Groceries"), // orange
-        CategoryItem("Rent", Res.drawable.ic_home_expenses, Color(0xFFFF0000), "Rent"), // red
-        CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFF800080), "Gifts"), // purple
-        CategoryItem("Savings", Res.drawable.ic_savings, Color(0xFFFFD700), "Savings"), // gold
-        CategoryItem(
-            "Entertainment",
-            Res.drawable.ic_entertainmentame,
-            Color(0xFF40E0D0), // turquoise
-            "Entertainment"
-        )
-    )
 }

@@ -14,7 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +31,7 @@ import com.tihcodes.finanzapp.co.ui.TopNavBar
 import com.tihcodes.finanzapp.co.ui.components.ExpandableFab
 import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.screens.modules.records.TransactionItemCard
+import com.tihcodes.finanzapp.co.utils.getSampleCategories
 import org.koin.compose.koinInject
 
 
