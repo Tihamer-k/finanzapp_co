@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.User
+import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
@@ -46,6 +47,7 @@ fun HomeScreen(
     val user = viewModel.currentUser.collectAsState().value ?: User()
     val listState = rememberLazyListState()
     val transactionRepository = koinInject<TransactionRepository>()
+    val categoryRepository = koinInject<CategoryRepository>()
     val userId = user.id
 
     // Detectar si deberíamos mostrar el FAB
@@ -57,6 +59,17 @@ fun HomeScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.syncUserData()
+    }
+    LaunchedEffect(userId) {
+        // First initialize with default categories
+        categoryRepository.initialize(userId)
+        transactionRepository.initialize(userId)
+
+        // Then sync with Firestore to get user-specific data
+        if (userId.isNotEmpty()) {
+            categoryRepository.syncCategories(userId)
+            transactionRepository.syncTransactions(userId)
+        }
     }
 
     if (isLoading) {

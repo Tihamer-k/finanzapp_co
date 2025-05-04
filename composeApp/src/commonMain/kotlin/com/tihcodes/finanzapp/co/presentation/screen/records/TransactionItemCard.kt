@@ -22,6 +22,7 @@ import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_food
 import org.jetbrains.compose.resources.DrawableResource
@@ -79,7 +80,7 @@ fun TransactionItemCard(transaction: TransactionItem) {
             }
 
             Text(
-                text = if (transaction.type == TransactionType.INCOME) "+$${transaction.amount}" else "-$${transaction.amount.absoluteValue}",
+                text = if (transaction.type == TransactionType.INCOME) "+$${formatDoubleWithCommas(transaction.amount)}" else "-$${formatDoubleWithCommas(transaction.amount.absoluteValue)}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (transaction.type == TransactionType.INCOME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )

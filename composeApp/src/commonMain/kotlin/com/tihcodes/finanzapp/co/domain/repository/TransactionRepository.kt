@@ -313,7 +313,7 @@ class TransactionRepository(
                     val title = doc.get("title") as? String ?: ""
                     val category = doc.get("category") as? String ?: ""
                     val dateString = doc.get("date") as? String ?: ""
-                    val amount = (doc.get("amount") as? Number)?.toDouble() ?: 0.0
+                    val amount = (doc.get("amount") as? String) ?: "0.0"
                     val typeString = doc.get("type") as? String ?: ""
                     val iconString = doc.get("icon") as? String ?: ""
 
@@ -326,6 +326,13 @@ class TransactionRepository(
                     // Parse icon from string
                     val icon = parseIconFromString(iconString)
 
+                    // Convert amount to Double
+                    val amountDouble = try {
+                        amount.toDouble()
+                    } catch (e: NumberFormatException) {
+                        0.0 // Default value if parsing fails
+                    }
+
                     // Create the transaction with the parsed values
                     userTransactions.add(
                         TransactionItem(
@@ -333,7 +340,7 @@ class TransactionRepository(
                             title = title,
                             category = category,
                             date = date,
-                            amount = amount,
+                            amount = amountDouble,
                             type = type,
                             icon = icon,
                             userId = userId
