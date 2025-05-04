@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,6 +39,12 @@ fun LearnScreen(
     val user = viewModel.currentUser.collectAsState().value ?: User()
     val courses by viewModel.courses.collectAsState()
     val progress by viewModel.progress.collectAsState()
+
+    LaunchedEffect(Unit) {
+        if (courses.isEmpty()) {
+            viewModel.loadCourses()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -113,9 +120,7 @@ fun LearnScreen(
                             onClick = {
                                 if (course.isUnlocked && !course.isCompleted) {
                                     if (course.hasPendingQuestions) {
-                                        navController.navigate("questions/${course.id}")
-                                    } else {
-                                        viewModel.completeCourse(course.id)
+                                        navController.navigate("course/${course.id}/isCompleted=${false}")
                                     }
                                 }
                             }
@@ -124,7 +129,6 @@ fun LearnScreen(
                 }
             }
         }
-
 
     }
 }

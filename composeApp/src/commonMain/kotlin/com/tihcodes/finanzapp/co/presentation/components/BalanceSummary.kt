@@ -64,7 +64,7 @@ fun BalanceSummary(
             )
             Text(
                 text = "$${if (transactions.isEmpty()) persistedBalance else totalBalance}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -85,7 +85,7 @@ fun BalanceSummary(
             )
             Text(
                 text = "-$${if (transactions.isEmpty()) persistedExpenses else totalExpenses}",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.error
             )
         }

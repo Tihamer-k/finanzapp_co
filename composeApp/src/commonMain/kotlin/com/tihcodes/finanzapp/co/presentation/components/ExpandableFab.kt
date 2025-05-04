@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_budget
 import finanzapp_co.composeapp.generated.resources.ic_close
 import finanzapp_co.composeapp.generated.resources.ic_expense
 import finanzapp_co.composeapp.generated.resources.ic_income
@@ -73,17 +72,17 @@ fun ExpandableFab(
                 )
             }
 
-            AnimatedVisibility(visible = expanded) {
-                SmallActionButton(
-                    text = "Presupuesto",
-                    icon = Res.drawable.ic_budget,
-                    color = MaterialTheme.colorScheme.tertiary, // Color para Presupuesto
-                    onClick = {
-                        expanded = false
-                        onAddBudget()
-                    }
-                )
-            }
+//            AnimatedVisibility(visible = expanded) {
+//                SmallActionButton(
+//                    text = "Presupuesto",
+//                    icon = Res.drawable.ic_budget,
+//                    color = MaterialTheme.colorScheme.tertiary, // Color para Presupuesto
+//                    onClick = {
+//                        expanded = false
+//                        onAddBudget()
+//                    }
+//                )
+//            }
 
             FloatingActionButton(
                 onClick = { expanded = !expanded },

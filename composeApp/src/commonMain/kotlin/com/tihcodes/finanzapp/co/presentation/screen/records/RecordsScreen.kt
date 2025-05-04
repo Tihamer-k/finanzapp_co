@@ -129,20 +129,15 @@ fun RecordsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Balance
-                CardBalanceSection(
-                    transactionRepository = transactionRepository,
-                    userId = userId
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 // Filtro botones
                 FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp)
+                        .padding(start = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    maxItemsInEachRow = Int.MAX_VALUE
+                    maxItemsInEachRow = Int.MAX_VALUE,
                 ) {
                     FilterButton(
                         label = "Todos",
@@ -159,11 +154,11 @@ fun RecordsScreen(
                         selected = filterType == TransactionType.EXPENSE,
                         onClick = { viewModel.setFilter(TransactionType.EXPENSE) }
                     )
-                    FilterButton(
-                        label = "Presupuestos",
-                        selected = filterType == TransactionType.BUDGET,
-                        onClick = { viewModel.setFilter(TransactionType.BUDGET) }
-                    )
+//                    FilterButton(
+//                        label = "Presupuestos",
+//                        selected = filterType == TransactionType.BUDGET,
+//                        onClick = { viewModel.setFilter(TransactionType.BUDGET) }
+//                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
