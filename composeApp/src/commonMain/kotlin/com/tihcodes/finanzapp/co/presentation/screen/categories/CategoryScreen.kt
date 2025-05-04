@@ -33,9 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
+import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
-import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_more

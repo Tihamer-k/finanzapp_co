@@ -18,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
-import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_food

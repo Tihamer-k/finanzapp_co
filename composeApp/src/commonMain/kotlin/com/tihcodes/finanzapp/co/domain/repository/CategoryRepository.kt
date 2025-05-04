@@ -1,7 +1,7 @@
 package com.tihcodes.finanzapp.co.domain.repository
 
-import com.tihcodes.finanzapp.co.domain.model.CategoryItem
 import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
+import com.tihcodes.finanzapp.co.domain.model.CategoryItem
 import com.tihcodes.finanzapp.co.utils.getColorIdentifier
 import com.tihcodes.finanzapp.co.utils.getIconIdentifier
 import com.tihcodes.finanzapp.co.utils.getSampleCategories

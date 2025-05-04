@@ -2,8 +2,8 @@ package com.tihcodes.finanzapp.co.data.repository
 
 
 import com.russhwolf.settings.Settings
-import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.data.local.UserDatabase
+import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.domain.repository.AuthRepository
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth

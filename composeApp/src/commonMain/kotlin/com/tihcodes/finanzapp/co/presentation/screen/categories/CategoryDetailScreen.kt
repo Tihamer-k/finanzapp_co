@@ -30,10 +30,10 @@ import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
-import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.screen.records.TransactionItemCard
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.utils.getSampleCategories
 import org.koin.compose.koinInject
 

@@ -1,8 +1,8 @@
 package com.tihcodes.finanzapp.co.domain.repository
 
+import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
-import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_baby

@@ -4,9 +4,9 @@ import com.russhwolf.settings.Settings
 import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import com.tihcodes.finanzapp.co.data.local.UserDatabase
+import com.tihcodes.finanzapp.co.data.repository.AuthRepositoryImpl
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.data.repository.AuthRepositoryImpl
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth

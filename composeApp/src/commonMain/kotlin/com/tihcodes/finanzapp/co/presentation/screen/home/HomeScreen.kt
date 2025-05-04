@@ -29,10 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
-import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
+import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
+import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import org.koin.compose.koinInject
 
