@@ -19,7 +19,7 @@ import com.tihcodes.finanzapp.co.presentation.screen.categories.CategoryScreen
 import com.tihcodes.finanzapp.co.presentation.screen.categories.NewCategoryScreen
 import com.tihcodes.finanzapp.co.presentation.screen.home.HomeScreen
 import com.tihcodes.finanzapp.co.presentation.screen.learn.CourseContentScreen
-import com.tihcodes.finanzapp.co.presentation.screen.learn.CoursePages
+import com.tihcodes.finanzapp.co.presentation.screen.learn.CoursesModule
 import com.tihcodes.finanzapp.co.presentation.screen.learn.LearnScreen
 import com.tihcodes.finanzapp.co.presentation.screen.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
@@ -261,7 +261,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-            CoursePages(
+            CoursesModule(
                 courseId = courseId,
                 viewModel = authViewModel,
                 navController = navController,

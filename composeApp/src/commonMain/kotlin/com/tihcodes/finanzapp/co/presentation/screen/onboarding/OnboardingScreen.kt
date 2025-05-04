@@ -2,16 +2,13 @@ package com.tihcodes.finanzapp.co.presentation.screen.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.presentation.components.indicatorBar
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_button_next
 import org.jetbrains.compose.resources.DrawableResource
@@ -137,34 +135,8 @@ fun OnboardingScreen(
             .background(MaterialTheme.colorScheme.background))
         // Indicador de Progreso
         indicatorBar(currentPage)
-
-
     }
 
 }
 
 
-@Composable
-fun indicatorBar(currentPage: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 24.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        repeat(4) { index ->
-            Box(
-                modifier = Modifier
-                    .size(20.dp)
-                    .padding(4.dp)
-                    .clip(RoundedCornerShape(80))
-                    .background(
-                        if (index == currentPage) MaterialTheme.colorScheme.primaryContainer
-                        else MaterialTheme.colorScheme.secondary.copy(alpha = 0.3f)
-                    )
-            )
-        }
-    }
-}

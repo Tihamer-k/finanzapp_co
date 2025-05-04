@@ -32,7 +32,7 @@ import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.idea
+import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -99,12 +99,12 @@ fun CourseContentScreen(
 
                 if (!showQuestions) {
                     Image(
-                        painter = painterResource(Res.drawable.idea),
+                        painter = painterResource(Res.drawable.onboarding_2_business_plan_amico),
                         contentDescription = null,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
-                            .height(100.dp)
+                            .height(120.dp)
                     )
                     Column(
                         modifier = Modifier

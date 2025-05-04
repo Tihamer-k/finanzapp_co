@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -56,9 +57,7 @@ fun RecordsScreen(
     val currentUser by viewModel.currentUser.collectAsState()
     val userId = currentUser?.id ?: ""
     val finalTransactions by viewModel.filteredFinalTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
-    // Check if we're showing example data
-    var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
-    realTransactions = transactionRepository.getAllTransactions(userId)
+
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -67,6 +66,22 @@ fun RecordsScreen(
                     listState.isScrollInProgress.not()
         }
     }
+
+    LaunchedEffect(userId) {
+        // First initialize with default categories
+        categoryRepository.initialize(userId)
+        transactionRepository.initialize(userId)
+
+        // Then sync with Firestore to get user-specific data
+        if (userId.isNotEmpty()) {
+            categoryRepository.syncCategories(userId)
+            transactionRepository.syncTransactions(userId)
+        }
+    }
+
+    // Check if we're showing example data
+    var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
+    realTransactions = transactionRepository.getAllTransactions(userId)
 
     Scaffold(
         topBar = {
