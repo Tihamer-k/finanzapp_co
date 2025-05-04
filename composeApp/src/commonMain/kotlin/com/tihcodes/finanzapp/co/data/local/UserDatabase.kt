@@ -1,7 +1,7 @@
 package com.tihcodes.finanzapp.co.data.local
 
 import com.finanzapp.Database
-import com.tihcodes.finanzapp.co.data.User
+import com.tihcodes.finanzapp.co.domain.model.User
 
 class UserDatabase(
     databaseDriverFactory: DatabaseDriverFactory

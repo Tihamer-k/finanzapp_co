@@ -1,0 +1,12 @@
+package com.tihcodes.finanzapp.co.domain.model
+
+import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.DrawableResource
+
+data class  CategoryItem(
+    val name: String,
+    val icon: DrawableResource,
+    val backgroundColor: Color,
+    val nameReference: String,
+    val userId: String = "" // Default empty string for backward compatibility
+)

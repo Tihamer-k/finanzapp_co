@@ -1,9 +1,9 @@
 package com.tihcodes.finanzapp.co.utils
 
 import androidx.compose.ui.graphics.Color
-import com.tihcodes.finanzapp.co.data.CategoryItem
-import com.tihcodes.finanzapp.co.data.TransactionItem
-import com.tihcodes.finanzapp.co.data.TransactionType
+import com.tihcodes.finanzapp.co.domain.model.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.TransactionItem
+import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
 import finanzapp_co.composeapp.generated.resources.ic_food

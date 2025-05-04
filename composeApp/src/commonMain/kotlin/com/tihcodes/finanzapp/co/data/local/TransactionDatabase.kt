@@ -1,8 +1,8 @@
 package com.tihcodes.finanzapp.co.data.local
 
 import com.finanzapp.Database
-import com.tihcodes.finanzapp.co.data.TransactionItem
-import com.tihcodes.finanzapp.co.data.TransactionType
+import com.tihcodes.finanzapp.co.domain.model.TransactionItem
+import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import finanzapp_co.composeapp.generated.resources.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

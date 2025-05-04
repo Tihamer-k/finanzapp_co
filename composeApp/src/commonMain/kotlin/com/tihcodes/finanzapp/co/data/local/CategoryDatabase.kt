@@ -2,7 +2,7 @@ package com.tihcodes.finanzapp.co.data.local
 
 import androidx.compose.ui.graphics.Color
 import com.finanzapp.Database
-import com.tihcodes.finanzapp.co.data.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.CategoryItem
 import com.tihcodes.finanzapp.co.utils.getSampleCategories
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_baby

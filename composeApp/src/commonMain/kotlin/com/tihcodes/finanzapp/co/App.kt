@@ -14,9 +14,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tihcodes.finanzapp.co.ui.Navigation
-import com.tihcodes.finanzapp.co.ui.model.AuthViewModel
-import com.tihcodes.finanzapp.co.ui.theme.Theme
+import com.tihcodes.finanzapp.co.presentation.components.Navigation
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val ONBOARDING_DESTINATION = "onboarding"
