@@ -57,7 +57,9 @@ fun RecordsScreen(
     val currentUser by viewModel.currentUser.collectAsState()
     val userId = currentUser?.id ?: ""
     val finalTransactions by viewModel.filteredFinalTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
+    val allTransactions by transactionRepository.transactions.collectAsState()
 
+    viewModel.setFinalTransactions(allTransactions)
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -78,6 +80,8 @@ fun RecordsScreen(
             transactionRepository.syncTransactions(userId)
         }
     }
+
+
 
     // Check if we're showing example data
     var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
@@ -147,7 +151,7 @@ fun RecordsScreen(
                 // Filtro botones
                 FlowRow(
                     modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                        .padding(horizontal = 8.dp)
                         .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
