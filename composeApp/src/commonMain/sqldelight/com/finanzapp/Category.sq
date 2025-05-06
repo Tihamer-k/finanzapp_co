@@ -8,7 +8,7 @@ getCategoriesByUserId:
 SELECT * FROM Category WHERE userId = ?;
 
 getCategoryByNameAndUserId:
-SELECT * FROM Category WHERE name = ? AND userId = ?;
+SELECT * FROM Category WHERE name = ? AND userId = ? LIMIT 1;
 
 insertCategory:
 INSERT INTO Category

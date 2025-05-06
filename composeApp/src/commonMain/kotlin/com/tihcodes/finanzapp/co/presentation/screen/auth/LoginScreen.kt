@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.screen.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,6 @@ import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
-import finanzapp_co.composeapp.generated.resources.ic_google
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
@@ -248,7 +246,7 @@ fun LoginScreen(
 //            style = MaterialTheme.typography.bodyMedium,
 //            color = MaterialTheme.colorScheme.onBackground
 //        )
-            Spacer(modifier = Modifier.height(16.dp))
+/*            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "O inicia sesión con",
@@ -263,7 +261,7 @@ fun LoginScreen(
                     contentDescription = "Iniciar con Google",
                     modifier = Modifier.size(48.dp)
                 )
-            }
+            }*/
 
             Spacer(modifier = Modifier.weight(0.1f).fillMaxWidth())
 

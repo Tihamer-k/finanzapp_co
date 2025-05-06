@@ -114,7 +114,7 @@ fun HomeScreen(
                         },
                         onAddBudget = {
                             navController.navigate("new_transaction_budget?userId=$userId")
-                        }
+                        },
                     )
                 }
             }

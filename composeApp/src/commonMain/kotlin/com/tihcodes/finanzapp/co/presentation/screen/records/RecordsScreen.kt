@@ -148,8 +148,7 @@ fun RecordsScreen(
                 FlowRow(
                     modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = 8.dp)
-                        .padding(bottom = 8.dp)
-                        .padding(start = 16.dp),
+                        .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     maxItemsInEachRow = Int.MAX_VALUE,

@@ -26,10 +26,10 @@ fun getSampleCategories(): List<CategoryItem> {
             "Transport"
         ), // cyan
         CategoryItem("Medicine", Res.drawable.ic_medicine, Color(0xFF00FF00), "Medicine"), // green
-        CategoryItem("Pantry", Res.drawable.ic_groceries, Color(0xFFFFA500), "Groceries"), // orange
-        CategoryItem("Housing", Res.drawable.ic_home_expenses, Color(0xFFFF0000), "Rent"), // red
+        CategoryItem("Pantry", Res.drawable.ic_groceries, Color(0xFFFFA500), "Pantry"), // orange
+        CategoryItem("Housing", Res.drawable.ic_home_expenses, Color(0xFFFF0000), "Housing"), // red
         CategoryItem("Gifts", Res.drawable.ic_gifts, Color(0xFF800080), "Gifts"), // purple
-        CategoryItem("Incomes", Res.drawable.ic_savings, Color(0xFFFFD700), "Savings"), // gold
+        CategoryItem("Incomes", Res.drawable.ic_savings, Color(0xFFFFD700), "Incomes"), // gold
         CategoryItem(
             "Entertainment",
             Res.drawable.ic_entertainmentame,
@@ -44,7 +44,7 @@ fun getSampleTransactions(): List<TransactionItem> {
         TransactionItem(
             "1",
             "Salarío",
-            "Ingresos",
+            "Incomes",
             LocalDate(2024, 4, 30),
             4500000.0,
             TransactionType.INCOME,
