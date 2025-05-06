@@ -73,7 +73,7 @@ fun TransactionItemCard(transaction: TransactionItem) {
                         transaction.date.month.name.take(
                             3
                         )
-                    }",
+                    } ${transaction.date.year}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

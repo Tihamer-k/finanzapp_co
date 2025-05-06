@@ -156,7 +156,7 @@ fun LoginScreen(
             }
             if (errorMessage.isNotEmpty()) {
                 LaunchedEffect(errorMessage) {
-                    delay(4000) // 3 segundos
+                    delay(4000) // 4 segundos
                     errorMessage = ""
                 }
                 Spacer(modifier = Modifier.height(16.dp))

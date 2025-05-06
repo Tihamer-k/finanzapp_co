@@ -45,6 +45,7 @@ import finanzapp_co.composeapp.generated.resources.ic_budget
 import finanzapp_co.composeapp.generated.resources.ic_calendar
 import finanzapp_co.composeapp.generated.resources.ic_expense
 import finanzapp_co.composeapp.generated.resources.ic_income
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -261,7 +262,7 @@ fun NewTransactionScreen(
                         println("[DEBUG_LOG] Date picker dismissed")
                         showDatePicker = false
                     },
-                    yearsRange = IntRange(1920, LocalDate.now().year + 10),
+                    yearsRange = IntRange(1920, LocalDate.now().year),
                 )
 
                 // Category dropdown
@@ -354,8 +355,13 @@ fun NewTransactionScreen(
                 }
 
                 // Save button
+                LaunchedEffect(errorMessage) {
+                    delay(4000) // 4 segundos
+                    errorMessage = ""
+                }
                 Button(
                     onClick = {
+
                         // Validar campos
                         if (title.isEmpty() || amount.isEmpty() || selectedCategory == null) {
                             isError = true
