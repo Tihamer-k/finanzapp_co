@@ -2,14 +2,14 @@ package com.tihcodes.finanzapp.co.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.tihcodes.finanzapp.co.domain.model.Course
-import com.tihcodes.finanzapp.co.domain.model.Question
 import com.tihcodes.finanzapp.co.domain.model.Reward
-import com.tihcodes.finanzapp.co.domain.model.RewardType
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.domain.repository.AuthRepository
 import com.tihcodes.finanzapp.co.presentation.common.BaseViewModel
+import com.tihcodes.finanzapp.co.presentation.screen.learn.getCourses
+import com.tihcodes.finanzapp.co.presentation.screen.learn.getRewardsContent
 import com.tihcodes.finanzapp.co.utils.getSampleTransactions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,6 +48,13 @@ class AuthViewModel(
     val authState = _authState.asStateFlow()
 
     private val _isSignIn = MutableStateFlow(false)
+    val isSignIn = _isSignIn.asStateFlow()
+
+    private val _isSignedOut = MutableStateFlow(false)
+    val isSignedOut = _isSignedOut.asStateFlow()
+
+    private val _showOnboarding = MutableStateFlow(true)
+    val showOnboarding = _showOnboarding.asStateFlow()
 
 
     init {
@@ -59,132 +66,20 @@ class AuthViewModel(
     }
 
     private val _courses = MutableStateFlow<List<Course>>(emptyList())
+
     fun loadCourses() {
-        _courses.value = listOf(
-            Course(
-                "1",
-                "Introducción a Finanzas",
-                "Conceptos básicos",
-                isUnlocked = true,
-                rewardId = "medal_1",
-                content = "Este curso tiene como objetivo brindarte una base sólida sobre qué son las finanzas personales y cómo influyen en tu vida diaria. Las finanzas personales se refieren a cómo administras el dinero que ganas, gastas, ahorras e inviertes.\n" +
-                        "Aprenderás a identificar tus ingresos (todo el dinero que recibes), tus gastos (todo lo que pagas o consumes), tu capacidad de ahorro, y la importancia de planificar lo que haces con tu dinero. Además, conocerás qué es un presupuesto, una herramienta fundamental que te ayuda a tener el control de tus finanzas, organizando tus ingresos y gastos para evitar endeudarte o gastar más de lo que tienes.",
-                questions = listOf(
-                    Question(
-                        text = "¿Qué es una tasa de interés?",
-                        options = listOf(
-                            "Un impuesto",
-                            "Una tarifa",
-                            "El costo del dinero",
-                            "Una multa"
-                        ),
-                        correctAnswer = "El costo del dinero"
-                    ),
-                    Question(
-                        text = "¿Qué es una tasa de interés?",
-                        options = listOf(
-                            "Un impuesto",
-                            "Una tarifa",
-                            "El costo del dinero",
-                            "Una multa"
-                        ),
-                        correctAnswer = "El costo del dinero"
-                    )
-                ),
-            ),
-            Course(
-                "2", "Ahorro Inteligente", "Cómo ahorrar mejor", rewardId = "medal_2",
-                content = "Ahorrar es separar una parte de tus ingresos para usarla en el futuro. No se trata solo de guardar lo que te sobra, sino de tener un plan. Ahorrar te permite enfrentar emergencias, alcanzar metas y evitar deudas.\n" +
-                        "Aprenderás estrategias como la regla 50/30/20, donde:\n" +
-                        "\n" +
-                        "El 50% de tu dinero se destina a necesidades (comida, vivienda, transporte).\n" +
-                        "\n" +
-                        "El 30% a deseos (salidas, entretenimiento).\n" +
-                        "\n" +
-                        "El 20% se debe ahorrar o usar para pagar deudas.\n" +
-                        "También conocerás los gastos hormiga, que son esos pequeños gastos diarios (como una bebida o snack) que parecen insignificantes pero que, acumulados, pueden afectar tu capacidad de ahorro.",
-                questions = listOf(
-                    Question(
-                        text = "¿Qué es una tasa de interés?",
-                        options = listOf(
-                            "Un impuesto",
-                            "Una tarifa",
-                            "El costo del dinero",
-                            "Una multa"
-                        ),
-                        correctAnswer = "El costo del dinero"
-                    )
-                ),
-            ),
-            Course(
-                "3", "Inversiones Básicas", "Fundamentos de inversión", rewardId = "sim_1",
-                content = "nvertir es usar tu dinero para generar más dinero. A diferencia del ahorro, las inversiones implican cierto riesgo, es decir, podrías ganar más, pero también podrías perder algo.\n" +
-                        "En este curso conocerás la relación entre riesgo y rendimiento: a mayor potencial de ganancia, mayor es el riesgo.\n" +
-                        "Verás los principales instrumentos de inversión, como:\n" +
-                        "\n" +
-                        "Acciones: comprar una parte de una empresa.\n" +
-                        "\n" +
-                        "Bonos: prestar dinero a una empresa o gobierno a cambio de intereses.\n" +
-                        "\n" +
-                        "Fondos de inversión: agrupaciones de dinero de muchas personas que invierten en distintos activos.\n" +
-                        "Además, aprenderás por qué comenzar a invertir temprano es una ventaja, gracias al interés compuesto, que hace crecer tu inversión a lo largo del tiempo.",
-                questions = listOf(
-                    Question(
-                        text = "¿Qué es una tasa de interés?",
-                        options = listOf(
-                            "Un impuesto",
-                            "Una tarifa",
-                            "El costo del dinero",
-                            "Una multa"
-                        ),
-                        correctAnswer = "El costo del dinero"
-                    )
-                ),
-            ),
-            Course(
-                "4", "Planificación Financiera", "Organiza tu futuro", rewardId = "sim_2",
-                content = "La planificación financiera consiste en establecer metas claras y organizar tus recursos (dinero, tiempo, información) para alcanzarlas. Una meta financiera puede ser ahorrar para comprar algo, viajar, estudiar o formar un negocio.\n" +
-                        "Este curso te enseñará a identificar metas a corto, mediano y largo plazo, y a trazar un plan con fechas, cantidades y estrategias para lograr cada una.\n" +
-                        "También verás la importancia de tener un fondo de emergencia, un dinero reservado para imprevistos como una enfermedad o pérdida de ingresos.\n" +
-                        "Planificar tus finanzas desde joven te da más libertad y seguridad en el futuro.\n" +
-                        "\n",
-                questions = listOf(
-                    Question(
-                        text = "¿Qué es una tasa de interés?",
-                        options = listOf(
-                            "Un impuesto",
-                            "Una tarifa",
-                            "El costo del dinero",
-                            "Una multa"
-                        ),
-                        correctAnswer = "El costo del dinero"
-                    )
-                ),
-            )
-        )
+        _courses.value = getCourses()
     }
 
-    val courses: StateFlow<List<Course>> = _courses
+    val courses: StateFlow<List<Course>> = _courses.asStateFlow()
 
-    private val _rewards = MutableStateFlow<List<Reward>>(
-        listOf(
-            Reward("medal_1", "Medalla de Inicio", "Completaste el primer curso", RewardType.MEDAL),
-            Reward("medal_2", "Medalla de Ahorro", "Dominaste el ahorro", RewardType.MEDAL),
-            Reward(
-                "sim_1",
-                "Simulador de Inversión",
-                "Prueba escenarios reales",
-                RewardType.SIMULATOR
-            ),
-            Reward(
-                "sim_2",
-                "Simulador de Finanzas",
-                "Organiza tu futuro financiero",
-                RewardType.SIMULATOR
-            )
-        )
-    )
-    val rewards: StateFlow<List<Reward>> = _rewards
+    private val _rewards = MutableStateFlow<List<Reward>>(emptyList())
+
+    fun loadRewards(){
+        _rewards.value = getRewardsContent()
+    }
+
+    val rewards: StateFlow<List<Reward>> = _rewards.asStateFlow()
 
     val progress: StateFlow<Float> = _courses.map { list ->
         val total = list.size
@@ -219,7 +114,7 @@ class AuthViewModel(
     private val exampleTransactions = getSampleTransactions()
 
     private val _transactions = MutableStateFlow<List<TransactionItem>>(exampleTransactions)
-    val transactions: StateFlow<List<TransactionItem>> = _transactions
+    val transactions: StateFlow<List<TransactionItem>> = _transactions.asStateFlow()
 
     // Function to check if we should show example data
     fun checkAndClearExampleData(realTransactions: List<TransactionItem>) {
@@ -308,13 +203,13 @@ class AuthViewModel(
     }
 
     fun onSignInClick() {
-
         launchWithCatchingException {
             _isProcessing.value = true
             try {
                 authRepository.authenticate(_uiState.value.email, _uiState.value.password)
-                _authState.value = true
+                _authState.value = true // Actualiza el estado de autenticación
                 _isSignIn.value = true
+                _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
@@ -324,12 +219,14 @@ class AuthViewModel(
         }
     }
 
-
     fun onSignOut() {
         launchWithCatchingException {
             authRepository.signOut()
             _isSignIn.value = false
-            _currentUser.value = User()
+            _isSignedOut.value = true
+            _currentUser.value = null
+            _authState.value = false
+            _uiState.update { LoginUiState() } // Reset UI state
         }
     }
 
@@ -345,8 +242,9 @@ class AuthViewModel(
                     password = _uiState.value.password,
                     date = _uiState.value.date
                 )
-                _authState.value = true
+                _authState.value = true // Actualiza el estado de autenticación
                 _isSignIn.value = true
+                _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
@@ -396,8 +294,9 @@ class AuthViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+            } finally {
+                _isProcessing.value = false
             }
-            _isProcessing.value = false
         }
     }
 
@@ -408,6 +307,7 @@ class AuthViewModel(
 
 
 data class LoginUiState(
+    var id: String = "",
     var email: String = "",
     var password: String = "",
     var name: String = "",
@@ -415,3 +315,4 @@ data class LoginUiState(
     var phone: String = "",
     var date: String = "",
 )
+

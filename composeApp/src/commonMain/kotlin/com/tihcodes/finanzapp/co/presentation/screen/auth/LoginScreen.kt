@@ -169,14 +169,14 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
-// Botón Login (solo habilitado si es válido)
             Button(
                 onClick = {
                     viewModel.onSignInClick()
                     clicked = true
                 },
                 enabled = isFormValid,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .size(width = 200.dp, height = 48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,

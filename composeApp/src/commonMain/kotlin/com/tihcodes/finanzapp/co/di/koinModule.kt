@@ -27,8 +27,12 @@ val sharedModule = module {
         databaseDriverFactory = get(),
     ) }
     single<Settings> { Settings() }
-    single<FirebaseAuth> { Firebase.auth }
-    single<FirebaseFirestore> { Firebase.firestore }
+    single<FirebaseAuth> {
+        Firebase.auth // Asegúrate de que FirebaseApp esté inicializado antes de acceder a esto
+    }
+    single<FirebaseFirestore> {
+        Firebase.firestore
+    }
     single<CategoryDatabase> { CategoryDatabase(databaseDriverFactory = get()) }
     single<TransactionDatabase> { TransactionDatabase(databaseDriverFactory = get()) }
     single { CategoryRepository(firestore = get<FirebaseFirestore>(), categoryDatabase = get<CategoryDatabase>()) }
@@ -50,3 +54,4 @@ fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
         modules(targetModule, sharedModule)
     }
 }
+
