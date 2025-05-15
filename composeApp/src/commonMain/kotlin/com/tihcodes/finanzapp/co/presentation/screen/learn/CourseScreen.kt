@@ -83,7 +83,7 @@ fun CourseContentScreen(
                     .background(MaterialTheme.colorScheme.background),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(8.dp))
                 Text(
                     course.description,
                     style = MaterialTheme.typography.titleMedium,
@@ -93,7 +93,7 @@ fun CourseContentScreen(
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(8.dp))
 
 
 
@@ -104,7 +104,7 @@ fun CourseContentScreen(
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
-                            .height(120.dp)
+                            .height(160.dp)
                     )
                     Column(
                         modifier = Modifier
@@ -120,7 +120,7 @@ fun CourseContentScreen(
                             modifier = Modifier.padding(18.dp)
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Justify
                         )
                     }
 

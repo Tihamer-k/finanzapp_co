@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.domain.model.Reward
 import com.tihcodes.finanzapp.co.domain.model.RewardType
 import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_gifts
-import finanzapp_co.composeapp.generated.resources.ic_rewards
+import finanzapp_co.composeapp.generated.resources.rewards__gold_medal
+import finanzapp_co.composeapp.generated.resources.rewards__medal_cup
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -49,8 +49,8 @@ fun RewardItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             val icon = when (reward.type) {
-                RewardType.MEDAL -> Res.drawable.ic_gifts//ic_medal
-                RewardType.SIMULATOR -> Res.drawable.ic_rewards//ic_simulator
+                RewardType.MEDAL -> Res.drawable.rewards__gold_medal//ic_medal
+                RewardType.SIMULATOR -> Res.drawable.rewards__medal_cup//ic_simulator
             }
 
             Image(

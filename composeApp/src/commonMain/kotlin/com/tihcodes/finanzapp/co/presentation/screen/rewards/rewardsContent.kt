@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.presentation.screen.learn
+package com.tihcodes.finanzapp.co.presentation.screen.rewards
 
 import com.tihcodes.finanzapp.co.domain.model.Reward
 import com.tihcodes.finanzapp.co.domain.model.RewardType

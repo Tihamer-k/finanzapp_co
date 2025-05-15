@@ -36,6 +36,7 @@ fun CoursePages(
     description: String,
     onNextClick: () -> Unit,
     currentPage: Int,
+    total: Int,
 ) {
     Scaffold { paddingValues ->
 
@@ -73,12 +74,12 @@ fun CoursePages(
                     text = description.replace("\\n", "\n")
                         .replace("\\t", "\t")
                         .replace("\\r", "\r"),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center
                 )
             }
-            Spacer(modifier = Modifier.height(38.dp))
+            Spacer(modifier = Modifier.weight(0.3f))
 
             Column(
                 modifier = Modifier
@@ -88,14 +89,14 @@ fun CoursePages(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                Spacer(modifier = Modifier.height(42.dp))
+                Spacer(modifier = Modifier.weight(0.3f))
                 Image(
                     painter = painterResource(imageRes),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .height(280.dp)
+                        .height(240.dp)
                 )
                 Spacer(modifier = Modifier.weight(0.3f))
                 Button(
@@ -117,7 +118,7 @@ fun CoursePages(
                 }
                 Spacer(modifier = Modifier.height(14.dp).fillMaxWidth())
                 // Indicador de Progreso
-                indicatorBar(currentPage)
+                indicatorBar(currentPage, total)
             }
         }
 

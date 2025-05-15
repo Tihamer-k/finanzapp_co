@@ -9,7 +9,7 @@ import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.domain.repository.AuthRepository
 import com.tihcodes.finanzapp.co.presentation.common.BaseViewModel
 import com.tihcodes.finanzapp.co.presentation.screen.learn.getCourses
-import com.tihcodes.finanzapp.co.presentation.screen.learn.getRewardsContent
+import com.tihcodes.finanzapp.co.presentation.screen.rewards.getRewardsContent
 import com.tihcodes.finanzapp.co.utils.getSampleTransactions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

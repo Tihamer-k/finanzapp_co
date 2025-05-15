@@ -35,7 +35,8 @@ fun OnboardingScreen(
     title: String,
     description: String,
     onNextClick: () -> Unit,
-    currentPage: Int
+    currentPage: Int,
+    total: Int
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -134,7 +135,7 @@ fun OnboardingScreen(
         Spacer(modifier = Modifier.height(14.dp).fillMaxWidth()
             .background(MaterialTheme.colorScheme.background))
         // Indicador de Progreso
-        indicatorBar(currentPage)
+        indicatorBar(currentPage, total)
     }
 
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun indicatorBar(currentPage: Int) {
+fun indicatorBar(currentPage: Int, total: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,7 +24,7 @@ fun indicatorBar(currentPage: Int) {
             .padding(bottom = 24.dp),
         horizontalArrangement = Arrangement.Center
     ) {
-        repeat(4) { index ->
+        repeat(total) { index ->
             Box(
                 modifier = Modifier
                     .size(20.dp)
