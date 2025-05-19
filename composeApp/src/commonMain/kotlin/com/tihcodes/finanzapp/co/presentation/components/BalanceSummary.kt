@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
+import finanzapp_co.composeapp.generated.resources.Res
+import finanzapp_co.composeapp.generated.resources.ic_more
+import kotlinx.datetime.Clock
 import kotlinx.datetime.minus
 import kotlinx.datetime.toLocalDateTime
 
@@ -44,10 +47,27 @@ fun BalanceSummary(
     val transactions by transactionRepository.transactions.collectAsState()
 
     // Filtrar transacciones según el segmento seleccionado
-    val now = kotlinx.datetime.Clock.System.now()
+    val now = Clock.System.now()
         .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
     val filteredTransactions = remember(transactions, selectedSegment) {
-        transactions.filter { transaction ->
+        val previousBalance = when (selectedSegment) {
+            0, 1, 2 -> {
+                // Para Día, Semana y Mes, sumar el saldo a favor de meses anteriores
+                transactions.filter {
+                    it.date.year < now.year ||
+                            (it.date.year == now.year && it.date.monthNumber < now.monthNumber)
+                }
+                    .sumOf {
+                        when (it.type) {
+                            TransactionType.INCOME -> it.amount
+                            TransactionType.EXPENSE -> -it.amount
+                            TransactionType.BUDGET -> 0.0
+                        }
+                    }
+            }
+            else -> 0.0
+        }
+        val filtered = transactions.filter { transaction ->
             when (selectedSegment) {
                 0 -> transaction.date == now // Día
                 1 -> {
@@ -57,11 +77,27 @@ fun BalanceSummary(
                     )
                     transaction.date in startOfWeek..now
                 }
-
                 2 -> transaction.date.year == now.year && transaction.date.monthNumber == now.monthNumber // Mes
                 3 -> transaction.date.year == now.year // Año
                 else -> true
             }
+        }
+        if (previousBalance != 0.0) {
+            // Agrega un "saldo anterior" ficticio al inicio de la lista
+            listOf(
+                com.tihcodes.finanzapp.co.domain.model.TransactionItem(
+                    id = "saldo_anterior",
+                    title = "Saldo anterior",
+                    category = "",
+                    date = now,
+                    amount = previousBalance,
+                    type = TransactionType.INCOME,
+                    icon = Res.drawable.ic_more,
+                    userId = userId
+                )
+            ) + filtered
+        } else {
+            filtered
         }
     }
 
