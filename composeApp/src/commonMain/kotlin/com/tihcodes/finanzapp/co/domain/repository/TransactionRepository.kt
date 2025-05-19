@@ -3,21 +3,10 @@ package com.tihcodes.finanzapp.co.domain.repository
 import com.tihcodes.finanzapp.co.data.local.TransactionDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
+import com.tihcodes.finanzapp.co.utils.getIconIdentifier
+import com.tihcodes.finanzapp.co.utils.parseIconFromString
+import com.tihcodes.finanzapp.co.utils.parseTransactionType
 import dev.gitlive.firebase.firestore.FirebaseFirestore
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_baby
-import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
-import finanzapp_co.composeapp.generated.resources.ic_food
-import finanzapp_co.composeapp.generated.resources.ic_gifts
-import finanzapp_co.composeapp.generated.resources.ic_groceries
-import finanzapp_co.composeapp.generated.resources.ic_home_expenses
-import finanzapp_co.composeapp.generated.resources.ic_medicine
-import finanzapp_co.composeapp.generated.resources.ic_moneysim
-import finanzapp_co.composeapp.generated.resources.ic_savings
-import finanzapp_co.composeapp.generated.resources.ic_savings_pig
-import finanzapp_co.composeapp.generated.resources.ic_transport
-import finanzapp_co.composeapp.generated.resources.ic_travel
-import finanzapp_co.composeapp.generated.resources.ic_work
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,7 +16,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-import org.jetbrains.compose.resources.DrawableResource
 import kotlin.random.Random
 
 /**
@@ -313,7 +301,7 @@ class TransactionRepository(
                     val title = doc.get("title") as? String ?: ""
                     val category = doc.get("category") as? String ?: ""
                     val dateString = doc.get("date") as? String ?: ""
-                    val amount = (doc.get("amount") as? Number)?.toDouble() ?: 0.0
+                    val amount = (doc.get("amount") as? String) ?: "0.0"
                     val typeString = doc.get("type") as? String ?: ""
                     val iconString = doc.get("icon") as? String ?: ""
 
@@ -326,6 +314,13 @@ class TransactionRepository(
                     // Parse icon from string
                     val icon = parseIconFromString(iconString)
 
+                    // Convert amount to Double
+                    val amountDouble = try {
+                        amount.toDouble()
+                    } catch (e: NumberFormatException) {
+                        0.0 // Default value if parsing fails
+                    }
+
                     // Create the transaction with the parsed values
                     userTransactions.add(
                         TransactionItem(
@@ -333,7 +328,7 @@ class TransactionRepository(
                             title = title,
                             category = category,
                             date = date,
-                            amount = amount,
+                            amount = amountDouble,
                             type = type,
                             icon = icon,
                             userId = userId
@@ -428,52 +423,5 @@ class TransactionRepository(
 
     private fun formatDate(date: LocalDate): String {
         return "${date.year}-${date.monthNumber}-${date.dayOfMonth}"
-    }
-
-    private fun parseTransactionType(typeString: String): TransactionType {
-        return when (typeString) {
-            "INCOME" -> TransactionType.INCOME
-            "EXPENSE" -> TransactionType.EXPENSE
-            "BUDGET" -> TransactionType.BUDGET
-            else -> TransactionType.EXPENSE // Default type
-        }
-    }
-
-    private fun parseIconFromString(iconString: String): DrawableResource {
-        return when (iconString) {
-            "ic_gifts" -> Res.drawable.ic_gifts
-            "ic_food" -> Res.drawable.ic_food
-            "ic_transport" -> Res.drawable.ic_transport
-            "ic_baby" -> Res.drawable.ic_baby
-            "ic_work" -> Res.drawable.ic_work
-            "ic_travel" -> Res.drawable.ic_travel
-            "ic_entertainmentame" -> Res.drawable.ic_entertainmentame
-            "ic_moneysim" -> Res.drawable.ic_moneysim
-            "ic_medicine" -> Res.drawable.ic_medicine
-            "ic_home_expenses" -> Res.drawable.ic_home_expenses
-            "ic_groceries" -> Res.drawable.ic_groceries
-            "ic_savings_pig" -> Res.drawable.ic_savings_pig
-            "ic_savings" -> Res.drawable.ic_savings
-            else -> Res.drawable.ic_food // Default icon
-        }
-    }
-
-    private fun getIconIdentifier(icon: DrawableResource): String {
-        return when (icon) {
-            Res.drawable.ic_gifts -> "ic_gifts"
-            Res.drawable.ic_food -> "ic_food"
-            Res.drawable.ic_transport -> "ic_transport"
-            Res.drawable.ic_baby -> "ic_baby"
-            Res.drawable.ic_work -> "ic_work"
-            Res.drawable.ic_travel -> "ic_travel"
-            Res.drawable.ic_entertainmentame -> "ic_entertainmentame"
-            Res.drawable.ic_moneysim -> "ic_moneysim"
-            Res.drawable.ic_medicine -> "ic_medicine"
-            Res.drawable.ic_home_expenses -> "ic_home_expenses"
-            Res.drawable.ic_groceries -> "ic_groceries"
-            Res.drawable.ic_savings_pig -> "ic_savings_pig"
-            Res.drawable.ic_savings -> "ic_savings"
-            else -> "ic_food" // Default icon
-        }
     }
 }

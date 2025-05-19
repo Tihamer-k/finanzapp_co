@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,17 +28,23 @@ import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LearnScreen(
     viewModel: AuthViewModel,
-    onLogoutClick: () -> Unit,
     navController: NavHostController
 ) {
 
     val user = viewModel.currentUser.collectAsState().value ?: User()
-    val courses by viewModel.courses.collectAsState()
-    val progress by viewModel.progress.collectAsState()
+    val courseTracking = koinViewModel<CourseTrackingViewModel>()
+    val courses by courseTracking.courses.collectAsState()
+    val progress by courseTracking.progress.collectAsState()
+
+    LaunchedEffect(user.id) {
+        courseTracking.loadCourses(user.id)
+    }
 
     Scaffold(
         topBar = {
@@ -113,9 +120,7 @@ fun LearnScreen(
                             onClick = {
                                 if (course.isUnlocked && !course.isCompleted) {
                                     if (course.hasPendingQuestions) {
-                                        navController.navigate("questions/${course.id}")
-                                    } else {
-                                        viewModel.completeCourse(course.id)
+                                        navController.navigate("course/${course.id}/isCompleted=${false}")
                                     }
                                 }
                             }
@@ -124,7 +129,6 @@ fun LearnScreen(
                 }
             }
         }
-
 
     }
 }

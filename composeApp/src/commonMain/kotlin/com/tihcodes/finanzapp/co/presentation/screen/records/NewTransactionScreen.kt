@@ -19,6 +19,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,6 +46,7 @@ import finanzapp_co.composeapp.generated.resources.ic_budget
 import finanzapp_co.composeapp.generated.resources.ic_calendar
 import finanzapp_co.composeapp.generated.resources.ic_expense
 import finanzapp_co.composeapp.generated.resources.ic_income
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -261,7 +263,7 @@ fun NewTransactionScreen(
                         println("[DEBUG_LOG] Date picker dismissed")
                         showDatePicker = false
                     },
-                    yearsRange = IntRange(1920, LocalDate.now().year + 10),
+                    yearsRange = IntRange(1920, LocalDate.now().year),
                 )
 
                 // Category dropdown
@@ -308,7 +310,7 @@ fun NewTransactionScreen(
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .menuAnchor(),
+                                .menuAnchor(MenuAnchorType.PrimaryEditable, true),
                             isError = isError && selectedCategory == null
                         )
 
@@ -354,8 +356,13 @@ fun NewTransactionScreen(
                 }
 
                 // Save button
+                LaunchedEffect(errorMessage) {
+                    delay(4000) // 4 segundos
+                    errorMessage = ""
+                }
                 Button(
                     onClick = {
+
                         // Validar campos
                         if (title.isEmpty() || amount.isEmpty() || selectedCategory == null) {
                             isError = true

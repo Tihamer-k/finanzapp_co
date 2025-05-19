@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
+import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
 
 @Composable
 fun BalanceSummary(
@@ -54,7 +55,7 @@ fun BalanceSummary(
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
                 .padding(12.dp)
-                .width(140.dp)
+                .width(160.dp)
                 .clickable { }
         ) {
             Text(
@@ -63,8 +64,8 @@ fun BalanceSummary(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "$${if (transactions.isEmpty()) persistedBalance else totalBalance}",
-                style = MaterialTheme.typography.titleLarge,
+                text = "$${if (transactions.isEmpty()) formatDoubleWithCommas(persistedBalance) else formatDoubleWithCommas(totalBalance)}",
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
@@ -75,7 +76,7 @@ fun BalanceSummary(
                 .clip(RoundedCornerShape(16.dp))
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
                 .padding(12.dp)
-                .width(140.dp)
+                .width(160.dp)
                 .clickable { }
         ) {
             Text(
@@ -84,8 +85,8 @@ fun BalanceSummary(
                 color = MaterialTheme.colorScheme.onBackground
             )
             Text(
-                text = "-$${if (transactions.isEmpty()) persistedExpenses else totalExpenses}",
-                style = MaterialTheme.typography.titleLarge,
+                text = "-$${if (transactions.isEmpty()) formatDoubleWithCommas(persistedExpenses) else formatDoubleWithCommas(totalExpenses)}",
+                style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.error
             )
         }

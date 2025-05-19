@@ -22,9 +22,7 @@ import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_food
-import org.jetbrains.compose.resources.DrawableResource
+import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import kotlin.math.absoluteValue
@@ -46,9 +44,8 @@ fun TransactionItemCard(transaction: TransactionItem) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val icon = getIconForCategory(transaction.category, userId, categoryBD)
             Image(
-                painter = painterResource(icon),
+                painter = painterResource(transaction.icon),
                 contentDescription = transaction.title,
                 modifier = Modifier.size(48.dp)
                     .padding(4.dp)
@@ -72,21 +69,17 @@ fun TransactionItemCard(transaction: TransactionItem) {
                         transaction.date.month.name.take(
                             3
                         )
-                    }",
+                    } ${transaction.date.year}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Text(
-                text = if (transaction.type == TransactionType.INCOME) "+$${transaction.amount}" else "-$${transaction.amount.absoluteValue}",
+                text = if (transaction.type == TransactionType.INCOME) "+$${formatDoubleWithCommas(transaction.amount)}" else "-$${formatDoubleWithCommas(transaction.amount.absoluteValue)}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (transaction.type == TransactionType.INCOME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
         }
     }
-}
-
-fun getIconForCategory(category: String, userId: String, categoryBD: CategoryDatabase): DrawableResource {
-    return categoryBD.getCategoryByNameAndUserId(category, userId)?.icon ?: Res.drawable.ic_food
 }

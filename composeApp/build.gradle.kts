@@ -27,7 +27,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         iosMain.dependencies {
             implementation(libs.sqldelight.ios)
@@ -57,7 +57,6 @@ kotlin {
             implementation(libs.firebase.auth)
             implementation(libs.firebase.firestore)
             implementation(libs.firebase.database)
-            implementation(libs.accompanist.systemuicontroller)
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
@@ -72,9 +71,10 @@ kotlin {
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.no.arg)
 
-            implementation("network.chaintech:kmp-date-time-picker:1.0.7")
+            implementation(libs.kmp.date.time.picker)
         }
     }
+    task("testClasses")
 }
 
 android {

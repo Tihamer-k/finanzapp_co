@@ -28,12 +28,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.User
+import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
 import org.koin.compose.koinInject
 
 
@@ -46,7 +48,9 @@ fun HomeScreen(
     val user = viewModel.currentUser.collectAsState().value ?: User()
     val listState = rememberLazyListState()
     val transactionRepository = koinInject<TransactionRepository>()
+    val categoryRepository = koinInject<CategoryRepository>()
     val userId = user.id
+    val courseTracking = koinInject<CourseTrackingViewModel>()
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -56,7 +60,19 @@ fun HomeScreen(
         }
     }
     LaunchedEffect(Unit) {
-            viewModel.syncUserData()
+        viewModel.syncUserData()
+    }
+    LaunchedEffect(userId) {
+        // First initialize with default categories
+        categoryRepository.initialize(userId)
+        transactionRepository.initialize(userId)
+        courseTracking.setUserId(userId)
+
+        // Then sync with Firestore to get user-specific data
+        if (userId.isNotEmpty()) {
+            categoryRepository.syncCategories(userId)
+            transactionRepository.syncTransactions(userId)
+        }
     }
 
     if (isLoading) {
@@ -101,7 +117,7 @@ fun HomeScreen(
                         },
                         onAddBudget = {
                             navController.navigate("new_transaction_budget?userId=$userId")
-                        }
+                        },
                     )
                 }
             }

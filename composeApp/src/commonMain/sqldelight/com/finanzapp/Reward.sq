@@ -1,0 +1,15 @@
+getRewardById:
+SELECT * FROM Rewards WHERE userId = ? AND id = ? LIMIT 1;
+
+getRewardsByUserId:
+SELECT * FROM Rewards WHERE userId = ?;
+
+insertReward:
+INSERT INTO Rewards (
+    id,
+    name,
+    description,
+    type,
+    isUnlocked,
+    userId
+) VALUES (?, ?, ?, ?, ?, ?);

@@ -56,14 +56,16 @@ fun CategoryScreen(
     // Get current user ID
     val userId = viewModel.currentUser.collectAsState().value?.id ?: ""
 
-    // Initialize repository if needed with user ID and sync with Firestore
+
     LaunchedEffect(userId) {
         // First initialize with default categories
         categoryRepository.initialize(userId)
+        transactionRepository.initialize(userId)
 
-        // Then sync with Firestore to get user-specific categories
+        // Then sync with Firestore to get user-specific data
         if (userId.isNotEmpty()) {
             categoryRepository.syncCategories(userId)
+            transactionRepository.syncTransactions(userId)
         }
     }
 

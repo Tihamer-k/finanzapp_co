@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -56,9 +57,9 @@ fun RecordsScreen(
     val currentUser by viewModel.currentUser.collectAsState()
     val userId = currentUser?.id ?: ""
     val finalTransactions by viewModel.filteredFinalTransactions.collectAsState(initial = emptyMap<String, List<TransactionItem>>())
-    // Check if we're showing example data
-    var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
-    realTransactions = transactionRepository.getAllTransactions(userId)
+    val allTransactions by transactionRepository.transactions.collectAsState()
+
+    viewModel.setFinalTransactions(allTransactions)
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -67,6 +68,24 @@ fun RecordsScreen(
                     listState.isScrollInProgress.not()
         }
     }
+
+    LaunchedEffect(userId) {
+        // First initialize with default categories
+        categoryRepository.initialize(userId)
+        transactionRepository.initialize(userId)
+
+        // Then sync with Firestore to get user-specific data
+        if (userId.isNotEmpty()) {
+            categoryRepository.syncCategories(userId)
+            transactionRepository.syncTransactions(userId)
+        }
+    }
+
+
+
+    // Check if we're showing example data
+    var realTransactions by remember { mutableStateOf(emptyList<TransactionItem>()) }
+    realTransactions = transactionRepository.getAllTransactions(userId)
 
     Scaffold(
         topBar = {
@@ -129,20 +148,14 @@ fun RecordsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Balance
-                CardBalanceSection(
-                    transactionRepository = transactionRepository,
-                    userId = userId
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 // Filtro botones
                 FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    maxItemsInEachRow = Int.MAX_VALUE
+                    maxItemsInEachRow = Int.MAX_VALUE,
                 ) {
                     FilterButton(
                         label = "Todos",
@@ -159,11 +172,11 @@ fun RecordsScreen(
                         selected = filterType == TransactionType.EXPENSE,
                         onClick = { viewModel.setFilter(TransactionType.EXPENSE) }
                     )
-                    FilterButton(
-                        label = "Presupuestos",
-                        selected = filterType == TransactionType.BUDGET,
-                        onClick = { viewModel.setFilter(TransactionType.BUDGET) }
-                    )
+//                    FilterButton(
+//                        label = "Presupuestos",
+//                        selected = filterType == TransactionType.BUDGET,
+//                        onClick = { viewModel.setFilter(TransactionType.BUDGET) }
+//                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))

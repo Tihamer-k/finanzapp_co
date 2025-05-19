@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
@@ -280,9 +282,15 @@ fun IconDropdownMenu(
             label = { Text("Ícono") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) },
             modifier = Modifier
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 16.dp),
+            colors = ExposedDropdownMenuDefaults.textFieldColors(
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary
+            )
         )
         ExposedDropdownMenu(
             modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer),
@@ -297,8 +305,9 @@ fun IconDropdownMenu(
                                 painter = painterResource(icon),
                                 contentDescription = name,
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .padding(end = 8.dp)
+                                    .size(40.dp)
+                                    .padding(end = 16.dp),
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                             )
                             Text(
                                 name,
@@ -343,9 +352,9 @@ fun ColorDropdownMenu(
                 )
             },
             modifier = Modifier
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryEditable, true)
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 16.dp),
         )
         ExposedDropdownMenu(
             expanded = isExpanded,
@@ -358,14 +367,15 @@ fun ColorDropdownMenu(
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
-                                    .clip(RoundedCornerShape(4.dp))
+                                    .clip(RoundedCornerShape(60.dp))
                                     .background(color)
                                     .padding(end = 8.dp)
                             )
                             Text(
                                 text = name,
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(start = 8.dp)
                             )
                         }
                     },

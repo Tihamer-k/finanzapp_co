@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.screen.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,7 +40,6 @@ import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
-import finanzapp_co.composeapp.generated.resources.ic_google
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
@@ -158,7 +156,7 @@ fun LoginScreen(
             }
             if (errorMessage.isNotEmpty()) {
                 LaunchedEffect(errorMessage) {
-                    delay(4000) // 3 segundos
+                    delay(4000) // 4 segundos
                     errorMessage = ""
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -171,14 +169,14 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
-// Botón Login (solo habilitado si es válido)
             Button(
                 onClick = {
                     viewModel.onSignInClick()
                     clicked = true
                 },
                 enabled = isFormValid,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .size(width = 200.dp, height = 48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -248,7 +246,7 @@ fun LoginScreen(
 //            style = MaterialTheme.typography.bodyMedium,
 //            color = MaterialTheme.colorScheme.onBackground
 //        )
-            Spacer(modifier = Modifier.height(16.dp))
+/*            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = "O inicia sesión con",
@@ -263,7 +261,7 @@ fun LoginScreen(
                     contentDescription = "Iniciar con Google",
                     modifier = Modifier.size(48.dp)
                 )
-            }
+            }*/
 
             Spacer(modifier = Modifier.weight(0.1f).fillMaxWidth())
 

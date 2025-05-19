@@ -1,0 +1,19 @@
+getCourseTrackingById:
+SELECT * FROM Coursetracking WHERE id = ? AND userId = ? LIMIT 1;
+
+getCourseTrackingByUserId:
+SELECT * FROM Coursetracking WHERE userId = ?;
+
+getAllCourseTrackings:
+SELECT * FROM Coursetracking;
+
+insertCourseTracking:
+INSERT INTO Coursetracking (
+    id,
+    title,
+    isCompleted,
+    isUnlocked,
+    userId,
+    rewardId,
+    hasPendingQuestions
+) VALUES (?, ?, ?, ?, ?, ?, ?);

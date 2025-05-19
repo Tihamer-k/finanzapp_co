@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.screen.auth
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,9 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_google
 import finanzapp_co.composeapp.generated.resources.pre_login_button_sign_up
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -224,7 +220,7 @@ fun ForgotPasswordScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            Box(
+  /*          Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
@@ -264,7 +260,7 @@ fun ForgotPasswordScreen(
                         modifier = Modifier.size(48.dp)
                     )
                 }
-            }
+            }*/
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

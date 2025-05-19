@@ -1,9 +1,6 @@
 package com.tihcodes.finanzapp.co.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.tihcodes.finanzapp.co.domain.model.Course
-import com.tihcodes.finanzapp.co.domain.model.Reward
-import com.tihcodes.finanzapp.co.domain.model.RewardType
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.model.User
@@ -47,6 +44,13 @@ class AuthViewModel(
     val authState = _authState.asStateFlow()
 
     private val _isSignIn = MutableStateFlow(false)
+    val isSignIn = _isSignIn.asStateFlow()
+
+    private val _isSignedOut = MutableStateFlow(false)
+    val isSignedOut = _isSignedOut.asStateFlow()
+
+    private val _showOnboarding = MutableStateFlow(true)
+    val showOnboarding = _showOnboarding.asStateFlow()
 
 
     init {
@@ -57,96 +61,11 @@ class AuthViewModel(
         }
     }
 
-    //    seccion de cursos
-    private val _courses = MutableStateFlow(
-        listOf(
-            Course(
-                "1",
-                "Introducción a Finanzas",
-                "Conceptos básicos",
-                isUnlocked = true,
-                rewardId = "medal_1"
-            ),
-            Course("2", "Ahorro Inteligente", "Cómo ahorrar mejor", rewardId = "medal_2"),
-            Course("3", "Inversiones Básicas", "Fundamentos de inversión", rewardId = "sim_1"),
-            Course("4", "Planificación Financiera", "Organiza tu futuro", rewardId = "sim_2")
-        )
-    )
-    val courses: StateFlow<List<Course>> = _courses
-
-    private val _rewards = MutableStateFlow<List<Reward>>(
-        listOf(
-            Reward("medal_1", "Medalla de Inicio", "Completaste el primer curso", RewardType.MEDAL),
-            Reward("medal_2", "Medalla de Ahorro", "Dominaste el ahorro", RewardType.MEDAL),
-            Reward(
-                "sim_1",
-                "Simulador de Inversión",
-                "Prueba escenarios reales",
-                RewardType.SIMULATOR
-            ),
-            Reward(
-                "sim_2",
-                "Simulador de Finanzas",
-                "Organiza tu futuro financiero",
-                RewardType.SIMULATOR
-            )
-        )
-    )
-    val rewards: StateFlow<List<Reward>> = _rewards
-
-    private val _questions = MutableStateFlow(
-        mapOf(
-            "1" to listOf("¿Qué es una finanza?", "¿Por qué es importante ahorrar?"),
-            "2" to listOf("¿Qué es un presupuesto?", "¿Cómo calcular un ahorro mensual?"),
-            "3" to listOf("¿Qué es una inversión?", "¿Qué tipos de inversión existen?"),
-            "4" to listOf("¿Qué es planificación financiera?", "¿Cómo establecer metas financieras?")
-        )
-    )
-    val questions: StateFlow<Map<String, List<String>>> = _questions
-
-    val progress: StateFlow<Float> = _courses.map { list ->
-        val total = list.size
-        val completed = list.count { it.isCompleted }
-        if (total == 0) 0f else completed.toFloat() / total
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, 0f)
-
-
-    fun completeCourse(courseId: String) {
-        val updatedCourses = _courses.value.mapIndexed { index, course ->
-            when {
-                course.id == courseId -> course.copy(isCompleted = true)
-                course.id != courseId && index == _courses.value.indexOfFirst { it.id == courseId } + 1 ->
-                    course.copy(isUnlocked = true)
-
-                else -> course
-            }
-        }
-
-        val completedCourse = _courses.value.find { it.id == courseId }
-        val unlockedRewardId = completedCourse?.rewardId
-
-        val updatedRewards = _rewards.value.map {
-            if (it.id == unlockedRewardId) it.copy(isUnlocked = true)
-            else it
-        }
-
-        _courses.value = updatedCourses
-        _rewards.value = updatedRewards
-    }
-
-    fun completeQuestions(courseId: String) {
-        val updatedCourses = _courses.value.map { course ->
-            if (course.id == courseId) course.copy(hasPendingQuestions = false)
-            else course
-        }
-        _courses.value = updatedCourses
-    }
-
     //    Sección de registros - Datos de ejemplo
     private val exampleTransactions = getSampleTransactions()
 
     private val _transactions = MutableStateFlow<List<TransactionItem>>(exampleTransactions)
-    val transactions: StateFlow<List<TransactionItem>> = _transactions
+    val transactions: StateFlow<List<TransactionItem>> = _transactions.asStateFlow()
 
     // Function to check if we should show example data
     fun checkAndClearExampleData(realTransactions: List<TransactionItem>) {
@@ -235,13 +154,13 @@ class AuthViewModel(
     }
 
     fun onSignInClick() {
-
         launchWithCatchingException {
             _isProcessing.value = true
             try {
                 authRepository.authenticate(_uiState.value.email, _uiState.value.password)
-                _authState.value = true
+                _authState.value = true // Actualiza el estado de autenticación
                 _isSignIn.value = true
+                _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
@@ -251,12 +170,14 @@ class AuthViewModel(
         }
     }
 
-
     fun onSignOut() {
         launchWithCatchingException {
             authRepository.signOut()
             _isSignIn.value = false
-            _currentUser.value = User()
+            _isSignedOut.value = true
+            _currentUser.value = null
+            _authState.value = false
+            _uiState.update { LoginUiState() } // Reset UI state
         }
     }
 
@@ -272,8 +193,9 @@ class AuthViewModel(
                     password = _uiState.value.password,
                     date = _uiState.value.date
                 )
-                _authState.value = true
+                _authState.value = true // Actualiza el estado de autenticación
                 _isSignIn.value = true
+                _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
@@ -323,8 +245,9 @@ class AuthViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+            } finally {
+                _isProcessing.value = false
             }
-            _isProcessing.value = false
         }
     }
 
@@ -335,6 +258,7 @@ class AuthViewModel(
 
 
 data class LoginUiState(
+    var id: String = "",
     var email: String = "",
     var password: String = "",
     var name: String = "",
@@ -342,3 +266,4 @@ data class LoginUiState(
     var phone: String = "",
     var date: String = "",
 )
+

@@ -69,7 +69,6 @@ fun SignUpScreen(
     var showSuccessDialog by rememberSaveable { mutableStateOf(false) }
     var showConfetti by rememberSaveable { mutableStateOf(false) }
 
-
     var clicked by rememberSaveable { mutableStateOf(false) }
 
     val uiState by viewModel.uiState.collectAsState()
@@ -78,6 +77,12 @@ fun SignUpScreen(
     var errorMessage by rememberSaveable { mutableStateOf("") }
     val isEmailValid = Validator.isEmailValid(uiState.email)
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(authState) {
+        if (authState) {
+            onRegisterClick()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -110,12 +115,12 @@ fun SignUpScreen(
         }
         Column(
             modifier = Modifier
-            .fillMaxSize()
+                .fillMaxSize()
                 .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-            .background(MaterialTheme.colorScheme.background),
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
 
-            ){
+        ) {
             Spacer(modifier = Modifier.height(30.dp))
 
             val modifierField = Modifier
@@ -140,7 +145,6 @@ fun SignUpScreen(
                 )
             }
 
-
             OutlinedTextField(
                 value = uiState.surname,
                 onValueChange = viewModel::onSurnameChange,
@@ -163,7 +167,7 @@ fun SignUpScreen(
                 label = { Text("Correo") },
                 placeholder = { Text("example@example.com") },
                 isError = uiState.email.isNotEmpty() && !isEmailValid,
-                modifier =modifierField,
+                modifier = modifierField,
                 shape = RoundedCornerShape(20.dp)
             )
             if (!isEmailValid && uiState.email.isNotEmpty()) {
@@ -227,14 +231,14 @@ fun SignUpScreen(
             WheelDatePickerView(
                 containerColor = MaterialTheme.colorScheme.secondaryContainer,
                 dateTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                showShortMonths=true,
+                showShortMonths = true,
                 showDatePicker = showDatePicker,
                 title = "Seleccione una fecha",
                 doneLabel = "Aceptar",
                 titleStyle = MaterialTheme.typography.labelMedium,
                 doneLabelStyle = MaterialTheme.typography.labelMedium,
                 startDate = LocalDate.now(),
-                selectorProperties = WheelPickerDefaults. selectorProperties(
+                selectorProperties = WheelPickerDefaults.selectorProperties(
                     borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
                 ),
                 height = 200.dp,
@@ -251,8 +255,6 @@ fun SignUpScreen(
                 },
                 yearsRange = IntRange(1920, LocalDate.now().year - 18),
             )
-
-
 
             OutlinedTextField(
                 value = uiState.password,
@@ -345,9 +347,9 @@ fun SignUpScreen(
             Button(
                 onClick = {
                     viewModel.onRegister()
-                    clicked = true
                 },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
                     .size(width = 200.dp, height = 48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -436,8 +438,5 @@ fun SignUpScreen(
                 }
             }
         }
-
     }
-
 }
-

@@ -73,7 +73,8 @@ fun Onboarding(navController: NavController) {
                         }
                     }
                 },
-                currentPage = page
+                currentPage = page,
+                total = pages.size,
             )
         } else {
             OnboardingScreen(
@@ -87,7 +88,8 @@ fun Onboarding(navController: NavController) {
                         }
                     }
                 },
-                currentPage = page
+                currentPage = page,
+                total = pages.size,
             )
         }
     }

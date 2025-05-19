@@ -18,8 +18,9 @@ import com.tihcodes.finanzapp.co.presentation.screen.categories.CategoryDetailSc
 import com.tihcodes.finanzapp.co.presentation.screen.categories.CategoryScreen
 import com.tihcodes.finanzapp.co.presentation.screen.categories.NewCategoryScreen
 import com.tihcodes.finanzapp.co.presentation.screen.home.HomeScreen
+import com.tihcodes.finanzapp.co.presentation.screen.learn.CourseContentScreen
+import com.tihcodes.finanzapp.co.presentation.screen.learn.CoursesModule
 import com.tihcodes.finanzapp.co.presentation.screen.learn.LearnScreen
-import com.tihcodes.finanzapp.co.presentation.screen.learn.QuestionsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.presentation.screen.profile.ProfileScreen
@@ -85,7 +86,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
         composable("learn") {
             LearnScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
                 navController = navController
             )
@@ -99,8 +99,8 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable(
             "new_transaction_income?userId={userId}&category={category}",
             arguments = listOf(
-                navArgument("userId") { 
-                    type = NavType.StringType 
+                navArgument("userId") {
+                    type = NavType.StringType
                     defaultValue = ""
                     nullable = true
                 },
@@ -116,7 +116,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             val transactionRepository = koinInject<TransactionRepository>()
             val categoryRepository = koinInject<CategoryRepository>()
             NewTransactionScreen(
-                navController = navController, 
+                navController = navController,
                 type = TransactionType.INCOME,
                 transactionRepository = transactionRepository,
                 categoryRepository = categoryRepository,
@@ -127,8 +127,8 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable(
             "new_transaction_expense?userId={userId}&category={category}",
             arguments = listOf(
-                navArgument("userId") { 
-                    type = NavType.StringType 
+                navArgument("userId") {
+                    type = NavType.StringType
                     defaultValue = ""
                     nullable = true
                 },
@@ -144,7 +144,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             val transactionRepository = koinInject<TransactionRepository>()
             val categoryRepository = koinInject<CategoryRepository>()
             NewTransactionScreen(
-                navController = navController, 
+                navController = navController,
                 type = TransactionType.EXPENSE,
                 transactionRepository = transactionRepository,
                 categoryRepository = categoryRepository,
@@ -155,8 +155,8 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable(
             "new_transaction_budget?userId={userId}&category={category}",
             arguments = listOf(
-                navArgument("userId") { 
-                    type = NavType.StringType 
+                navArgument("userId") {
+                    type = NavType.StringType
                     defaultValue = ""
                     nullable = true
                 },
@@ -172,7 +172,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             val transactionRepository = koinInject<TransactionRepository>()
             val categoryRepository = koinInject<CategoryRepository>()
             NewTransactionScreen(
-                navController = navController, 
+                navController = navController,
                 type = TransactionType.BUDGET,
                 transactionRepository = transactionRepository,
                 categoryRepository = categoryRepository,
@@ -201,7 +201,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
 
         composable("rewards") {
             RewardsScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
                 navController = navController
             )
@@ -212,7 +211,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             SimulatorScreen(
                 simulatorName = name,
                 navController = navController,
-            ) 
+            )
         }
 
         composable("notifications") {
@@ -235,14 +234,35 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
 
         composable(
-            "questions/{courseId}",
-            arguments = listOf(navArgument("courseId") { type = NavType.StringType })
+            "course/{courseId}/isCompleted={isCompleted}",
+            arguments = listOf(
+                navArgument("courseId") { type = NavType.StringType },
+                navArgument("isCompleted") {
+                    type = NavType.BoolType
+                    defaultValue = false
+                })
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-            QuestionsScreen(
+            val isCompleted = backStackEntry.arguments?.getBoolean("isCompleted") ?: false
+            CourseContentScreen(
                 courseId = courseId,
+                isCompleted = isCompleted,
                 viewModel = authViewModel,
                 navController = navController
+            )
+        }
+
+        composable(
+            "course-content/{courseId}",
+            arguments = listOf(
+                navArgument("courseId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
+            CoursesModule(
+                courseId = courseId,
+                viewModel = authViewModel,
+                navController = navController,
             )
         }
 

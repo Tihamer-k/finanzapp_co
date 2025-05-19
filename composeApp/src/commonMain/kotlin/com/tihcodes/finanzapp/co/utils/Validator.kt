@@ -67,4 +67,9 @@ object Validator {
                 isDateValid(birthDate) &&
                 isValidPass && confirmPassword
     }
+
+    fun formatDoubleWithCommas(value: Double): String {
+        return value.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+    }
+
 }

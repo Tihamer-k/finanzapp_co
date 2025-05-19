@@ -10,17 +10,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.presentation.components.Navigation
-import com.tihcodes.finanzapp.co.presentation.theme.Theme
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.ui.theme.Theme
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val ONBOARDING_DESTINATION = "onboarding"
 private const val HOME_DESTINATION = "home"
+private const val PRE_LOGIN_DESTINATION = "pre-login"
 
 @Composable
 fun App() {
@@ -28,6 +30,13 @@ fun App() {
         val authViewModel = koinViewModel<AuthViewModel>()
         val surfaceColor = MaterialTheme.colorScheme.background
         val authState = determineAuthState(authViewModel)
+        val isSignedOut = authViewModel.isSignedOut.collectAsState().value
+        val showOnboardibg = authViewModel.showOnboarding.collectAsState().value
+
+        // Sincroniza los datos del usuario al iniciar la app
+        LaunchedEffect(Unit) {
+            authViewModel.syncUserData()
+        }
 
         Surface(color = surfaceColor) {
             Box(modifier = Modifier.fillMaxSize()) {
@@ -35,7 +44,7 @@ fun App() {
                     null -> ShowLoadingIndicator()
                     else -> Navigation(
                         authViewModel = authViewModel,
-                        destination = getNavigationDestination(authState)
+                        destination = getNavigationDestination(authState, isSignedOut, showOnboardibg)
                     )
                 }
             }
@@ -69,6 +78,17 @@ private fun ShowLoadingIndicator() {
 }
 
 /** Determine navigation destination based on authentication state */
-private fun getNavigationDestination(authState: Boolean?): String {
-    return if (authState == true) HOME_DESTINATION else ONBOARDING_DESTINATION
+private fun getNavigationDestination(
+    authState: Boolean?,
+    isSignedOut: Boolean,
+    showOnboardibg: Boolean
+): String {
+    return when {
+        authState!! -> HOME_DESTINATION
+        isSignedOut -> PRE_LOGIN_DESTINATION
+        showOnboardibg -> ONBOARDING_DESTINATION
+        else -> {
+            PRE_LOGIN_DESTINATION
+        }
+    }
 }
