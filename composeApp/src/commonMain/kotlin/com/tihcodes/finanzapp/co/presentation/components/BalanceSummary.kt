@@ -20,75 +20,157 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
+import kotlinx.datetime.minus
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun BalanceSummary(
     transactionRepository: TransactionRepository,
     userId: String
 ) {
+    // Opciones del segmento
+    val segments = listOf("Día", "Semana", "Mes", "Año")
+    val (selectedSegment, setSelectedSegment) = remember { androidx.compose.runtime.mutableStateOf(0) }
+
     // Cargar datos persistidos
     val (persistedBalance, persistedExpenses) = remember {
         transactionRepository.getBalanceData(userId)
     }
 
-    // Calcular balance y gastos actuales
+    // Obtener transacciones
     val transactions by transactionRepository.transactions.collectAsState()
-    val totalBalance = transactionRepository.calculateTotalBalance(userId)
-    val totalExpenses = transactionRepository.calculateTotalExpenses(userId)
+
+    // Filtrar transacciones según el segmento seleccionado
+    val now = kotlinx.datetime.Clock.System.now()
+        .toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
+    val filteredTransactions = remember(transactions, selectedSegment) {
+        transactions.filter { transaction ->
+            when (selectedSegment) {
+                0 -> transaction.date == now // Día
+                1 -> {
+                    val startOfWeek = now.minus(
+                        (now.dayOfWeek.ordinal).toLong(),
+                        kotlinx.datetime.DateTimeUnit.DAY
+                    )
+                    transaction.date in startOfWeek..now
+                }
+
+                2 -> transaction.date.year == now.year && transaction.date.monthNumber == now.monthNumber // Mes
+                3 -> transaction.date.year == now.year // Año
+                else -> true
+            }
+        }
+    }
+
+    // Calcular balance y gastos filtrados
+    val totalBalance = filteredTransactions.sumOf {
+        when (it.type) {
+            TransactionType.INCOME -> it.amount
+            TransactionType.EXPENSE -> -it.amount
+            TransactionType.BUDGET -> 0.0
+        }
+    }
+    val totalExpenses = filteredTransactions.filter { it.type == TransactionType.EXPENSE }
+        .sumOf { it.amount }
 
     // Guardar los valores calculados en el repositorio
-    LaunchedEffect(totalBalance, totalExpenses) {
+    LaunchedEffect(totalBalance, totalExpenses, selectedSegment) {
         transactionRepository.saveBalanceData(userId, totalBalance, totalExpenses)
     }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Sección del balance total
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+    Column {
+        // Segmented control animado
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
-                .padding(12.dp)
-                .width(160.dp)
-                .clickable { }
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Total Balance",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = "$${if (transactions.isEmpty()) formatDoubleWithCommas(persistedBalance) else formatDoubleWithCommas(totalBalance)}",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
-            )
+            segments.forEachIndexed { index, label ->
+                val isSelected = selectedSegment == index
+                androidx.compose.animation.AnimatedContent(
+                    targetState = isSelected,
+                    label = ""
+                ) { selected ->
+                    Text(
+                        text = label,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(50))
+                            .background(
+                                if (selected) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
+                            )
+                            .clickable { setSelectedSegment(index) }
+                            .padding(horizontal = 18.dp, vertical = 8.dp),
+                        color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
         }
-        // Sección de gastos totales
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
-                .padding(12.dp)
-                .width(160.dp)
-                .clickable { }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Total Expense",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Text(
-                text = "-$${if (transactions.isEmpty()) formatDoubleWithCommas(persistedExpenses) else formatDoubleWithCommas(totalExpenses)}",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.error
-            )
+            // Sección del balance total
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
+                    .padding(12.dp)
+                    .width(160.dp)
+            ) {
+                Text(
+                    text = when {
+                        filteredTransactions.isEmpty() -> "Total Balance"
+                        totalBalance > 0 -> "Saldo a favor"
+                        totalBalance < 0 -> "Saldo en contra"
+                        else -> "Total Balance"
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "$${
+                        if (filteredTransactions.isEmpty()) formatDoubleWithCommas(
+                            persistedBalance
+                        ) else formatDoubleWithCommas(totalBalance)
+                    }",
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            // Sección de gastos totales
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f))
+                    .padding(12.dp)
+                    .width(160.dp)
+            ) {
+                Text(
+                    text = "Total Expense",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = if (filteredTransactions.isEmpty()) {
+                        formatDoubleWithCommas(persistedExpenses)
+                    } else {
+                        formatDoubleWithCommas(totalExpenses)
+                    },
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
         }
     }
 }

@@ -104,7 +104,7 @@ class TransactionRepository(
      * Get transactions by type (income, expense, budget)
      * Filters by userId if provided
      */
-    fun getTransactionsByType(type: TransactionType, userId: String = ""): List<TransactionItem> {
+    private fun getTransactionsByType(type: TransactionType, userId: String = ""): List<TransactionItem> {
         if (!isInitialized || currentUserId != userId) {
             initialize(userId)
         }
