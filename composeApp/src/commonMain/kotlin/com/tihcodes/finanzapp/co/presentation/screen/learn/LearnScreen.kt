@@ -28,22 +28,22 @@ import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LearnScreen(
     viewModel: AuthViewModel,
-    onLogoutClick: () -> Unit,
     navController: NavHostController
 ) {
 
     val user = viewModel.currentUser.collectAsState().value ?: User()
-    val courses by viewModel.courses.collectAsState()
-    val progress by viewModel.progress.collectAsState()
+    val courseTracking = koinViewModel<CourseTrackingViewModel>()
+    val courses by courseTracking.courses.collectAsState()
+    val progress by courseTracking.progress.collectAsState()
 
-    LaunchedEffect(Unit) {
-        if (courses.isEmpty()) {
-            viewModel.loadCourses()
-        }
+    LaunchedEffect(user.id) {
+        courseTracking.loadCourses(user.id)
     }
 
     Scaffold(

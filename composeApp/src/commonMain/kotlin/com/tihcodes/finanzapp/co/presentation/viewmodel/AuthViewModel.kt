@@ -1,15 +1,11 @@
 package com.tihcodes.finanzapp.co.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.tihcodes.finanzapp.co.domain.model.Course
-import com.tihcodes.finanzapp.co.domain.model.Reward
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.model.User
 import com.tihcodes.finanzapp.co.domain.repository.AuthRepository
 import com.tihcodes.finanzapp.co.presentation.common.BaseViewModel
-import com.tihcodes.finanzapp.co.presentation.screen.learn.getCourses
-import com.tihcodes.finanzapp.co.presentation.screen.rewards.getRewardsContent
 import com.tihcodes.finanzapp.co.utils.getSampleTransactions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -63,51 +59,6 @@ class AuthViewModel(
                 _currentUser.value = it
             }
         }
-    }
-
-    private val _courses = MutableStateFlow<List<Course>>(emptyList())
-
-    fun loadCourses() {
-        _courses.value = getCourses()
-    }
-
-    val courses: StateFlow<List<Course>> = _courses.asStateFlow()
-
-    private val _rewards = MutableStateFlow<List<Reward>>(emptyList())
-
-    fun loadRewards(){
-        _rewards.value = getRewardsContent()
-    }
-
-    val rewards: StateFlow<List<Reward>> = _rewards.asStateFlow()
-
-    val progress: StateFlow<Float> = _courses.map { list ->
-        val total = list.size
-        val completed = list.count { it.isCompleted }
-        if (total == 0) 0f else completed.toFloat() / total
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, 0f)
-
-
-    fun completeCourse(courseId: String) {
-        val updatedCourses = _courses.value.mapIndexed { index, course ->
-            when {
-                course.id == courseId -> course.copy(isCompleted = true)
-                course.id != courseId && index == _courses.value.indexOfFirst { it.id == courseId } + 1 ->
-                    course.copy(isUnlocked = true)
-                else -> course
-            }
-        }
-
-        val completedCourse = _courses.value.find { it.id == courseId }
-        val unlockedRewardId = completedCourse?.rewardId
-
-        val updatedRewards = _rewards.value.map {
-            if (it.id == unlockedRewardId) it.copy(isUnlocked = true)
-            else it
-        }
-
-        _courses.value = updatedCourses
-        _rewards.value = updatedRewards
     }
 
     //    Sección de registros - Datos de ejemplo

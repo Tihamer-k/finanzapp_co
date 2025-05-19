@@ -31,9 +31,11 @@ import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CourseContentScreen(
@@ -42,7 +44,8 @@ fun CourseContentScreen(
     navController: NavController,
     isCompleted: Boolean
 ) {
-    val courses by viewModel.courses.collectAsState()
+    val courseTrackingViewModel = koinViewModel<CourseTrackingViewModel>()
+    val courses by courseTrackingViewModel.courses.collectAsState()
     val course = courses.find { it.id == courseId } ?: return
 
     var showQuestions by remember { mutableStateOf(false) }
@@ -50,7 +53,8 @@ fun CourseContentScreen(
     var selectedOption by remember { mutableStateOf<String?>(null) }
     var answerFeedback by remember { mutableStateOf<String?>(null) }
     var correctAnswersCount by remember { mutableStateOf(0) }
-    var isCompleted  by remember { mutableStateOf(isCompleted) }
+    val user = viewModel.currentUser.collectAsState().value
+    var isCompletedValue by remember { mutableStateOf(isCompleted) }
 
     Scaffold(
         topBar = {
@@ -67,15 +71,13 @@ fun CourseContentScreen(
                 onItemClick = navController
             )
         }
-
-        ) { paddingValues ->
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
                 .padding(paddingValues)
         ) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -87,15 +89,14 @@ fun CourseContentScreen(
                 Text(
                     course.description,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(16.dp)
                         .align(Alignment.CenterHorizontally)
                         .fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.height(8.dp))
-
-
 
                 if (!showQuestions) {
                     Image(
@@ -117,7 +118,8 @@ fun CourseContentScreen(
                                 .replace("\\t", "\t")
                                 .replace("\\r", "\r"),
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(18.dp)
+                            modifier = Modifier
+                                .padding(18.dp)
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(),
                             textAlign = TextAlign.Justify
@@ -125,14 +127,14 @@ fun CourseContentScreen(
                     }
 
                     Spacer(Modifier.height(24.dp))
-                    if (!isCompleted) {
+                    if (!isCompletedValue) {
                         Button(
                             onClick = { navController.navigate("course-content/${course.id}") },
                         ) {
                             Text("Empezar Curso")
                         }
                     }
-                    if (isCompleted) {
+                    if (isCompletedValue) {
                         Button(onClick = { showQuestions = true }) {
                             Text("Empezar Cuestionario")
                         }
@@ -162,7 +164,7 @@ fun CourseContentScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
-                            .padding(horizontal = 16.dp),
+                                .padding(horizontal = 16.dp),
                             enabled = selectedOption == null
                         ) {
                             Text(option)
@@ -187,11 +189,13 @@ fun CourseContentScreen(
                                     val passed = correctAnswersCount == course.questions.size
                                     if (passed) {
                                         course.hasPendingQuestions = false
-                                        viewModel.completeCourse(courseId)
+                                        if (user != null) {
+                                            courseTrackingViewModel.completeCourse(courseId, user.id, true)
+                                        }
                                         navController.navigate("learn")
                                     } else {
                                         navController.popBackStack()
-                                        isCompleted = false
+                                        isCompletedValue = false
                                     }
                                 }
                             }

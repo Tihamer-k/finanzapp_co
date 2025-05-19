@@ -37,7 +37,7 @@ fun RewardItem(
     Surface(
         shape = RoundedCornerShape(16.dp),
         tonalElevation = 2.dp,
-        color = if (reward.isUnlocked) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant,
+        color = background,
         modifier = Modifier
             .fillMaxWidth()
             .clickable(enabled = isClickable) {

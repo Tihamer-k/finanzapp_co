@@ -93,7 +93,7 @@ fun getCourses(): List<Course> {
                         "Una penalización por retirar tu dinero antes de tiempo",
                         "Un impuesto que pagas por tus inversiones"
                     ),
-                    correctAnswer = "Un impuesto que pagas por tus inversiones"
+                    correctAnswer = "Interés que ganas sobre tu inversión inicial y sobre los intereses anteriores"
                 ),
                 Question(
                     text = "2.\t¿Por qué se dice que las acciones son más riesgosas que los bonos?",
@@ -103,17 +103,17 @@ fun getCourses(): List<Course> {
                         "Porque el valor de las acciones puede fluctuar más, subiendo o bajando drásticamente",
                         "Porque las acciones tienen fechas de vencimiento más cortas"
                     ),
-                    correctAnswer = "Porque los bonos siempre ganan más que las acciones"
+                    correctAnswer = "Porque el valor de las acciones puede fluctuar más, subiendo o bajando drásticamente"
                 ),
                 Question(
                     text = "3.\tLaura tiene \$1,000,000 para invertir. Quiere minimizar el riesgo pero aún así obtener algo de rendimiento. ¿Qué opción le recomendarías?",
                     options = listOf(
                         "Invertir todo en acciones de una sola empresa nueva",
                         "El ahorro no genera intereses, la inversión sí",
-                        "El ahorro es más riesgoso que la inversión",
+                        "Invertir en un fondo diversificado que incluya mayormente bonos",
                         "No hay diferencia"
                     ),
-                    correctAnswer = "Invertir todo en acciones de una sola empresa nueva"
+                    correctAnswer = "Invertir en un fondo diversificado que incluya mayormente bonos"
                 )
             ),
         ),
@@ -129,7 +129,7 @@ fun getCourses(): List<Course> {
                         "Que solo personas inteligentes puedan lograrla",
                         "Que utilice tecnología para su cumplimiento"
                     ),
-                    correctAnswer = "Que requiera mucho dinero para alcanzarla"
+                    correctAnswer = "Que sea Específica, Medible, Alcanzable, Relevante y con Tiempo definido"
                 ),
                 Question(
                     text = "2.\t¿Cuál de estos es un ejemplo de meta financiera a largo plazo?",
@@ -139,7 +139,7 @@ fun getCourses(): List<Course> {
                         "Ahorrar para un concierto el próximo mes",
                         "Comprar un celular nuevo"
                     ),
-                    correctAnswer = "Ahorrar para un concierto el próximo mes"
+                    correctAnswer = "Ahorrar para la universidad"
                 ),
                 Question(
                     text = "3.\tAntes de establecer otras metas financieras, ¿qué deberías asegurar primero?",
@@ -149,7 +149,7 @@ fun getCourses(): List<Course> {
                         "Tener un fondo de emergencia",
                         "Comprar una casa"
                     ),
-                    correctAnswer = "Obtener una tarjeta de crédito"
+                    correctAnswer = "Tener un fondo de emergencia"
                 )
             ),
         )

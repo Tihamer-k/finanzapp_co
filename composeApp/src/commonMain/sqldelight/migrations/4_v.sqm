@@ -1,1 +1,10 @@
-
+CREATE TABLE IF NOT EXISTS Coursetracking(
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    isCompleted INTEGER NOT NULL DEFAULT 0,
+    isUnlocked INTEGER NOT NULL DEFAULT 0,
+    userId TEXT NOT NULL DEFAULT '',
+    rewardId TEXT NOT NULL DEFAULT '',
+    hasPendingQuestions INTEGER NOT NULL DEFAULT 1,
+    UNIQUE(id, userId) ON CONFLICT REPLACE
+);

@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.presentation.theme
+package com.tihcodes.finanzapp.co.ui.theme
 
 
 import androidx.compose.foundation.isSystemInDarkTheme

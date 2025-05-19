@@ -86,7 +86,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
         composable("learn") {
             LearnScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
                 navController = navController
             )
@@ -202,7 +201,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
 
         composable("rewards") {
             RewardsScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
                 viewModel = authViewModel,
                 navController = navController
             )
