@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import com.tihcodes.finanzapp.co.utils.getDonutChartSampleData
 import network.chaintech.cmpcharts.common.components.Legends
 import network.chaintech.cmpcharts.common.model.LegendLabel
@@ -83,15 +83,13 @@ fun getDonutChart(
 
     // Obtener transacciones reales
     val transactions =
-            transactionRepository.getAllTransactions(userId)
-                .filter { it.type == selectedType }
-                .ifEmpty { listOf() }
+        transactionRepository.getAllTransactions(userId)
+            .filter { it.type == selectedType }
+            .ifEmpty { listOf() }
 
-    val data: PieChartData =
-        if (transactions.isNotEmpty()) {
-            val categories =
-                categoryRepository.categories.collectAsState(initial = emptyList()).value
+    val categories = categoryRepository.categories.collectAsState(initial = emptyList()).value
 
+    val data: PieChartData = if (transactions.isNotEmpty()) {
             val slices = transactions.groupBy { it.category }.map { (categoryName, transactions) ->
                 val total = transactions.sumOf { it.amount }
                 val category = categories.find { it.name == categoryName }
@@ -104,26 +102,26 @@ fun getDonutChart(
             }
 
             if (slices.isEmpty()) {
-                getDonutChartSampleData() // Usa datos de ejemplo si no hay slices
+                getDonutChartSampleData()
             } else {
                 PieChartData(slices = slices, plotType = PlotType.Donut)
             }
         } else {
-            getDonutChartSampleData() // Usa datos de ejemplo si no hay transacciones
+            getDonutChartSampleData()
         }
 
 
     val pieChartConfig =
         PieChartConfig(
             labelVisible = true,
-            strokeWidth = 60f,
+            strokeWidth = 40f,
             labelColor = MaterialTheme.colorScheme.primary,
             activeSliceAlpha = .9f,
             isEllipsizeEnabled = true,
             fontFamily = MaterialTheme.typography.bodyLarge.fontFamily,
             labelFontWeight = FontWeight.Bold,
             isAnimationEnable = true,
-            chartPadding = 40,
+            chartPadding = 60,
             labelFontSize = 42.sp,
             backgroundColor = MaterialTheme.colorScheme.background,
         )
@@ -152,7 +150,7 @@ fun getLegendsConfigFromPieChartDataForDonutChart(pieChartData: PieChartData): L
     return LegendsConfig(
         legendLabelList = pieChartData.slices.map { slice ->
             LegendLabel(
-                name = "${slice.label}\n($${formatDoubleWithCommas(slice.value.toDouble())})",
+                name = "${slice.label}\n($${formatNumberWithCommas(slice.value.toDouble())})",
                 brush = Brush.sweepGradient(listOf(slice.color, slice.color))
             )
         },

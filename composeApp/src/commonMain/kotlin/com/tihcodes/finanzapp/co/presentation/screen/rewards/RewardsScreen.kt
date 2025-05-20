@@ -90,7 +90,7 @@ fun RewardsScreen(
                         RewardItem(
                             reward = reward,
                             onSimulatorClick = {
-                                navController.navigate("simulator/${it.name}")
+                                navController.navigate("simulator/${it.name}/${it.id}")
                             }
                         )
                     }

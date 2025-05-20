@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
-import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_more
 import kotlinx.datetime.Clock
@@ -164,20 +164,15 @@ fun BalanceSummary(
                     .width(160.dp)
             ) {
                 Text(
-                    text = when {
-                        filteredTransactions.isEmpty() -> "Total Balance"
-                        totalBalance > 0 -> "Saldo a favor"
-                        totalBalance < 0 -> "Saldo en contra"
-                        else -> "Total Balance"
-                    },
+                    text = "Total Balance",
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
                     text = "$${
-                        if (filteredTransactions.isEmpty()) formatDoubleWithCommas(
+                        if (filteredTransactions.isEmpty()) formatNumberWithCommas(
                             persistedBalance
-                        ) else formatDoubleWithCommas(totalBalance)
+                        ) else formatNumberWithCommas(totalBalance)
                     }",
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -199,9 +194,9 @@ fun BalanceSummary(
                 )
                 Text(
                     text = if (filteredTransactions.isEmpty()) {
-                        formatDoubleWithCommas(persistedExpenses)
+                        formatNumberWithCommas(persistedExpenses)
                     } else {
-                        formatDoubleWithCommas(totalExpenses)
+                        formatNumberWithCommas(totalExpenses)
                     },
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.error

@@ -27,19 +27,23 @@ import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
-import kotlin.math.pow
-import kotlin.math.roundToInt
+import kotlin.math.ceil
+import kotlin.math.max
 
 @Composable
-fun SimulatorScreen(
-    simulatorName: String,
+fun FinanceSimulatorScreen(
+    simulatorName: String = "Simulador de Finanzas",
     navController: NavController
 ) {
-    var initialAmount by remember { mutableStateOf(100000.0) }
-    var interestRate by remember { mutableStateOf(5.0) }
-    var years by remember { mutableStateOf(1) }
+    var goalAmount by remember { mutableStateOf(1_000_000.0) }
+    var initialSavings by remember { mutableStateOf(100_000.0) }
+    var monthlyContribution by remember { mutableStateOf(20_000.0) }
 
-    val finalAmount = initialAmount * (1 + (interestRate / 100)).pow(years)
+    val monthsRequired = if (monthlyContribution > 0 && goalAmount > initialSavings) {
+        ceil((goalAmount - initialSavings) / monthlyContribution).toInt()
+    } else {
+        0
+    }
 
     Scaffold(
         topBar = {
@@ -47,7 +51,7 @@ fun SimulatorScreen(
                 navController = navController,
                 title = "Simuladores",
                 notificationsCount = 0,
-                showBackButton = true,
+                showBackButton = true
             )
         },
         bottomBar = {
@@ -73,58 +77,52 @@ fun SimulatorScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
-                    text = "Simulador de interés compuesto",
+                    text = "Simulador de Meta Financiera",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Text(
-                    text = "Este simulador te permite calcular el crecimiento de una inversión a través del interés compuesto. Ajusta el monto inicial, la tasa de interés anual y los años para ver el total proyectado.",
+                    text = "Calcula cuánto tiempo necesitas para alcanzar una meta financiera según tu ahorro actual y tus aportes mensuales.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Text(
                     text = simulatorName,
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
-                )
-                Text(
-                    "Monto inicial: $${
-                        formatNumberWithCommas(
-                            initialAmount.roundToInt()
-                        )
-                    }"
-                )
-                Slider(
-                    value = initialAmount.toFloat(),
-                    onValueChange = { initialAmount = it.toDouble() },
-                    valueRange = 100000.0f..9000000.0f
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
-                Text("Tasa de interés: ${interestRate.roundToInt()}%")
+                Text("Meta financiera: $${formatNumberWithCommas(goalAmount.toInt())}")
                 Slider(
-                    value = interestRate.toFloat(),
-                    onValueChange = { interestRate = it.toDouble() },
-                    valueRange = 1f..20f
+                    value = goalAmount.toFloat(),
+                    onValueChange = { goalAmount = it.toDouble() },
+                    valueRange = 100_000f..10_000_000f
                 )
 
-                Text("Años: $years")
+                Text("Ahorros actuales: $${formatNumberWithCommas(initialSavings.toInt())}")
                 Slider(
-                    value = years.toFloat(),
-                    onValueChange = { years = it.toInt() },
-                    valueRange = 1f..30f,
-                    steps = 29
+                    value = initialSavings.toFloat(),
+                    onValueChange = { initialSavings = it.toDouble() },
+                    valueRange = 0f..9_000_000f
+                )
+
+                Text("Aporte mensual: $${formatNumberWithCommas(monthlyContribution.toInt())}")
+                Slider(
+                    value = monthlyContribution.toFloat(),
+                    onValueChange = { monthlyContribution = max(it.toDouble(), 100.0) },
+                    valueRange = 100f..1_000_000f
                 )
 
                 HorizontalDivider()
 
                 Text(
-                    text = "Total proyectado: $${formatNumberWithCommas(finalAmount.roundToInt())}",
+                    text = if (monthsRequired <= 0) "¡Ya alcanzaste tu meta!" else
+                        "Alcanzarás tu meta en $monthsRequired meses",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color(0xFF1B9C85)
                 )

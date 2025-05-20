@@ -141,8 +141,8 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        text = "Bienvenido, ${user.name}",
-                        style = MaterialTheme.typography.titleLarge,
+                        text = "Bienvenido, ${user.name.replaceFirstChar { it.uppercase() }}",
+                        style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -154,6 +154,12 @@ fun HomeScreen(
                         userId = userId
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Visualiza los porcentajes de gastos e ingresos",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(16.dp)
+                    )
                     getDonutChart(
                         transactionRepository = transactionRepository,
                         categoryRepository = categoryRepository,

@@ -26,6 +26,7 @@ import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.presentation.screen.profile.ProfileScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.NewTransactionScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.RecordsScreen
+import com.tihcodes.finanzapp.co.presentation.screen.rewards.FinanceSimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.screen.rewards.RewardsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.rewards.SimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
@@ -206,12 +207,31 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
 
-        composable("simulator/{simulatorName}") { backStack ->
+        composable("simulator/{simulatorName}/{simulatorId}") { backStack ->
             val name = backStack.arguments?.getString("simulatorName") ?: "Simulador"
-            SimulatorScreen(
-                simulatorName = name,
-                navController = navController,
-            )
+            val id = backStack.arguments?.getString("simulatorId") ?: "0"
+            when (id) {
+                "sim_1" -> {
+                    SimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+
+                "sim_2" -> {
+                    FinanceSimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+
+                else -> {
+                    SimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+            }
         }
 
         composable("notifications") {
