@@ -153,9 +153,10 @@ fun RecordsScreen(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 8.dp)
                         .padding(bottom = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     maxItemsInEachRow = Int.MAX_VALUE,
+
                 ) {
                     FilterButton(
                         label = "Todos",

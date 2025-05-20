@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.domain.model.BottomNavItem
 import finanzapp_co.composeapp.generated.resources.Res
@@ -65,7 +66,7 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
             .background(MaterialTheme.colorScheme.background)
             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
             .height(140.dp),
-        tonalElevation =  6.dp,
+        tonalElevation = 6.dp,
     ) {
 
         Row(
@@ -73,8 +74,7 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items.forEachIndexed {
-                index, item ->
+            items.forEachIndexed { index, item ->
                 NavigationBarItem(
                     selected = index == indexIn,
                     icon = {
@@ -92,11 +92,12 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
                     },
                     label = if (index == indexIn) {
                         {
-                        Text(
-                            text = item.title,
+                            Text(
+                                text = item.title,
                                 color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                                style = MaterialTheme.typography.labelSmall
+                                    .copy(color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
+                            )
                         }
                     } else null,
                     onClick = {

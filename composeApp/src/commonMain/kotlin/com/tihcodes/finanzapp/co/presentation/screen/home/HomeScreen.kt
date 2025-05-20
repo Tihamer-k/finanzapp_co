@@ -33,6 +33,7 @@ import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
+import com.tihcodes.finanzapp.co.presentation.components.getDonutChart
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
@@ -152,7 +153,8 @@ fun HomeScreen(
                         transactionRepository = transactionRepository,
                         userId = userId
                     )
-
+                    Spacer(modifier = Modifier.height(16.dp))
+                    getDonutChart()
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))
