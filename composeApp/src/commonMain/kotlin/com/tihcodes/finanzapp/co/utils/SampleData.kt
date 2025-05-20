@@ -1,5 +1,6 @@
 package com.tihcodes.finanzapp.co.utils
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
@@ -14,6 +15,8 @@ import finanzapp_co.composeapp.generated.resources.ic_medicine
 import finanzapp_co.composeapp.generated.resources.ic_savings
 import finanzapp_co.composeapp.generated.resources.ic_transport
 import kotlinx.datetime.LocalDate
+import network.chaintech.cmpcharts.common.model.PlotType
+import network.chaintech.cmpcharts.ui.piechart.models.PieChartData
 
 
 fun getSampleCategories(): List<CategoryItem> {
@@ -95,6 +98,45 @@ fun getSampleTransactions(): List<TransactionItem> {
             TransactionType.INCOME,
             Res.drawable.ic_savings
         )
+    )
+}
+
+@Composable
+fun getDonutChartSampleData(): PieChartData {
+    return PieChartData(
+        listOf(
+            PieChartData.Slice(
+                value = 20f,
+                label = "Housing",
+                color = Color(0xFF6200EE)
+            ),
+            PieChartData.Slice(
+                value = 30f,
+                label = "Entertainment",
+                color = Color(0xFF03DAC5)
+            ),
+            PieChartData.Slice(
+                value = 50f,
+                label = "Food",
+                color = Color(0xFFFF5722)
+            ),
+            PieChartData.Slice(
+                value = 10f,
+                label = "Transport",
+                color = Color(0xFF9C27B0)
+            ),
+            PieChartData.Slice(
+                value = 40f,
+                label = "Medicine",
+                color = Color(0xFF2196F3)
+            ),
+            PieChartData.Slice(
+                value = 60f,
+                label = "Pantry",
+                color = Color(0xFFFFEB3B)
+            ),
+        ),
+        plotType = PlotType.Donut
     )
 }
 

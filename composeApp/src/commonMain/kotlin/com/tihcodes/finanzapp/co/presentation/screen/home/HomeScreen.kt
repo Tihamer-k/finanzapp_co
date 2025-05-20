@@ -154,7 +154,10 @@ fun HomeScreen(
                         userId = userId
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-                    getDonutChart()
+                    getDonutChart(
+                        transactionRepository = transactionRepository,
+                        categoryRepository = categoryRepository,
+                        userId = userId)
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))
