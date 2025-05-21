@@ -18,6 +18,7 @@ import com.tihcodes.finanzapp.co.domain.repository.RewardsRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
@@ -100,6 +101,12 @@ val viewModelModule = module {
         CourseTrackingViewModel(
             courseTrackingRepository = get(),
             rewardRepository = get(),
+        )
+    }
+    viewModel {
+        TransactionChartViewModel(
+            transactionRepository = get(),
+            categoryRepository = get(),
         )
     }
 

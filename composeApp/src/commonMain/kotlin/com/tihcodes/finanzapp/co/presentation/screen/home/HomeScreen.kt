@@ -37,6 +37,7 @@ import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.getDonutChart
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import org.koin.compose.koinInject
 
 
@@ -50,6 +51,7 @@ fun HomeScreen(
     val listState = rememberLazyListState()
     val transactionRepository = koinInject<TransactionRepository>()
     val categoryRepository = koinInject<CategoryRepository>()
+    val chartViewModel = koinInject<TransactionChartViewModel>()
     val userId = user.id
     val courseTracking = koinInject<CourseTrackingViewModel>()
 
@@ -69,10 +71,12 @@ fun HomeScreen(
         transactionRepository.initialize(userId)
         courseTracking.setUserId(userId)
 
+
         // Then sync with Firestore to get user-specific data
         if (userId.isNotEmpty()) {
             categoryRepository.syncCategories(userId)
             transactionRepository.syncTransactions(userId)
+            chartViewModel.setUserId(userId)
         }
     }
 
@@ -160,10 +164,7 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
-                    getDonutChart(
-                        transactionRepository = transactionRepository,
-                        categoryRepository = categoryRepository,
-                        userId = userId)
+                    getDonutChart(chartViewModel)
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))

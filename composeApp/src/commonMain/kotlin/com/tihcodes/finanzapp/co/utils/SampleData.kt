@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.utils
 
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
@@ -101,7 +100,6 @@ fun getSampleTransactions(): List<TransactionItem> {
     )
 }
 
-@Composable
 fun getDonutChartSampleData(): PieChartData {
     return PieChartData(
         listOf(
