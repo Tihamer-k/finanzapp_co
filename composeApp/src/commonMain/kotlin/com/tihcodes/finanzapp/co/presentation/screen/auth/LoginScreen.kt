@@ -94,8 +94,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Spacer(modifier = Modifier.weight(0.1f))
-
+            Spacer(modifier = Modifier.height(40.dp))
             OutlinedTextField(
                 value = uiState.email.lowercase(),
                 onValueChange = viewModel::onEmailChange,

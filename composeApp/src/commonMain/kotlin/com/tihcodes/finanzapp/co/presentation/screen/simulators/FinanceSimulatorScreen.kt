@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.presentation.screen.rewards
+package com.tihcodes.finanzapp.co.presentation.screen.simulators
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -79,6 +79,12 @@ fun FinanceSimulatorScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
+                    text = simulatorName,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+                Text(
                     text = "Simulador de Meta Financiera",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface
@@ -90,12 +96,6 @@ fun FinanceSimulatorScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                Text(
-                    text = simulatorName,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
 
                 Text("Meta financiera: $${formatNumberWithCommas(goalAmount.toInt())}")
                 Slider(

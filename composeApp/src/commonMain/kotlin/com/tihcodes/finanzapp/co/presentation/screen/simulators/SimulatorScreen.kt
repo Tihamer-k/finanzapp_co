@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.presentation.screen.rewards
+package com.tihcodes.finanzapp.co.presentation.screen.simulators
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -74,6 +74,12 @@ fun SimulatorScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
+                    text = simulatorName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
+                )
+                Text(
                     text = "Simulador de interés compuesto",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -87,12 +93,6 @@ fun SimulatorScreen(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
-                Text(
-                    text = simulatorName,
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
-                )
                 Text(
                     "Monto inicial: $${
                         formatNumberWithCommas(
