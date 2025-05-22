@@ -26,8 +26,8 @@ import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.presentation.screen.profile.ProfileScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.NewTransactionScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.RecordsScreen
-import com.tihcodes.finanzapp.co.presentation.screen.simulators.FinanceSimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.screen.rewards.RewardsScreen
+import com.tihcodes.finanzapp.co.presentation.screen.simulators.FinanceSimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.screen.simulators.SimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import org.koin.compose.koinInject
