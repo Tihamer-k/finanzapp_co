@@ -74,7 +74,8 @@ kotlin {
 
             implementation(libs.kmp.date.time.picker)
 
-            implementation(libs.cmpcharts)
+            implementation(libs.koalaplot.core)
+
         }
     }
     task("testClasses")

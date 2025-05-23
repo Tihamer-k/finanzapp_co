@@ -3,6 +3,7 @@ package com.tihcodes.finanzapp.co.presentation.viewmodel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.PieSliceData
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
@@ -16,8 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import network.chaintech.cmpcharts.common.model.PlotType
-import network.chaintech.cmpcharts.ui.piechart.models.PieChartData
 import kotlin.math.absoluteValue
 
 
@@ -42,7 +41,7 @@ class TransactionChartViewModel(
         _transactionType.value = type
     }
 
-    val pieChartData: StateFlow<PieChartData> = combine(
+    val pieChartData: StateFlow<List<PieSliceData>> = combine(
         _transactions,
         _categories,
         _transactionType
@@ -56,18 +55,17 @@ class TransactionChartViewModel(
                 if (total <= 0.0) return@mapNotNull null
                 val category = categories.find { it.name.trim().lowercase() == categoryName }
 
-                PieChartData.Slice(
-                    value = total.toFloat().absoluteValue
-                        .let { if (selectedType == TransactionType.EXPENSE) -it else it },
+                PieSliceData(
+                    value = total.absoluteValue, // usamos .absoluteValue por consistencia
                     label = category?.name ?: categoryName,
                     color = category?.backgroundColor ?: Color.Gray
                 )
             }
 
         if (slices.isEmpty()) getDonutChartSampleData()
-        else PieChartData(slices = slices, plotType = PlotType.Donut)
-
+        else slices
     }.stateIn(viewModelScope, SharingStarted.Eagerly, getDonutChartSampleData())
+
 
     private fun loadData(userId: String) {
         viewModelScope.launch {

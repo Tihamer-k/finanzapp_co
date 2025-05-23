@@ -28,6 +28,7 @@ ktor = "3.0.1"
 settings = "1.2.0"
 dateTime = "0.6.1"
 koin = "4.0.0"
+koalaplot-core = "0.7.0"
 
 firebase-bom = "33.14.0"
 
@@ -92,6 +93,8 @@ kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 
 # cmpcharts
 cmpcharts = { module = "network.chaintech:cmpcharts", version.ref = "cmpcharts" }
+# KoalaPlot
+koalaplot-core = { module = "io.github.koalaplot:koalaplot-core", version.ref = "koalaplot-core" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

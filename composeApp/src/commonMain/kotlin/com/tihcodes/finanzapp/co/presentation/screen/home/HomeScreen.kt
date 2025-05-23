@@ -34,7 +34,7 @@ import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
-import com.tihcodes.finanzapp.co.presentation.components.getDonutChart
+import com.tihcodes.finanzapp.co.presentation.components.TransactionPieChartWithKoalaPlot
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
@@ -157,14 +157,15 @@ fun HomeScreen(
                         transactionRepository = transactionRepository,
                         userId = userId
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = "Visualiza los porcentajes de gastos e ingresos",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
-                    getDonutChart(chartViewModel)
+                    TransactionPieChartWithKoalaPlot(
+                        viewModel = chartViewModel
+                    )
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))
