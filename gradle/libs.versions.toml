@@ -11,13 +11,13 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.4"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-cmpcharts = "1.0.0"
+cmpcharts = "2.0.3"
 compose-multiplatform = "1.8.0"
 junit = "4.13.2"
 kmpDateTimePicker = "1.0.7"
 kotlin = "2.1.20"
 navigation-compose = "2.8.0-alpha10"
-runtimeSaveableAndroid = "1.8.1"
+runtimeSaveableAndroid = "1.8.2"
 firebaseAuth = "2.1.0"
 firebaseAuthKtx = "21.0.1"
 firebaseCommonKtx = "20.0.0"
@@ -29,13 +29,12 @@ settings = "1.2.0"
 dateTime = "0.6.1"
 koin = "4.0.0"
 
-firebase-bom = "33.13.0"
+firebase-bom = "33.14.0"
 
 kotlinx-coroutines = "1.10.2"
 composeHotReload = "1.0.0-alpha01"
 
 [libraries]
-cmpcharts = { module = "network.chaintech:cmpcharts", version.ref = "cmpcharts" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -91,6 +90,8 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
+# cmpcharts
+cmpcharts = { module = "network.chaintech:cmpcharts", version.ref = "cmpcharts" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
