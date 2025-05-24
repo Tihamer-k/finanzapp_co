@@ -78,12 +78,6 @@ fun SignUpScreen(
     val isEmailValid = Validator.isEmailValid(uiState.email)
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(authState) {
-        if (authState) {
-            onRegisterClick()
-        }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()

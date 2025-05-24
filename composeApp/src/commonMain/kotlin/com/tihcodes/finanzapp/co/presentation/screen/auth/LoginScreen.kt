@@ -21,7 +21,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +39,6 @@ import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
-import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
 
@@ -153,19 +151,7 @@ fun LoginScreen(
                     )
                 }
             }
-            if (errorMessage.isNotEmpty()) {
-                LaunchedEffect(errorMessage) {
-                    delay(4000) // 4 segundos
-                    errorMessage = ""
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+
 
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
             Button(

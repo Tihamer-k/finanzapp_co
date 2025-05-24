@@ -3,7 +3,6 @@ package com.tihcodes.finanzapp.co.presentation.components
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,28 +24,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tihcodes.finanzapp.co.domain.model.BottomNavItem
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_arrow_back
-import finanzapp_co.composeapp.generated.resources.ic_notifications
-import finanzapp_co.composeapp.generated.resources.ic_user
-import org.jetbrains.compose.resources.painterResource
+import compose.icons.TablerIcons
+import compose.icons.tablericons.ArrowBack
+import compose.icons.tablericons.Bell
+import compose.icons.tablericons.User
 
 
 val itemsTopBar = listOf(
     BottomNavItem(
         title = "Perfil",
         route = "profile",
-        icon = Res.drawable.ic_user
+        icon = TablerIcons.User
     ),
     BottomNavItem(
         title = "Notificaciones",
         route = "notifications",
-        icon = Res.drawable.ic_notifications
+        icon = TablerIcons.Bell,
     )
 )
 
@@ -102,11 +100,11 @@ fun TopNavBar(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.ic_arrow_back),
+                    Icon(
+                        imageVector = TablerIcons.ArrowBack,
                         contentDescription = "Back",
                         modifier = Modifier.size(20.dp),
-                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             } else {
@@ -135,11 +133,11 @@ fun TopNavBar(
                             .align(Alignment.CenterStart)
                             .scale(scale)
                     ) {
-                        Image(
-                            painter = painterResource(item.icon),
+                        Icon(
+                            imageVector = item.icon,
                             contentDescription = item.title,
                             modifier = Modifier.size(24.dp),
-                            colorFilter = ColorFilter.tint(iconColor)
+                            tint = iconColor
                         )
                     }
                 }
@@ -185,11 +183,11 @@ fun TopNavBar(
                                 }
                             }
                         ) {
-                            Image(
-                                painter = painterResource(item.icon),
+                            Icon(
+                                imageVector = item.icon,
                                 contentDescription = item.title,
                                 modifier = Modifier.size(24.dp),
-                                colorFilter = ColorFilter.tint(iconColor)
+                                tint = iconColor
                             )
                         }
                     }

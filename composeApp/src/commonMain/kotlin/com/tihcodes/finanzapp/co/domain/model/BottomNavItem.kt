@@ -1,9 +1,9 @@
 package com.tihcodes.finanzapp.co.domain.model
 
-import org.jetbrains.compose.resources.DrawableResource
+import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavItem(
     val title: String,
-    val icon: DrawableResource,
+    val icon: ImageVector,
     val route: String,
 )

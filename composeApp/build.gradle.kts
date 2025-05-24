@@ -76,6 +76,7 @@ kotlin {
 
             implementation(libs.koalaplot.core)
 
+            implementation("br.com.devsrsouza.compose.icons:tabler-icons:1.1.1")
         }
     }
     task("testClasses")
@@ -121,4 +122,3 @@ sqldelight {
         }
     }
 }
-
