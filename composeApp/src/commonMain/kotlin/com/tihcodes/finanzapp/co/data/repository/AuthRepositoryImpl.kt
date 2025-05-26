@@ -145,23 +145,6 @@ class AuthRepositoryImpl(
         }
     }
 
-//    override suspend fun getUserData(userId: String): User {
-//        return try {
-//            userRepository.getUserById(userId).map { user ->
-//                User(
-//                    id = user.id,
-//                    name = user.name,
-//                    surname = user.surname,
-//                    email = user.email,
-//                    phone = user.phone,
-//                    date = user.date
-//                )
-//            }.first() // Collect the first emitted value from the Flow
-//        } catch (e: Exception) {
-//            User()
-//        }
-//    }
-
     override suspend fun getUserData(userId: String): User {
         return try {
             // Primero intentar obtener usuario de la base de datos local

@@ -77,6 +77,7 @@ fun SignUpScreen(
     var errorMessage by rememberSaveable { mutableStateOf("") }
     val isEmailValid = Validator.isEmailValid(uiState.email)
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var signInRes by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -340,7 +341,7 @@ fun SignUpScreen(
 
             Button(
                 onClick = {
-                    viewModel.onRegister()
+                    signInRes = viewModel.onRegister()
                 },
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -378,7 +379,7 @@ fun SignUpScreen(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                } else if (!authState) {
+                } else if (!signInRes) {
                     errorMessage = "Error en el registro"
                     if (errorMessage.isNotEmpty()) {
                         LaunchedEffect(errorMessage) {
@@ -393,7 +394,7 @@ fun SignUpScreen(
                         )
                     }
                     clicked = false
-                } else if (authState) {
+                } else if (signInRes) {
                     showConfetti = true
                     showSuccessDialog = true
                     clicked = false

@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.components
 
-import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,12 +39,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
     NavHost(
         navController = navController,
         startDestination = destination,
-        enterTransition = {
-            when (initialState.destination.route) {
-                "onboarding" -> fadeIn()
-                else -> fadeIn(initialAlpha = 1f)
-            }
-        }
     ) {
 
         composable("onboarding") {
@@ -72,7 +65,9 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
         composable("login") {
             LoginScreen(
-                onLoginClick = { navController.navigate("home") },
+                onLoginClick = { navController.navigate("home") {
+                    popUpTo("pre-login") { inclusive = true }
+                } },
                 onGoogleLoginClick = { navController.navigate("home") },
                 onRegisterClick = { navController.navigate("register") },
                 onForgotPasswordClick = { navController.navigate("forgot-password") },

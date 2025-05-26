@@ -153,7 +153,7 @@ class AuthViewModel(
         _uiState.update { it.copy(date = newValue) }
     }
 
-    fun onSignInClick() {
+    fun onSignInClick(): Boolean {
         launchWithCatchingException {
             _isProcessing.value = true
             try {
@@ -168,6 +168,7 @@ class AuthViewModel(
             }
             _isProcessing.value = false
         }
+        return _isSignIn.value
     }
 
     fun onSignOut() {
@@ -181,7 +182,7 @@ class AuthViewModel(
         }
     }
 
-    fun onRegister() {
+    fun onRegister(): Boolean {
         launchWithCatchingException {
             _isProcessing.value = true
             try {
@@ -203,6 +204,7 @@ class AuthViewModel(
             }
             _isProcessing.value = false
         }
+        return _isSignIn.value
     }
 
     fun onReset() {

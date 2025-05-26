@@ -32,6 +32,7 @@ fun App() {
         val authState = determineAuthState(authViewModel)
         val isSignedOut = authViewModel.isSignedOut.collectAsState().value
         val showOnboardibg = authViewModel.showOnboarding.collectAsState().value
+        val isSignedIn = authViewModel.isSignIn.collectAsState().value
 
         // Sincroniza los datos del usuario al iniciar la app
         LaunchedEffect(Unit) {
@@ -44,7 +45,7 @@ fun App() {
                     null -> ShowLoadingIndicator()
                     else -> Navigation(
                         authViewModel = authViewModel,
-                        destination = getNavigationDestination(authState, isSignedOut, showOnboardibg)
+                        destination = getNavigationDestination(authState, isSignedOut, showOnboardibg, isSignedIn)
                     )
                 }
             }
@@ -81,12 +82,13 @@ private fun ShowLoadingIndicator() {
 private fun getNavigationDestination(
     authState: Boolean?,
     isSignedOut: Boolean,
-    showOnboardibg: Boolean
+    showOnboarding: Boolean,
+    isSignedIn: Boolean
 ): String {
     return when {
-        authState!! -> HOME_DESTINATION
+        authState!! || isSignedIn-> HOME_DESTINATION
         isSignedOut -> PRE_LOGIN_DESTINATION
-        showOnboardibg -> ONBOARDING_DESTINATION
+        showOnboarding -> ONBOARDING_DESTINATION
         else -> {
             PRE_LOGIN_DESTINATION
         }

@@ -21,6 +21,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,7 @@ import com.tihcodes.finanzapp.co.utils.Validator
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
 
@@ -60,6 +62,7 @@ fun LoginScreen(
     val errorMessagePassword = Validator.isPasswordValid(uiState.password).second
     val isFormValid = isEmailValid && isPasswordValid
     var clicked by rememberSaveable { mutableStateOf(false) }
+    var signInRes by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -156,7 +159,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
             Button(
                 onClick = {
-                    viewModel.onSignInClick()
+                    signInRes = viewModel.onSignInClick()
                     clicked = true
                 },
                 enabled = isFormValid,
@@ -188,13 +191,27 @@ fun LoginScreen(
                         modifier = Modifier.size(24.dp).padding(top = 8.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                } else if (!authState) {
+                } else if (!signInRes) {
                     errorMessage = "Error de autenticación usuario o contraseña incorrectos"
                     clicked = false
-                } else if (authState) {
+                } else if (signInRes) {
                     onLoginClick()
                     clicked = false
                 }
+            }
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(20.dp))
+                LaunchedEffect(errorMessage) {
+                    delay(3000) // 3 segundos
+                    errorMessage = ""
+                }
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
             }
             Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
             TextButton(onClick = onForgotPasswordClick) {
