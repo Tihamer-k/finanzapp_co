@@ -50,7 +50,9 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable("register") {
             SignUpScreen(
                 viewModel = authViewModel,
-                onRegisterClick = { navController.navigate("home") },
+                onRegisterClick = { navController.navigate("login") {
+                    popUpTo("pre-login") { inclusive = true }
+                } },
                 onLoginNavigate = { navController.navigate("login") },
             )
         }

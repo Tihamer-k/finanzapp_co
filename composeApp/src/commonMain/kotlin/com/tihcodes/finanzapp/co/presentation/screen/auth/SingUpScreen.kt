@@ -73,7 +73,6 @@ fun SignUpScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val isProcessing by viewModel.isProcessing.collectAsState()
-    val authState by viewModel.authState.collectAsState()
     var errorMessage by rememberSaveable { mutableStateOf("") }
     val isEmailValid = Validator.isEmailValid(uiState.email)
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
@@ -342,6 +341,7 @@ fun SignUpScreen(
             Button(
                 onClick = {
                     signInRes = viewModel.onRegister()
+                    clicked = true
                 },
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -380,19 +380,7 @@ fun SignUpScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                 } else if (!signInRes) {
-                    errorMessage = "Error en el registro"
-                    if (errorMessage.isNotEmpty()) {
-                        LaunchedEffect(errorMessage) {
-                            delay(3000) // 3 segundos
-                            errorMessage = ""
-                        }
-                        Text(
-                            text = errorMessage,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
+                    errorMessage = "Error en el registro, correo ya registrado o error de conexión"
                     clicked = false
                 } else if (signInRes) {
                     showConfetti = true
@@ -410,6 +398,22 @@ fun SignUpScreen(
                     }
                 )
             }
+
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(20.dp))
+                LaunchedEffect(errorMessage) {
+                    delay(3000) // 3 segundos
+                    errorMessage = ""
+                }
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
