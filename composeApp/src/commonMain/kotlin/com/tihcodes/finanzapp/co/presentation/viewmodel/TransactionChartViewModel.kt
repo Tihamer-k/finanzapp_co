@@ -27,6 +27,9 @@ class TransactionChartViewModel(
 
     private val _transactionType = MutableStateFlow(TransactionType.EXPENSE)
     val transactionType: StateFlow<TransactionType> = _transactionType.asStateFlow()
+    private val _errorMessageChart = MutableStateFlow("")
+    val errorMessageChart: StateFlow<String> = _errorMessageChart.asStateFlow()
+
 
     private val _userId = MutableStateFlow("")
     fun setUserId(userId: String) {
@@ -62,8 +65,13 @@ class TransactionChartViewModel(
                 )
             }
 
-        if (slices.isEmpty()) getDonutChartSampleData()
-        else slices
+        if (slices.isNotEmpty()) {
+            _errorMessageChart.value = ""
+            slices
+        } else {
+            _errorMessageChart.value = "Datos de ejemplo hasta que se ingrese información real."
+            getDonutChartSampleData()
+        }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, getDonutChartSampleData())
 
 

@@ -49,6 +49,7 @@ fun TransactionPieChartWithKoalaPlot(
     viewModel: TransactionChartViewModel
 ) {
     val transactionType by viewModel.transactionType.collectAsState()
+    val errorMessage by viewModel.errorMessageChart.collectAsState()
 
     val slices by viewModel.pieChartData.collectAsState()
     val total = slices.sumOf { it.value.absoluteValue }
@@ -88,6 +89,13 @@ fun TransactionPieChartWithKoalaPlot(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                modifier = Modifier.padding(top = 16.dp).align(Alignment.CenterHorizontally),
+                style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.error)
+            )
+        }
 
         if (values.isNotEmpty()) {
             val dataSize = values.size
