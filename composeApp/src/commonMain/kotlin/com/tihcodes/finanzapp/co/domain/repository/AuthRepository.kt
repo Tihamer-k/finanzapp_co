@@ -34,6 +34,14 @@ interface AuthRepository {
     suspend fun resetPassword(email: String)
     suspend fun isExistingUser(email: String): Boolean
     suspend fun getUserData(userId: String): User
+    suspend fun updateUserData(
+        userId: String,
+        name: String,
+        surname: String,
+        email: String,
+        phone: String,
+        date: String
+    ): User
 
 
 }

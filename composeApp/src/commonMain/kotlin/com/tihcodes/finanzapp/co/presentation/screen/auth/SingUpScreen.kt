@@ -47,7 +47,9 @@ import finanzapp_co.composeapp.generated.resources.ic_calendar
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
 import kotlinx.coroutines.delay
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
 import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerView
 import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
 import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
@@ -231,7 +233,7 @@ fun SignUpScreen(
                 doneLabel = "Aceptar",
                 titleStyle = MaterialTheme.typography.labelMedium,
                 doneLabelStyle = MaterialTheme.typography.labelMedium,
-                startDate = LocalDate.now(),
+                startDate = LocalDate.now().minus(DatePeriod(years = 18)),
                 selectorProperties = WheelPickerDefaults.selectorProperties(
                     borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
                 ),

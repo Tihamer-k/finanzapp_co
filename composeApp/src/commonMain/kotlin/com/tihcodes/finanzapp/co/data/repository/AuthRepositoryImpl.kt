@@ -185,5 +185,49 @@ class AuthRepositoryImpl(
             User() // Devolver un usuario vacío en caso de error
         }
     }
+
+    override suspend fun updateUserData(
+        userId: String,
+        name: String,
+        surname: String,
+        email: String,
+        phone: String,
+        date: String
+    ): User {
+        return try {
+            // Actualizar en Firestore
+            database.collection("users").document(userId).set(
+                mapOf(
+                    "name" to name,
+                    "surname" to surname,
+                    "phone" to phone,
+                    "date" to date
+                )
+            )
+            val user = User(
+                id = userId,
+                name = name,
+                surname = surname,
+                phone = phone,
+                date = date
+                )
+
+            // Actualizar en la base de datos local
+            userDatabaseDriver.updateUser(
+                User(
+                    id = userId,
+                    name = name,
+                    surname = surname,
+                    phone = phone,
+                    date = date
+                )
+            )
+
+            user
+        } catch (e: Exception) {
+            println("ERROR: Error al actualizar datos de usuario: ${e.message}")
+            User() // Devolver un usuario vacío en caso de error
+        }
+    }
 }
 

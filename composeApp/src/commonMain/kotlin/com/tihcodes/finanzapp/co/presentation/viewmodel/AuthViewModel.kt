@@ -255,6 +255,29 @@ class AuthViewModel(
         }
     }
 
+    fun onUpdateUserData() {
+        viewModelScope.launch {
+            _isProcessing.value = true
+            try {
+                val userId = authRepository.currentUserId
+                authRepository.updateUserData(
+                    name = _uiState.value.name,
+                    surname = _uiState.value.surname,
+                    email = _uiState.value.email,
+                    phone = _uiState.value.phone,
+                    date = _uiState.value.date,
+                    userId = userId
+                )
+                // Sync user data after update
+                syncUserData()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                _isProcessing.value = false
+            }
+        }
+    }
+
     fun setFinalTransactions(realTransactions: List<TransactionItem>) {
         _finalTransactions.value = realTransactions
     }

@@ -118,9 +118,11 @@ fun ProfileScreen(
                 }
                 ProfileOptionItem(icon = TablerIcons.Edit, label = "Editar Perfil") {
                     // Navegar a pantalla de edición
+                    navController.navigate("edit_profile")
                 }
                 ProfileOptionItem(icon = TablerIcons.FileInfo, label = "Información") {
                     // Navegar a términos y condiciones
+                    navController.navigate("info")
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
