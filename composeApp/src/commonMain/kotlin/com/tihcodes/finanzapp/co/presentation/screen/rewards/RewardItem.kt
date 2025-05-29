@@ -30,9 +30,8 @@ fun RewardItem(
     onSimulatorClick: (Reward) -> Unit = {}
 ) {
     val background = if (reward.isUnlocked) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceVariant
-    val textAlpha = if (reward.isUnlocked) 1f else 0.4f
+    val textAlpha = if (reward.isUnlocked) 1f else 0.6f // Reducir opacidad para rewards bloqueados
     val isClickable = reward.isUnlocked && reward.type == RewardType.SIMULATOR
-
 
     Surface(
         shape = RoundedCornerShape(16.dp),

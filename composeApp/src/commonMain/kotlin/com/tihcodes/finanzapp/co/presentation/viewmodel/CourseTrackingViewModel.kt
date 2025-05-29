@@ -127,16 +127,18 @@ class CourseTrackingViewModel(
     }
 
     fun loadRewards(userId: String) {
-        getRewardsByUserId(userId)
-        _rewards.value = _rewards.value.map { reward ->
-                val courseTracking = _courseTrackingByUserId.value.find { it.rewardId == reward.id }
-            val isUnlocked = reward.isUnlocked || (courseTracking?.isUnlocked == 1L)
+        viewModelScope.launch {
+            val userRewards = rewardRepository.getRewardsByUserId(userId)
+            val allRewards = getRewardsContent()
+            _rewards.value = allRewards.map { reward ->
+                val userReward = userRewards.find { it.id == reward.id }
                 reward.copy(
-                    isUnlocked = isUnlocked,
+                    isUnlocked = userReward?.isUnlocked ?: false, // Mantener bloqueados si no están desbloqueados
                     userId = userId
                 )
             }
         }
+    }
 
     val progress: StateFlow<Float> = _courses.map { list ->
         val total = list.size
