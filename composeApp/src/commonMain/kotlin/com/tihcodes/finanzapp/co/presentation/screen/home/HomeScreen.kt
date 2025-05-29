@@ -158,10 +158,10 @@ fun HomeScreen(
                         userId = userId
                     )
                     Text(
-                        text = "Visualiza los porcentajes de gastos e ingresos",
+                        text = "Visualiza los porcentajes:",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                     TransactionPieChartWithKoalaPlot(
                         viewModel = chartViewModel

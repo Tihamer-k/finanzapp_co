@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -45,7 +44,6 @@ import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     navController: NavHostController,
@@ -93,7 +91,8 @@ fun EditProfileScreen(
                     onValueChange = viewModel::onNameChange,
                     label = { Text("Nombre") },
                     shape = RoundedCornerShape(20.dp),
-                    modifier = modifierField,isError = !Validator.isNameValid(uiState.name) && uiState.name.isNotEmpty()
+                    modifier = modifierField,
+                    isError = !Validator.isNameValid(uiState.name) && uiState.name.isNotEmpty()
                 )
                 if (!Validator.isNameValid(uiState.name) && uiState.name.isNotEmpty()) {
                     Text(
@@ -226,7 +225,7 @@ fun EditProfileScreen(
                         "Guardar Cambios",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onPrimary,
-                        )
+                    )
                 }
             }
         }

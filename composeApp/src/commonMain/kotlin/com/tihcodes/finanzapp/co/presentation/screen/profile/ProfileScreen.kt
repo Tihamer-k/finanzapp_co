@@ -36,8 +36,8 @@ import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.Edit
-import compose.icons.tablericons.FileInfo
 import compose.icons.tablericons.Settings
+import compose.icons.tablericons.Shield
 
 @Composable
 fun ProfileScreen(
@@ -115,14 +115,15 @@ fun ProfileScreen(
 
                 ProfileOptionItem(icon = TablerIcons.Settings, label = "Configuración") {
                     // Navegar a pantalla de configuración
+                    navController.navigate("settings")
                 }
                 ProfileOptionItem(icon = TablerIcons.Edit, label = "Editar Perfil") {
                     // Navegar a pantalla de edición
                     navController.navigate("edit_profile")
                 }
-                ProfileOptionItem(icon = TablerIcons.FileInfo, label = "Información") {
+                ProfileOptionItem(icon = TablerIcons.Shield, label = "Seguridad") {
                     // Navegar a términos y condiciones
-                    navController.navigate("info")
+                    navController.navigate("security")
                 }
 
                 Spacer(modifier = Modifier.weight(1f))

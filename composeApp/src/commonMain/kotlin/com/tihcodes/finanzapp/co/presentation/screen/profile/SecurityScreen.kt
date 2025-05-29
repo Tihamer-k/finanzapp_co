@@ -18,17 +18,18 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import compose.icons.TablerIcons
-import compose.icons.tablericons.FileInfo
+import compose.icons.tablericons.FileText
+import compose.icons.tablericons.InfoCircle
 
 @Composable
-fun InfoScreen(
+fun SecurityScreen(
     navController: NavHostController
 ) {
     Scaffold(
         topBar = {
             TopNavBar(
                 navController = navController,
-                title = "Información",
+                title = "Seguridad",
                 notificationsCount = 0,
                 showBackButton = true,
             )
@@ -55,7 +56,7 @@ fun InfoScreen(
                     headlineContent = { Text("Términos y condiciones") },
                     leadingContent = {
                         androidx.compose.material3.Icon(
-                            TablerIcons.FileInfo,
+                            TablerIcons.FileText,
                             contentDescription = null
                         )
                     },
@@ -68,7 +69,7 @@ fun InfoScreen(
                     headlineContent = { Text("Política de privacidad") },
                     leadingContent = {
                         androidx.compose.material3.Icon(
-                            TablerIcons.FileInfo,
+                            TablerIcons.FileText,
                             contentDescription = null
                         )
                     },
@@ -81,7 +82,7 @@ fun InfoScreen(
                     supportingContent = { Text("1.0.0") },
                     leadingContent = {
                         androidx.compose.material3.Icon(
-                            TablerIcons.FileInfo,
+                            TablerIcons.InfoCircle,
                             contentDescription = null
                         )
                     }

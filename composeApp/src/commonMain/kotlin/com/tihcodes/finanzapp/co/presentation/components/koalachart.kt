@@ -125,7 +125,7 @@ fun TransactionPieChartWithKoalaPlot(
                         modifier = Modifier.padding(top = 8.dp),
                     )
                 },
-                legendLocation = LegendLocation.BOTTOM
+                legendLocation = LegendLocation.TOP
             ) {
                 PieChart(
                     values = values,
@@ -157,7 +157,7 @@ fun TransactionPieChartWithKoalaPlot(
                                 connectorStroke = Stroke(width = 1f)
                             )
                     },
-                    holeSize = 0.6f,
+                    holeSize = 0.8f,
                     holeContent = {
                         Column(
                             modifier = Modifier.fillMaxSize().wrapContentSize(Alignment.Center)

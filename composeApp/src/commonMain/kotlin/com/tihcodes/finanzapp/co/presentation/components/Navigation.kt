@@ -23,8 +23,9 @@ import com.tihcodes.finanzapp.co.presentation.screen.learn.LearnScreen
 import com.tihcodes.finanzapp.co.presentation.screen.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.presentation.screen.profile.EditProfileScreen
-import com.tihcodes.finanzapp.co.presentation.screen.profile.InfoScreen
 import com.tihcodes.finanzapp.co.presentation.screen.profile.ProfileScreen
+import com.tihcodes.finanzapp.co.presentation.screen.profile.SecurityScreen
+import com.tihcodes.finanzapp.co.presentation.screen.profile.SettingsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.NewTransactionScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.RecordsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.rewards.RewardsScreen
@@ -289,8 +290,12 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             EditProfileScreen(navController = navController, viewModel = authViewModel)
         }
 
-        composable("info") {
-            InfoScreen(navController = navController)
+        composable("security") {
+            SecurityScreen(navController = navController)
+        }
+
+        composable("settings") {
+            SettingsScreen(navController = navController)
         }
 
     }
