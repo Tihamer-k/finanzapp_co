@@ -37,9 +37,8 @@ import finanzapp_co.composeapp.generated.resources.Poppins_ThinItalic
 import finanzapp_co.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 
-
 @Composable
-fun AppTypography(): Typography {
+fun AppTypography(fontSize: androidx.compose.ui.unit.TextUnit): Typography {
     val displayFontFamily = FontFamily(
         Font(Res.font.Poppins_Bold, FontWeight.Bold),
         Font(Res.font.Poppins_Regular, FontWeight.Normal),
@@ -60,8 +59,7 @@ fun AppTypography(): Typography {
         Font(Res.font.Poppins_BlackItalic, FontWeight.Black, FontStyle.Italic),
         Font(Res.font.Poppins_SemiBoldItalic, FontWeight.SemiBold, FontStyle.Italic),
         Font(Res.font.Poppins_BoldItalic, FontWeight.Bold, FontStyle.Italic),
-
-        )
+    )
 
     val bodyFontFamily = FontFamily(
         Font(Res.font.LeagueSpartan_Black, FontWeight.Black),
@@ -76,21 +74,20 @@ fun AppTypography(): Typography {
     )
 
     return Typography(
-        displayLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 28.sp),
-        displayMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp),
-        displaySmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Medium, fontSize = 16.sp),
-        headlineLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 24.sp),
-        headlineMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp),
-        headlineSmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp),
-        titleLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 24.sp),
-        titleMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 20.sp),
-        titleSmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = 16.sp),
-        bodyLarge = TextStyle(fontFamily = bodyFontFamily,  fontSize = 24.sp, fontWeight = FontWeight.Normal),
-        bodyMedium = TextStyle(fontFamily = bodyFontFamily, fontSize = 16.sp, fontWeight = FontWeight.Normal),
-        bodySmall = TextStyle(fontFamily = bodyFontFamily,  fontSize = 14.sp, fontWeight = FontWeight.Medium),
-        labelLarge = TextStyle(fontFamily = bodyFontFamily, fontSize = 24.sp, fontWeight = FontWeight.Black),
-        labelMedium = TextStyle(fontFamily = bodyFontFamily, fontSize = 16.sp, fontWeight = FontWeight.Bold),
-        labelSmall = TextStyle(fontFamily = bodyFontFamily, fontSize = 14.sp, fontWeight = FontWeight.SemiBold),
-
+        displayLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 1.75),
+        displayMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 1.5),
+        displaySmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Medium, fontSize = fontSize * 1.25),
+        headlineLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 1.5),
+        headlineMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 1.25),
+        headlineSmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize),
+        titleLarge = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 1.25),
+        titleMedium = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize),
+        titleSmall = TextStyle(fontFamily = displayFontFamily, fontWeight = FontWeight.Bold, fontSize = fontSize * 0.875),
+        bodyLarge = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize * 1.25, fontWeight = FontWeight.Normal),
+        bodyMedium = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize, fontWeight = FontWeight.Normal),
+        bodySmall = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize * 0.875, fontWeight = FontWeight.Medium),
+        labelLarge = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize * 1.25, fontWeight = FontWeight.Black),
+        labelMedium = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize, fontWeight = FontWeight.Bold),
+        labelSmall = TextStyle(fontFamily = bodyFontFamily, fontSize = fontSize * 0.875, fontWeight = FontWeight.SemiBold),
     )
 }

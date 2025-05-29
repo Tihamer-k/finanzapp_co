@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.presentation.components.Navigation
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.ui.theme.Theme
+import com.tihcodes.finanzapp.co.ui.theme.ThemeManager
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val ONBOARDING_DESTINATION = "onboarding"
@@ -26,7 +27,9 @@ private const val PRE_LOGIN_DESTINATION = "pre-login"
 
 @Composable
 fun App() {
-    Theme {
+    Theme(
+        darkTheme = ThemeManager.isDarkTheme
+    ) {
         val authViewModel = koinViewModel<AuthViewModel>()
         val surfaceColor = MaterialTheme.colorScheme.background
         val authState = determineAuthState(authViewModel)
