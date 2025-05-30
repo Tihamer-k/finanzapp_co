@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.presentation.components.ConfettiAnimation
 import com.tihcodes.finanzapp.co.presentation.components.SuccessDialog
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
@@ -47,7 +48,9 @@ import finanzapp_co.composeapp.generated.resources.ic_calendar
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
 import kotlinx.coroutines.delay
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
 import network.chaintech.kmp_date_time_picker.ui.datepicker.WheelDatePickerView
 import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
 import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
@@ -58,7 +61,8 @@ import org.jetbrains.compose.resources.painterResource
 fun SignUpScreen(
     onRegisterClick: () -> Unit,
     onLoginNavigate: () -> Unit,
-    viewModel: AuthViewModel
+    viewModel: AuthViewModel,
+    navigation: NavHostController
 ) {
     // Estados locales para inputs
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -73,16 +77,10 @@ fun SignUpScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val isProcessing by viewModel.isProcessing.collectAsState()
-    val authState by viewModel.authState.collectAsState()
     var errorMessage by rememberSaveable { mutableStateOf("") }
     val isEmailValid = Validator.isEmailValid(uiState.email)
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(authState) {
-        if (authState) {
-            onRegisterClick()
-        }
-    }
+    var isRegistered by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -237,7 +235,7 @@ fun SignUpScreen(
                 doneLabel = "Aceptar",
                 titleStyle = MaterialTheme.typography.labelMedium,
                 doneLabelStyle = MaterialTheme.typography.labelMedium,
-                startDate = LocalDate.now(),
+                startDate = LocalDate.now().minus(DatePeriod(years = 18)),
                 selectorProperties = WheelPickerDefaults.selectorProperties(
                     borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
                 ),
@@ -332,11 +330,17 @@ fun SignUpScreen(
             Row {
                 Text(
                     text = "Términos de uso ",
+                    modifier = Modifier.clickable {
+                        navigation.navigate("terms")
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
                     text = "y Política de privacidad.",
+                    modifier = Modifier.clickable {
+                        navigation.navigate("privacy")
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall
                 )
@@ -346,7 +350,8 @@ fun SignUpScreen(
 
             Button(
                 onClick = {
-                    viewModel.onRegister()
+                    isRegistered = viewModel.onRegister()
+                    clicked = true
                 },
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
@@ -384,22 +389,10 @@ fun SignUpScreen(
                         modifier = Modifier.size(24.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                } else if (!authState) {
-                    errorMessage = "Error en el registro"
-                    if (errorMessage.isNotEmpty()) {
-                        LaunchedEffect(errorMessage) {
-                            delay(3000) // 3 segundos
-                            errorMessage = ""
-                        }
-                        Text(
-                            text = errorMessage,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
+                } else if (!isRegistered) {
+                    errorMessage = "Error en el registro, correo ya registrado o error de conexión"
                     clicked = false
-                } else if (authState) {
+                } else if (isRegistered) {
                     showConfetti = true
                     showSuccessDialog = true
                     clicked = false
@@ -415,6 +408,22 @@ fun SignUpScreen(
                     }
                 )
             }
+
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(20.dp))
+                LaunchedEffect(errorMessage) {
+                    delay(3000) // 3 segundos
+                    errorMessage = ""
+                }
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 

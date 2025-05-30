@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,43 +16,42 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.domain.model.BottomNavItem
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_category
-import finanzapp_co.composeapp.generated.resources.ic_home
-import finanzapp_co.composeapp.generated.resources.ic_learn
-import finanzapp_co.composeapp.generated.resources.ic_rewards
-import finanzapp_co.composeapp.generated.resources.ic_transactions
-import org.jetbrains.compose.resources.painterResource
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Home
+import compose.icons.tablericons.Medal
+import compose.icons.tablericons.ReportMoney
+import compose.icons.tablericons.School
+import compose.icons.tablericons.TriangleSquareCircle
 
 val items = listOf(
     BottomNavItem(
         title = "Inicio",
         route = "home",
-        icon = Res.drawable.ic_home
+        icon = TablerIcons.Home
     ),
     BottomNavItem(
         title = "Aprende",
         route = "learn",
-        icon = Res.drawable.ic_learn
+        icon = TablerIcons.School
     ),
     BottomNavItem(
         title = "Registros",
         route = "records",
-        icon = Res.drawable.ic_transactions
+        icon = TablerIcons.ReportMoney
     ),
     BottomNavItem(
         title = "Categorías",
         route = "categories",
-        icon = Res.drawable.ic_category
+        icon = TablerIcons.TriangleSquareCircle
     ),
     BottomNavItem(
         title = "Premios",
         route = "rewards",
-        icon = Res.drawable.ic_rewards
+        icon = TablerIcons.Medal
     )
 )
 
@@ -65,7 +64,7 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
             .background(MaterialTheme.colorScheme.background)
             .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
             .height(140.dp),
-        tonalElevation =  6.dp,
+        tonalElevation = 6.dp,
     ) {
 
         Row(
@@ -73,32 +72,32 @@ fun BottomNavBar(indexIn: Int, onItemClick: NavController) {
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items.forEachIndexed {
-                index, item ->
+            items.forEachIndexed { index, item ->
                 NavigationBarItem(
                     selected = index == indexIn,
                     icon = {
-                        Image(
-                            painter = painterResource(item.icon),
+                        Icon(
+                            imageVector = item.icon,
                             contentDescription = item.title,
                             modifier = Modifier
                                 .padding(4.dp)
                                 .height(if (index == indexIn) 36.dp else 30.dp)
                                 .width(if (index == indexIn) 34.dp else 28.dp),
-                            colorFilter =
-                                if (index == indexIn) ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                                else ColorFilter.tint(MaterialTheme.colorScheme.onSecondaryContainer),
+                            tint =
+                                if (index == indexIn) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSecondaryContainer,
                         )
                     },
-                    label = if (index == indexIn) {
+                    label =
                         {
-                        Text(
-                            text = item.title,
-                                color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        }
-                    } else null,
+                            Text(
+                                text = item.title,
+                                color = if (index == indexIn) MaterialTheme.colorScheme.primary
+                                else MaterialTheme.colorScheme.onSecondaryContainer,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontSize = if (index == indexIn) 12.sp else 10.sp
+                            )
+                        },
                     onClick = {
                         onItemClick.navigate(item.route)
                     }

@@ -86,11 +86,13 @@ fun RewardsScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(rewards) { reward ->
+                    items(rewards.sortedByDescending { it.isUnlocked }) { reward -> // Mostrar desbloqueados primero
                         RewardItem(
                             reward = reward,
                             onSimulatorClick = {
-                                navController.navigate("simulator/${it.name}")
+                                if (reward.isUnlocked) {
+                                    navController.navigate("simulator/${reward.name}/${reward.id}")
+                                }
                             }
                         )
                     }

@@ -68,8 +68,12 @@ object Validator {
                 isValidPass && confirmPassword
     }
 
-    fun formatDoubleWithCommas(value: Double): String {
-        return value.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+    fun formatNumberWithCommas(value: Number): String {
+        val strValue = when (value) {
+            is Int, is Long -> value.toLong().toString()
+            is Double, is Float -> value.toLong().toString()
+            else -> value.toString()
+        }
+        return strValue.replace("(\\d)(?=(\\d{3})+(?!\\d))".toRegex(), "$1,")
     }
-
 }

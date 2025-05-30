@@ -1,14 +1,15 @@
 package com.tihcodes.finanzapp.co.ui.theme
 
-
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.ui.unit.sp
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -250,20 +251,21 @@ val unspecified_scheme = ColorFamily(
     Color.Unspecified, Color.Unspecified, Color.Unspecified, Color.Unspecified
 )
 
+object ThemeManager {
+    var isDarkTheme by mutableStateOf(false)
+    var fontSize by mutableStateOf(16.sp)
+}
+
 @Composable
 fun Theme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = ThemeManager.isDarkTheme,
     content: @Composable () -> Unit
 ) {
-  val colorScheme = when {
-      darkTheme -> darkScheme
-      else -> lightScheme
-  }
+    val colorScheme = if (darkTheme) darkScheme else lightScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = AppTypography(),
+        typography = AppTypography(fontSize = ThemeManager.fontSize),
         content = content
     )
 }
-

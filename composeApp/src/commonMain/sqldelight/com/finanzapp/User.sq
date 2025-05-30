@@ -9,6 +9,6 @@ VALUES
 
 updateUser:
 UPDATE User
-SET name = ?, surname = ?, email = ?, phone = ?, date = ?, isAnonymous = ?
+SET name = ?, surname = ?, phone = ?, date = ?, isAnonymous = ?
 WHERE id = ?;
 

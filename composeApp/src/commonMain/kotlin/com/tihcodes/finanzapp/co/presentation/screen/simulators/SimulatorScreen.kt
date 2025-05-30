@@ -1,4 +1,4 @@
-package com.tihcodes.finanzapp.co.presentation.screen.rewards
+package com.tihcodes.finanzapp.co.presentation.screen.simulators
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -34,27 +35,27 @@ fun SimulatorScreen(
     simulatorName: String,
     navController: NavController
 ) {
-    var initialAmount by remember { mutableStateOf(1000.0) }
+    var initialAmount by remember { mutableStateOf(100000.0) }
     var interestRate by remember { mutableStateOf(5.0) }
     var years by remember { mutableStateOf(1) }
 
     val finalAmount = initialAmount * (1 + (interestRate / 100)).pow(years)
 
     Scaffold(
-            topBar = {
-                TopNavBar(
-                    navController = navController,
-                    title = "Simuladores",
-                    notificationsCount = 0,
-                    showBackButton = true,
-                )
-            },
-            bottomBar = {
-                BottomNavBar(
-                    indexIn = 4,
-                    onItemClick = navController
-                )
-            }
+        topBar = {
+            TopNavBar(
+                navController = navController,
+                title = "Simuladores",
+                notificationsCount = 0,
+                showBackButton = true,
+            )
+        },
+        bottomBar = {
+            BottomNavBar(
+                indexIn = 4,
+                onItemClick = navController
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -72,19 +73,37 @@ fun SimulatorScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
                     text = simulatorName,
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(16.dp).align(Alignment.CenterHorizontally)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Monto inicial: $${initialAmount.roundToInt()}")
+                Text(
+                    text = "Simulador de interés compuesto",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                Text(
+                    text = "Este simulador te permite calcular el crecimiento de una inversión a través del interés compuesto. Ajusta el monto inicial, la tasa de interés anual y los años para ver el total proyectado.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                Text(
+                    "Monto inicial: $${
+                        formatNumberWithCommas(
+                            initialAmount.roundToInt()
+                        )
+                    }"
+                )
                 Slider(
                     value = initialAmount.toFloat(),
                     onValueChange = { initialAmount = it.toDouble() },
-                    valueRange = 100.0f..10000.0f
+                    valueRange = 100000.0f..9000000.0f
                 )
 
                 Text("Tasa de interés: ${interestRate.roundToInt()}%")
@@ -105,7 +124,7 @@ fun SimulatorScreen(
                 HorizontalDivider()
 
                 Text(
-                    text = "Total proyectado: $${finalAmount.roundToInt()}",
+                    text = "Total proyectado: $${formatNumberWithCommas(finalAmount.roundToInt())}",
                     style = MaterialTheme.typography.titleLarge,
                     color = Color(0xFF1B9C85)
                 )

@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.googleServices) apply false
     alias(libs.plugins.kotlinxSerialization) apply false
     alias(libs.plugins.sqlDelight) apply false
+    alias(libs.plugins.composeHotReload) apply false
 }

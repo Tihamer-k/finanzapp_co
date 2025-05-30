@@ -1,6 +1,5 @@
 package com.tihcodes.finanzapp.co.presentation.components
 
-import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -21,13 +20,19 @@ import com.tihcodes.finanzapp.co.presentation.screen.home.HomeScreen
 import com.tihcodes.finanzapp.co.presentation.screen.learn.CourseContentScreen
 import com.tihcodes.finanzapp.co.presentation.screen.learn.CoursesModule
 import com.tihcodes.finanzapp.co.presentation.screen.learn.LearnScreen
+import com.tihcodes.finanzapp.co.presentation.screen.legal.PrivacyPolicyScreen
+import com.tihcodes.finanzapp.co.presentation.screen.legal.TermsAndConditionsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
+import com.tihcodes.finanzapp.co.presentation.screen.profile.EditProfileScreen
 import com.tihcodes.finanzapp.co.presentation.screen.profile.ProfileScreen
+import com.tihcodes.finanzapp.co.presentation.screen.profile.SecurityScreen
+import com.tihcodes.finanzapp.co.presentation.screen.profile.SettingsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.NewTransactionScreen
 import com.tihcodes.finanzapp.co.presentation.screen.records.RecordsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.rewards.RewardsScreen
-import com.tihcodes.finanzapp.co.presentation.screen.rewards.SimulatorScreen
+import com.tihcodes.finanzapp.co.presentation.screen.simulators.FinanceSimulatorScreen
+import com.tihcodes.finanzapp.co.presentation.screen.simulators.SimulatorScreen
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import org.koin.compose.koinInject
 
@@ -39,12 +44,6 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
     NavHost(
         navController = navController,
         startDestination = destination,
-        enterTransition = {
-            when (initialState.destination.route) {
-                "onboarding" -> fadeIn()
-                else -> fadeIn(initialAlpha = 1f)
-            }
-        }
     ) {
 
         composable("onboarding") {
@@ -56,8 +55,11 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable("register") {
             SignUpScreen(
                 viewModel = authViewModel,
-                onRegisterClick = { navController.navigate("home") },
+                onRegisterClick = { navController.navigate("login") {
+                    popUpTo("pre-login") { inclusive = true }
+                } },
                 onLoginNavigate = { navController.navigate("login") },
+                navigation = navController,
             )
         }
         composable("forgot-password") {
@@ -71,7 +73,9 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         }
         composable("login") {
             LoginScreen(
-                onLoginClick = { navController.navigate("home") },
+                onLoginClick = { navController.navigate("home") {
+                    popUpTo("pre-login") { inclusive = true }
+                } },
                 onGoogleLoginClick = { navController.navigate("home") },
                 onRegisterClick = { navController.navigate("register") },
                 onForgotPasswordClick = { navController.navigate("forgot-password") },
@@ -206,12 +210,31 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             )
         }
 
-        composable("simulator/{simulatorName}") { backStack ->
+        composable("simulator/{simulatorName}/{simulatorId}") { backStack ->
             val name = backStack.arguments?.getString("simulatorName") ?: "Simulador"
-            SimulatorScreen(
-                simulatorName = name,
-                navController = navController,
-            )
+            val id = backStack.arguments?.getString("simulatorId") ?: "0"
+            when (id) {
+                "sim_1" -> {
+                    SimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+
+                "sim_2" -> {
+                    FinanceSimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+
+                else -> {
+                    SimulatorScreen(
+                        simulatorName = name,
+                        navController = navController,
+                    )
+                }
+            }
         }
 
         composable("notifications") {
@@ -265,6 +288,22 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
                 navController = navController,
             )
         }
+
+        composable("edit_profile") {
+            EditProfileScreen(navController = navController, viewModel = authViewModel)
+        }
+
+        composable("security") {
+            SecurityScreen(navController = navController)
+        }
+
+        composable("settings") {
+            SettingsScreen(navController = navController)
+        }
+
+        composable("terms") { TermsAndConditionsScreen(navController) }
+        composable("privacy") { PrivacyPolicyScreen(navController) }
+
 
     }
 

@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.sqlDelight)
+    alias(libs.plugins.composeHotReload)
 }
 
 kotlin {
@@ -72,6 +73,10 @@ kotlin {
             implementation(libs.multiplatform.settings.no.arg)
 
             implementation(libs.kmp.date.time.picker)
+
+            implementation(libs.koalaplot.core)
+
+            implementation("br.com.devsrsouza.compose.icons:tabler-icons:1.1.1")
         }
     }
     task("testClasses")
@@ -117,4 +122,3 @@ sqldelight {
         }
     }
 }
-

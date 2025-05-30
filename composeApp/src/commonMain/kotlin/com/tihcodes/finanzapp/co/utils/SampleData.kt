@@ -2,6 +2,7 @@ package com.tihcodes.finanzapp.co.utils
 
 import androidx.compose.ui.graphics.Color
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.PieSliceData
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import finanzapp_co.composeapp.generated.resources.Res
@@ -95,6 +96,17 @@ fun getSampleTransactions(): List<TransactionItem> {
             TransactionType.INCOME,
             Res.drawable.ic_savings
         )
+    )
+}
+
+fun getDonutChartSampleData(): List<PieSliceData> {
+    return listOf(
+        PieSliceData(20000.0, "Housing", Color(0xFF6200EE)),
+        PieSliceData(30000.0, "Entertainment", Color(0xFF03DAC5)),
+        PieSliceData(50000.0, "Food", Color(0xFFFF5722)),
+        PieSliceData(10000.0, "Transport", Color(0xFF9C27B0)),
+        PieSliceData(40000.0, "Medicine", Color(0xFF2196F3)),
+        PieSliceData(60000.0, "Pantry", Color(0xFFFFEB3B))
     )
 }
 

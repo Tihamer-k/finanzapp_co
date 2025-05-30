@@ -62,6 +62,7 @@ fun LoginScreen(
     val errorMessagePassword = Validator.isPasswordValid(uiState.password).second
     val isFormValid = isEmailValid && isPasswordValid
     var clicked by rememberSaveable { mutableStateOf(false) }
+    var signInRes by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -94,8 +95,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
-            Spacer(modifier = Modifier.weight(0.1f))
-
+            Spacer(modifier = Modifier.height(40.dp))
             OutlinedTextField(
                 value = uiState.email.lowercase(),
                 onValueChange = viewModel::onEmailChange,
@@ -154,24 +154,12 @@ fun LoginScreen(
                     )
                 }
             }
-            if (errorMessage.isNotEmpty()) {
-                LaunchedEffect(errorMessage) {
-                    delay(4000) // 4 segundos
-                    errorMessage = ""
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = errorMessage,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+
 
             Spacer(modifier = Modifier.height(18.dp).fillMaxWidth())
             Button(
                 onClick = {
-                    viewModel.onSignInClick()
+                    signInRes = viewModel.onSignInClick()
                     clicked = true
                 },
                 enabled = isFormValid,
@@ -203,13 +191,27 @@ fun LoginScreen(
                         modifier = Modifier.size(24.dp).padding(top = 8.dp),
                         color = MaterialTheme.colorScheme.primary
                     )
-                } else if (!authState) {
+                } else if (!signInRes) {
                     errorMessage = "Error de autenticación usuario o contraseña incorrectos"
                     clicked = false
-                } else if (authState) {
+                } else if (signInRes) {
                     onLoginClick()
                     clicked = false
                 }
+            }
+            if (errorMessage.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(20.dp))
+                LaunchedEffect(errorMessage) {
+                    delay(3000) // 3 segundos
+                    errorMessage = ""
+                }
+                Text(
+                    text = errorMessage,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(8.dp)
+                )
+                Spacer(modifier = Modifier.height(20.dp))
             }
             Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
             TextButton(onClick = onForgotPasswordClick) {

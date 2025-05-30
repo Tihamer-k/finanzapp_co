@@ -23,16 +23,13 @@ class AuthViewModel(
 ) : BaseViewModel() {
 
     private val _finalTransactions = MutableStateFlow<List<TransactionItem>>(emptyList())
-    val finalTransactions: StateFlow<List<TransactionItem>> = _finalTransactions.asStateFlow()
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _emailError = MutableStateFlow(false)
-    val emailError = _emailError.asStateFlow()
 
     private val _passwordError = MutableStateFlow(false)
-    val passwordError = _passwordError.asStateFlow()
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser = _currentUser.asStateFlow()
@@ -51,6 +48,9 @@ class AuthViewModel(
 
     private val _showOnboarding = MutableStateFlow(true)
     val showOnboarding = _showOnboarding.asStateFlow()
+
+    private val _isRegistered = MutableStateFlow(false)
+    val isRegistered = _isRegistered.asStateFlow()
 
 
     init {
@@ -153,7 +153,7 @@ class AuthViewModel(
         _uiState.update { it.copy(date = newValue) }
     }
 
-    fun onSignInClick() {
+    fun onSignInClick(): Boolean {
         launchWithCatchingException {
             _isProcessing.value = true
             try {
@@ -167,7 +167,9 @@ class AuthViewModel(
                 _isSignIn.value = false
             }
             _isProcessing.value = false
+            _isRegistered.value = false // Reset registration state on sign in
         }
+        return _isSignIn.value
     }
 
     fun onSignOut() {
@@ -177,11 +179,12 @@ class AuthViewModel(
             _isSignedOut.value = true
             _currentUser.value = null
             _authState.value = false
+            _isRegistered.value = false
             _uiState.update { LoginUiState() } // Reset UI state
         }
     }
 
-    fun onRegister() {
+    fun onRegister(): Boolean {
         launchWithCatchingException {
             _isProcessing.value = true
             try {
@@ -194,15 +197,16 @@ class AuthViewModel(
                     date = _uiState.value.date
                 )
                 _authState.value = true // Actualiza el estado de autenticación
-                _isSignIn.value = true
+                _isRegistered.value = true
                 _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
-                _isSignIn.value = false
+                _isRegistered.value = false
             }
             _isProcessing.value = false
         }
+        return _isRegistered.value
     }
 
     fun onReset() {
@@ -245,6 +249,29 @@ class AuthViewModel(
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+            } finally {
+                _isProcessing.value = false
+            }
+        }
+    }
+
+    fun onUpdateUserData() {
+        viewModelScope.launch {
+            _isProcessing.value = true
+            try {
+                val userId = authRepository.currentUserId
+                authRepository.updateUserData(
+                    name = _uiState.value.name,
+                    surname = _uiState.value.surname,
+                    email = _uiState.value.email,
+                    phone = _uiState.value.phone,
+                    date = _uiState.value.date,
+                    userId = userId
+                )
+                // Sync user data after update
+                syncUserData()
+            } catch (e: Exception) {
+                e.printStackTrace()
             } finally {
                 _isProcessing.value = false
             }

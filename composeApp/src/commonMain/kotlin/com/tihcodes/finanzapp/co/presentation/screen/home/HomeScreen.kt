@@ -34,8 +34,10 @@ import com.tihcodes.finanzapp.co.presentation.components.BalanceSummary
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.components.TransactionPieChartWithKoalaPlot
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import org.koin.compose.koinInject
 
 
@@ -49,6 +51,7 @@ fun HomeScreen(
     val listState = rememberLazyListState()
     val transactionRepository = koinInject<TransactionRepository>()
     val categoryRepository = koinInject<CategoryRepository>()
+    val chartViewModel = koinInject<TransactionChartViewModel>()
     val userId = user.id
     val courseTracking = koinInject<CourseTrackingViewModel>()
 
@@ -68,10 +71,12 @@ fun HomeScreen(
         transactionRepository.initialize(userId)
         courseTracking.setUserId(userId)
 
+
         // Then sync with Firestore to get user-specific data
         if (userId.isNotEmpty()) {
             categoryRepository.syncCategories(userId)
             transactionRepository.syncTransactions(userId)
+            chartViewModel.setUserId(userId)
         }
     }
 
@@ -133,15 +138,16 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(MaterialTheme.colorScheme.background)
+                    ,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
-                        text = "Bienvenido, ${user.name}",
-                        style = MaterialTheme.typography.titleLarge,
+                        text = "Bienvenido, ${user.name.replaceFirstChar { it.uppercase() }}",
+                        style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(16.dp)
                     )
@@ -152,7 +158,15 @@ fun HomeScreen(
                         transactionRepository = transactionRepository,
                         userId = userId
                     )
-
+                    Text(
+                        text = "Visualiza los porcentajes",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                    TransactionPieChartWithKoalaPlot(
+                        viewModel = chartViewModel
+                    )
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Spacer(Modifier.weight(0.3f))

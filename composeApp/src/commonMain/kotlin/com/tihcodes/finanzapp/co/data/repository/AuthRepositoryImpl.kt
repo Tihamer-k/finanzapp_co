@@ -145,23 +145,6 @@ class AuthRepositoryImpl(
         }
     }
 
-//    override suspend fun getUserData(userId: String): User {
-//        return try {
-//            userRepository.getUserById(userId).map { user ->
-//                User(
-//                    id = user.id,
-//                    name = user.name,
-//                    surname = user.surname,
-//                    email = user.email,
-//                    phone = user.phone,
-//                    date = user.date
-//                )
-//            }.first() // Collect the first emitted value from the Flow
-//        } catch (e: Exception) {
-//            User()
-//        }
-//    }
-
     override suspend fun getUserData(userId: String): User {
         return try {
             // Primero intentar obtener usuario de la base de datos local
@@ -199,6 +182,50 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             println("ERROR: Error al obtener datos de usuario: ${e.message}")
+            User() // Devolver un usuario vacío en caso de error
+        }
+    }
+
+    override suspend fun updateUserData(
+        userId: String,
+        name: String,
+        surname: String,
+        email: String,
+        phone: String,
+        date: String
+    ): User {
+        return try {
+            // Actualizar en Firestore
+            database.collection("users").document(userId).set(
+                mapOf(
+                    "name" to name,
+                    "surname" to surname,
+                    "phone" to phone,
+                    "date" to date
+                )
+            )
+            val user = User(
+                id = userId,
+                name = name,
+                surname = surname,
+                phone = phone,
+                date = date
+                )
+
+            // Actualizar en la base de datos local
+            userDatabaseDriver.updateUser(
+                User(
+                    id = userId,
+                    name = name,
+                    surname = surname,
+                    phone = phone,
+                    date = date
+                )
+            )
+
+            user
+        } catch (e: Exception) {
+            println("ERROR: Error al actualizar datos de usuario: ${e.message}")
             User() // Devolver un usuario vacío en caso de error
         }
     }

@@ -22,7 +22,7 @@ import com.tihcodes.finanzapp.co.data.local.CategoryDatabase
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
-import com.tihcodes.finanzapp.co.utils.Validator.formatDoubleWithCommas
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import kotlin.math.absoluteValue
@@ -76,7 +76,7 @@ fun TransactionItemCard(transaction: TransactionItem) {
             }
 
             Text(
-                text = if (transaction.type == TransactionType.INCOME) "+$${formatDoubleWithCommas(transaction.amount)}" else "-$${formatDoubleWithCommas(transaction.amount.absoluteValue)}",
+                text = if (transaction.type == TransactionType.INCOME) "+$${formatNumberWithCommas(transaction.amount)}" else "-$${formatNumberWithCommas(transaction.amount.absoluteValue)}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (transaction.type == TransactionType.INCOME) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )

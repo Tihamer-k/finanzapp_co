@@ -52,7 +52,6 @@ class UserDatabase(
             id = user.id,
             name = user.name,
             surname = user.surname,
-            email = user.email,
             phone = user.phone,
             date = user.date,
             isAnonymous = 0
