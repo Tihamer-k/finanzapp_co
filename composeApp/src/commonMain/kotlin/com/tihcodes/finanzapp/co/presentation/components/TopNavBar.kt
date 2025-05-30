@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,10 +29,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tihcodes.finanzapp.co.domain.model.BottomNavItem
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.ArrowBack
 import compose.icons.tablericons.Bell
 import compose.icons.tablericons.User
+import org.koin.compose.koinInject
 
 
 val itemsTopBar = listOf(
@@ -78,6 +81,7 @@ fun TopNavBar(
                 end = 16.dp
             )
     ) {
+        val user = koinInject<AuthViewModel>().currentUser.collectAsState().value
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,103 +96,106 @@ fun TopNavBar(
                 color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.align(Alignment.Center)
             )
+            if (user != null) {
+                if (user.id.isNotEmpty()) {
+                    if (showBackButton) {
+                        // Back button (left)
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                        ) {
+                            Icon(
+                                imageVector = TablerIcons.ArrowBack,
+                                contentDescription = "Back",
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary
+                            )
+                        }
+                    } else {
+                        // Profile icon (left)
+                        profileItem?.let { item ->
+                            val isSelected = item.route == currentRoute
+                            val iconColor by animateColorAsState(
+                                targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
+                                animationSpec = tween(durationMillis = 300)
+                            )
+                            val scale by animateFloatAsState(
+                                targetValue = if (isSelected) 1.2f else 1f,
+                                animationSpec = tween(300)
+                            )
 
-            if (showBackButton) {
-                // Back button (left)
-                IconButton(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                ) {
-                    Icon(
-                        imageVector = TablerIcons.ArrowBack,
-                        contentDescription = "Back",
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.onPrimary
-                    )
-                }
-            } else {
-                // Profile icon (left)
-                profileItem?.let { item ->
-                    val isSelected = item.route == currentRoute
-                    val iconColor by animateColorAsState(
-                        targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
-                        animationSpec = tween(durationMillis = 300)
-                    )
-                    val scale by animateFloatAsState(
-                        targetValue = if (isSelected) 1.2f else 1f,
-                        animationSpec = tween(300)
-                    )
-
-                    IconButton(
-                        onClick = {
-                            if (!isSelected) {
-                                navController.navigate(item.route) {
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
+                            IconButton(
+                                onClick = {
+                                    if (!isSelected) {
+                                        navController.navigate(item.route) {
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    }
+                                },
+                                modifier = Modifier
+                                    .align(Alignment.CenterStart)
+                                    .scale(scale)
+                            ) {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = iconColor
+                                )
                             }
-                        },
-                        modifier = Modifier
-                            .align(Alignment.CenterStart)
-                            .scale(scale)
-                    ) {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title,
-                            modifier = Modifier.size(24.dp),
-                            tint = iconColor
-                        )
+                        }
                     }
-                }
-            }
 
-            // Notifications icon (right)
-            notificationsItem?.let { item ->
-                val isSelected = item.route == currentRoute
-                val iconColor by animateColorAsState(
-                    targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
-                    animationSpec = tween(durationMillis = 300)
-                )
-                val scale by animateFloatAsState(
-                    targetValue = if (isSelected) 1.2f else 1f,
-                    animationSpec = tween(300)
-                )
+                    // Notifications icon (right)
+                    notificationsItem?.let { item ->
+                        val isSelected = item.route == currentRoute
+                        val iconColor by animateColorAsState(
+                            targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
+                            animationSpec = tween(durationMillis = 300)
+                        )
+                        val scale by animateFloatAsState(
+                            targetValue = if (isSelected) 1.2f else 1f,
+                            animationSpec = tween(300)
+                        )
 
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .scale(scale)
-                ) {
-                    BadgedBox(
-                        badge = {
-                            if (adjustedNotificationsCount > 0) {
-                                Badge {
-                                    Text(
-                                        text = if (adjustedNotificationsCount > 9) "9+" else adjustedNotificationsCount.toString(),
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.onPrimary
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .scale(scale)
+                        ) {
+                            BadgedBox(
+                                badge = {
+                                    if (adjustedNotificationsCount > 0) {
+                                        Badge {
+                                            Text(
+                                                text = if (adjustedNotificationsCount > 9) "9+" else adjustedNotificationsCount.toString(),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onPrimary
+                                            )
+                                        }
+                                    }
+                                }
+                            ) {
+                                IconButton(
+                                    onClick = {
+                                        if (!isSelected) {
+                                            navController.navigate(item.route) {
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = item.icon,
+                                        contentDescription = item.title,
+                                        modifier = Modifier.size(24.dp),
+                                        tint = iconColor
                                     )
                                 }
                             }
-                        }
-                    ) {
-                        IconButton(
-                            onClick = {
-                                if (!isSelected) {
-                                    navController.navigate(item.route) {
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.title,
-                                modifier = Modifier.size(24.dp),
-                                tint = iconColor
-                            )
                         }
                     }
                 }

@@ -20,6 +20,8 @@ import com.tihcodes.finanzapp.co.presentation.screen.home.HomeScreen
 import com.tihcodes.finanzapp.co.presentation.screen.learn.CourseContentScreen
 import com.tihcodes.finanzapp.co.presentation.screen.learn.CoursesModule
 import com.tihcodes.finanzapp.co.presentation.screen.learn.LearnScreen
+import com.tihcodes.finanzapp.co.presentation.screen.legal.PrivacyPolicyScreen
+import com.tihcodes.finanzapp.co.presentation.screen.legal.TermsAndConditionsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.notifications.NotificationsScreen
 import com.tihcodes.finanzapp.co.presentation.screen.onboarding.Onboarding
 import com.tihcodes.finanzapp.co.presentation.screen.profile.EditProfileScreen
@@ -57,6 +59,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
                     popUpTo("pre-login") { inclusive = true }
                 } },
                 onLoginNavigate = { navController.navigate("login") },
+                navigation = navController,
             )
         }
         composable("forgot-password") {
@@ -297,6 +300,10 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
         composable("settings") {
             SettingsScreen(navController = navController)
         }
+
+        composable("terms") { TermsAndConditionsScreen(navController) }
+        composable("privacy") { PrivacyPolicyScreen(navController) }
+
 
     }
 

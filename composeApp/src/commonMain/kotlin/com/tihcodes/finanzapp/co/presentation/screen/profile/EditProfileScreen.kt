@@ -1,7 +1,9 @@
 package com.tihcodes.finanzapp.co.presentation.screen.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -28,7 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
@@ -84,6 +89,28 @@ fun EditProfileScreen(
                     .padding(vertical = 4.dp)
                     .padding(horizontal = 4.dp)
                     .clip(RoundedCornerShape(20.dp))
+
+                // Círculo con iniciales
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                        .align(Alignment.CenterHorizontally),
+                    contentAlignment = Alignment.Center
+                ) {
+                    val initials =
+                        "${uiState.name.firstOrNull() ?: ""}${uiState.surname.firstOrNull() ?: ""}".uppercase()
+                    Text(
+                        text = initials,
+                        style = MaterialTheme.typography.titleLarge.copy(fontSize = 32.sp),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
 
                 OutlinedTextField(

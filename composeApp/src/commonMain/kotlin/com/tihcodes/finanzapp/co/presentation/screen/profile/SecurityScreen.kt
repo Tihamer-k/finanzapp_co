@@ -61,7 +61,7 @@ fun SecurityScreen(
                         )
                     },
                     modifier = Modifier.clickable {
-                        // Navegar a pantalla de términos
+                        navController.navigate("terms")
                     }
                 )
 
@@ -74,7 +74,7 @@ fun SecurityScreen(
                         )
                     },
                     modifier = Modifier.clickable {
-                        // Navegar a pantalla de política de privacidad
+                        navController.navigate("privacy")
                     }
                 )
                 ListItem(

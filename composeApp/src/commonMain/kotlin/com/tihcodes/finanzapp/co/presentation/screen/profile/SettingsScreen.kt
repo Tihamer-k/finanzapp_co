@@ -68,7 +68,7 @@ fun SettingsScreen(navController: NavHostController) {
                             modifier = Modifier.padding(horizontal = 16.dp)
                         ) {
                             Text(
-                                text = "Tema oscuro",
+                                text = "Cambiar tema de la aplicación",
                                 fontSize = 16.sp,
                                 modifier = Modifier.weight(1f)
                             )
@@ -109,7 +109,6 @@ fun SettingsScreen(navController: NavHostController) {
                             )
                         }
                     }
-
                 }
             }
         }

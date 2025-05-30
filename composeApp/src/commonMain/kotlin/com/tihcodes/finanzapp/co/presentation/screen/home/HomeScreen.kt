@@ -138,7 +138,8 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                        .background(MaterialTheme.colorScheme.background),
+                        .background(MaterialTheme.colorScheme.background)
+                    ,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
 
@@ -158,7 +159,7 @@ fun HomeScreen(
                         userId = userId
                     )
                     Text(
-                        text = "Visualiza los porcentajes:",
+                        text = "Visualiza los porcentajes",
                         style = MaterialTheme.typography.titleSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.padding(8.dp)

@@ -38,6 +38,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.presentation.components.ConfettiAnimation
 import com.tihcodes.finanzapp.co.presentation.components.SuccessDialog
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
@@ -60,7 +61,8 @@ import org.jetbrains.compose.resources.painterResource
 fun SignUpScreen(
     onRegisterClick: () -> Unit,
     onLoginNavigate: () -> Unit,
-    viewModel: AuthViewModel
+    viewModel: AuthViewModel,
+    navigation: NavHostController
 ) {
     // Estados locales para inputs
     var confirmPassword by rememberSaveable { mutableStateOf("") }
@@ -328,11 +330,17 @@ fun SignUpScreen(
             Row {
                 Text(
                     text = "Términos de uso ",
+                    modifier = Modifier.clickable {
+                        navigation.navigate("terms")
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
                     text = "y Política de privacidad.",
+                    modifier = Modifier.clickable {
+                        navigation.navigate("privacy")
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodySmall
                 )
