@@ -42,7 +42,7 @@ fun LearnScreen(
     val courses by courseTracking.courses.collectAsState()
     val progress by courseTracking.progress.collectAsState()
 
-    LaunchedEffect(user.id) {
+    LaunchedEffect(Unit) {
         courseTracking.loadCourses(user.id)
     }
 

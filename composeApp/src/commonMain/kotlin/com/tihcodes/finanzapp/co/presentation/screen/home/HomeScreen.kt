@@ -69,8 +69,6 @@ fun HomeScreen(
         // First initialize with default categories
         categoryRepository.initialize(userId)
         transactionRepository.initialize(userId)
-        courseTracking.setUserId(userId)
-
 
         // Then sync with Firestore to get user-specific data
         if (userId.isNotEmpty()) {

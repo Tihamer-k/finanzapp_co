@@ -34,7 +34,7 @@ fun App() {
         val surfaceColor = MaterialTheme.colorScheme.background
         val authState = determineAuthState(authViewModel)
         val isSignedOut = authViewModel.isSignedOut.collectAsState().value
-        val showOnboardibg = authViewModel.showOnboarding.collectAsState().value
+        val showOnboarding = authViewModel.showOnboarding.collectAsState().value
         val isSignedIn = authViewModel.isSignIn.collectAsState().value
 
         // Sincroniza los datos del usuario al iniciar la app
@@ -48,7 +48,7 @@ fun App() {
                     null -> ShowLoadingIndicator()
                     else -> Navigation(
                         authViewModel = authViewModel,
-                        destination = getNavigationDestination(authState, isSignedOut, showOnboardibg, isSignedIn)
+                        destination = getNavigationDestination(authState, isSignedOut, showOnboarding, isSignedIn)
                     )
                 }
             }
@@ -89,7 +89,7 @@ private fun getNavigationDestination(
     isSignedIn: Boolean
 ): String {
     return when {
-        authState!! || isSignedIn-> HOME_DESTINATION
+        authState!! && isSignedIn-> HOME_DESTINATION
         isSignedOut -> PRE_LOGIN_DESTINATION
         showOnboarding -> ONBOARDING_DESTINATION
         else -> {

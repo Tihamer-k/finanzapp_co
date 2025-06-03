@@ -192,7 +192,9 @@ fun CourseContentScreen(
                                         if (user != null) {
                                             courseTrackingViewModel.completeCourse(courseId, user.id, true)
                                         }
-                                        navController.navigate("learn")
+                                        navController.navigate("learn") {
+                                            popUpTo("learn") { inclusive = true }
+                                        }
                                     } else {
                                         navController.popBackStack()
                                         isCompletedValue = false

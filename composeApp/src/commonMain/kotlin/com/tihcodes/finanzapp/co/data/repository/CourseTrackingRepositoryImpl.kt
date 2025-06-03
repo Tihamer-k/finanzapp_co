@@ -44,5 +44,10 @@ class CourseTrackingRepositoryImpl(
     override suspend fun setCourseTracking(courseTracking: CourseTrackingData) {
         localDataSource.setCourseTrackingData(courseTracking)
         remoteDataSource.setCourseTrackingData(courseTracking)
+        // Sincroniza los datos después de actualizar
+        val updatedData = localDataSource.getCourseTrackingById(courseTracking.userId, courseTracking.id)
+        if (updatedData != null) {
+            remoteDataSource.setCourseTrackingData(updatedData)
+        }
     }
 }

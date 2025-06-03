@@ -160,6 +160,7 @@ class AuthViewModel(
                 authRepository.authenticate(_uiState.value.email, _uiState.value.password)
                 _authState.value = true // Actualiza el estado de autenticación
                 _isSignIn.value = true
+                _isSignedOut.value = false
                 _showOnboarding.value = false
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -180,6 +181,7 @@ class AuthViewModel(
             _currentUser.value = null
             _authState.value = false
             _isRegistered.value = false
+            _showOnboarding.value = false
             _uiState.update { LoginUiState() } // Reset UI state
         }
     }
@@ -197,6 +199,8 @@ class AuthViewModel(
                     date = _uiState.value.date
                 )
                 _authState.value = true // Actualiza el estado de autenticación
+                _isSignIn.value = true
+                _isSignedOut.value = false
                 _isRegistered.value = true
                 _showOnboarding.value = false
             } catch (e: Exception) {
@@ -246,9 +250,11 @@ class AuthViewModel(
                     )
                 }
                 _authState.value = true
+                _isSignIn.value = true
             } catch (e: Exception) {
                 e.printStackTrace()
                 _authState.value = false
+                _isSignIn.value = false
             } finally {
                 _isProcessing.value = false
             }
@@ -293,4 +299,3 @@ data class LoginUiState(
     var phone: String = "",
     var date: String = "",
 )
-
