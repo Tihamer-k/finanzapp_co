@@ -26,4 +26,7 @@ WHERE id = ?;
 
 deleteTransaction:
 DELETE FROM "Transaction"
-WHERE id = ?;
+WHERE id = ? AND userId = ?;
+
+deleteAllTransactions:
+DELETE FROM "Transaction";

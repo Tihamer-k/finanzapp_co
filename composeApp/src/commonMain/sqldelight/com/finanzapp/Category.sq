@@ -24,3 +24,6 @@ WHERE id = ?;
 deleteCategory:
 DELETE FROM Category
 WHERE id = ?;
+
+deleteAllCategories:
+DELETE FROM Category;

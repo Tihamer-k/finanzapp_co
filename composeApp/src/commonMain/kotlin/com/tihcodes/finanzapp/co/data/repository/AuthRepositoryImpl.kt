@@ -128,6 +128,8 @@ class AuthRepositoryImpl(
         }
 
         auth.signOut()
+        userSettings.clear() // Limpiar la configuración del usuario
+
     }
 
     override suspend fun resetPassword(email: String) {

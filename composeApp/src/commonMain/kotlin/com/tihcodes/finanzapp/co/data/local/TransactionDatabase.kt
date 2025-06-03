@@ -135,9 +135,9 @@ class TransactionDatabase(
         )
     }
 
-    suspend fun deleteTransaction(id: String) = withContext(Dispatchers.Default) {
+    suspend fun deleteTransaction(id: String, userId: String) = withContext(Dispatchers.Default) {
         println("INFO: Deleting transaction from database")
-        transactionQueries.deleteTransaction(id)
+        transactionQueries.deleteTransaction(id, userId)
     }
 
     private fun generateId(): String {

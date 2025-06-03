@@ -17,3 +17,9 @@ INSERT INTO Coursetracking (
     rewardId,
     hasPendingQuestions
 ) VALUES (?, ?, ?, ?, ?, ?, ?);
+
+deleteCourseTracking:
+DELETE FROM Coursetracking;
+
+deleteCourseTrackingById:
+DELETE FROM Coursetracking WHERE id = ? AND userId = ?;

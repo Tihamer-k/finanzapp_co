@@ -251,7 +251,7 @@ class TransactionRepository(
             try {
                 // Delete from SQLDelight if available
                 if (transactionDatabase != null) {
-                    transactionDatabase.deleteTransaction(transaction.id)
+                    transactionDatabase.deleteTransaction(transaction.id, transaction.userId)
                     println("INFO: Transaction deleted from SQLDelight: ${transaction.id}")
                 }
 
