@@ -37,8 +37,10 @@ import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TransactionPieChartWithKoalaPlot
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
@@ -54,6 +56,8 @@ fun HomeScreen(
     val chartViewModel = koinInject<TransactionChartViewModel>()
     val userId = user.id
     val courseTracking = koinInject<CourseTrackingViewModel>()
+    val notificationViewModel = koinViewModel<NotificationViewModel>()
+
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -163,7 +167,8 @@ fun HomeScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                     TransactionPieChartWithKoalaPlot(
-                        viewModel = chartViewModel
+                        viewModel = chartViewModel,
+                        notificationViewModel = notificationViewModel,
                     )
                     Spacer(modifier = Modifier.height(36.dp))
 

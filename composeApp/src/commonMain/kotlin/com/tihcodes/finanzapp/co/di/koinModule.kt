@@ -30,7 +30,6 @@ import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
-
 expect val targetModule: Module
 
 val sharedModule = module {
@@ -109,7 +108,6 @@ val viewModelModule = module {
             categoryRepository = get(),
         )
     }
-
 }
 
 fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
@@ -118,4 +116,3 @@ fun initializeKoin(config: (KoinApplication.() -> Unit)? = null) {
         modules(targetModule, sharedModule, viewModelModule)
     }
 }
-

@@ -187,7 +187,6 @@ class CourseTrackingViewModel(
                 )
             }
         }
-
         _courses.value = updatedCourses
         _rewards.value = updatedRewards
     }

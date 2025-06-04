@@ -1,0 +1,62 @@
+package com.tihcodes.finanzapp.co.utils
+
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.tihcodes.finanzapp.co.R
+
+actual class NotificationManager(
+    private val context: Context
+) {
+    private val notificationManager get() = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+    @SuppressLint("MissingPermission")
+    actual fun showNotification(
+        title: String,
+        description: String
+    ) {
+        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.money)
+            .setContentTitle(title)
+            .setContentText(description)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(description)
+            )
+
+        createNotificationChannel()
+
+        if (areNotificationEnabled) {
+            NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
+        }
+    }
+
+    private val areNotificationEnabled get() = NotificationManagerCompat
+        .from(context)
+        .areNotificationsEnabled()
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = CHANNEL_DESCRIPTION
+            }.also { notificationManager.createNotificationChannel(it) }
+        }
+    }
+
+
+    companion object {
+        private const val CHANNEL_DESCRIPTION = "Notification channel description"
+        private const val CHANNEL_NAME = "Notification channel name"
+        private const val CHANNEL_ID = "Notification channel id"
+        private const val NOTIFICATION_ID = 1
+    }
+}
