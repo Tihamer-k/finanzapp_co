@@ -32,6 +32,7 @@ import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
 import org.jetbrains.compose.resources.painterResource
@@ -55,6 +56,8 @@ fun CourseContentScreen(
     var correctAnswersCount by remember { mutableStateOf(0) }
     val user = viewModel.currentUser.collectAsState().value
     var isCompletedValue by remember { mutableStateOf(isCompleted) }
+    val notificationViewModel = koinViewModel<NotificationViewModel>()
+
 
     Scaffold(
         topBar = {
@@ -191,6 +194,10 @@ fun CourseContentScreen(
                                         course.hasPendingQuestions = false
                                         if (user != null) {
                                             courseTrackingViewModel.completeCourse(courseId, user.id, true)
+                                            notificationViewModel.executeNotification(
+                                                title = "Curso Completado",
+                                                description = "¡Felicidades! Has completado el curso: ${course.title}, revisa tu recompensa.",
+                                            )
                                         }
                                         navController.navigate("learn") {
                                             popUpTo("learn") { inclusive = true }

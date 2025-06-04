@@ -4,10 +4,13 @@ package com.tihcodes.finanzapp.co.presentation.screen.onboarding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.domain.model.OnboardingPage
 import com.tihcodes.finanzapp.co.getPlatform
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_1_piggy_bank_amico
 import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
@@ -25,9 +28,20 @@ import finanzapp_co.composeapp.generated.resources.onboarding_title_3
 import finanzapp_co.composeapp.generated.resources.onboarding_title_4
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Onboarding(navController: NavController) {
+    val userViewModel = koinViewModel<AuthViewModel>()
+    val user = userViewModel.currentUser.collectAsState().value
+    if (user?.name?.isNotEmpty() == true) {
+        LaunchedEffect(user) {
+            navController.navigate("home") {
+                popUpTo("pre-login") { inclusive = true }
+            }
+        }
+        return
+    }
     val plt = getPlatform()
     val isWeb = plt.name == "IOS"
     val pages = listOf(

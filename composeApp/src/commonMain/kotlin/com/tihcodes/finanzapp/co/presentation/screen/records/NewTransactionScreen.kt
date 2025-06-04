@@ -41,6 +41,8 @@ import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_budget
 import finanzapp_co.composeapp.generated.resources.ic_calendar
@@ -56,6 +58,7 @@ import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
 import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +82,8 @@ fun NewTransactionScreen(
         )
     }
     var showDatePicker by remember { mutableStateOf(false) }
+    val notificationViewModel = koinViewModel<NotificationViewModel>()
+
 
     // Use a default userId if the provided userId is empty
     // This is a workaround for the issue where the userId is not being correctly passed to the NewTransactionScreen
@@ -401,6 +406,11 @@ fun NewTransactionScreen(
 
                         // Navegar hacia atrás
                         navController.popBackStack()
+
+                        notificationViewModel.executeNotification(
+                            "Nueva transacción",
+                            "Transacción de ${transaction.type.name} guardada: ${transaction.title} - ${formatNumberWithCommas(transaction.amount)}"
+                        )
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {

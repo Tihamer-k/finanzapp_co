@@ -84,10 +84,10 @@ fun TransactionPieChartWithKoalaPlot(
                         )
                         .clickable {
                             viewModel.toggleType(type)
-                            notificationViewModel.executeNotification(
-                                "Change Transaction Type",
-                                "Tipo de transacción cambiado a $label"
-                            )
+//                            notificationViewModel.executeNotification(
+//                                "Change Transaction Type",
+//                                "Tipo de transacción cambiado a $label"
+//                            )
                         }
                         .padding(horizontal = 18.dp, vertical = 8.dp),
                     color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,

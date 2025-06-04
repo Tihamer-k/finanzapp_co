@@ -50,7 +50,11 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             Onboarding(navController = navController)
         }
         composable("pre-login") {
-            PreLoginScreen(navController = navController)
+            PreLoginScreen(
+                navController = navController,
+                userViewModel = authViewModel,
+            )
+
         }
         composable("register") {
             SignUpScreen(
