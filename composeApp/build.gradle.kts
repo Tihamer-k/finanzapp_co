@@ -128,5 +128,6 @@ sqldelight {
             packageName.set("com.finanzapp")
             deriveSchemaFromMigrations.set(true)
         }
+        linkSqlite.set(true)
     }
 }
