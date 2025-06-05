@@ -7,3 +7,45 @@ CREATE TABLE IF NOT EXISTS User (
     date TEXT,
     isAnonymous INTEGER NOT NULL DEFAULT 0
 );
+
+CREATE TABLE IF NOT EXISTS Category (
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    color TEXT NOT NULL,
+    nameReference TEXT NOT NULL,
+    userId TEXT NOT NULL DEFAULT '',
+    UNIQUE(name, userId) ON CONFLICT REPLACE
+);
+
+CREATE TABLE IF NOT EXISTS "Transaction" (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    category TEXT NOT NULL,
+    date TEXT NOT NULL,
+    amount REAL NOT NULL,
+    type TEXT NOT NULL,
+    icon TEXT NOT NULL,
+    userId TEXT NOT NULL DEFAULT '',
+    UNIQUE(id, userId) ON CONFLICT REPLACE
+
+);
+
+CREATE TABLE IF NOT EXISTS Coursetracking(
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    isCompleted INTEGER NOT NULL DEFAULT 0,
+    isUnlocked INTEGER NOT NULL DEFAULT 0,
+    userId TEXT NOT NULL DEFAULT '',
+    rewardId TEXT NOT NULL DEFAULT '',
+    hasPendingQuestions INTEGER NOT NULL DEFAULT 1
+);
+
+CREATE TABLE IF NOT EXISTS Rewards(
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    type TEXT NOT NULL,
+    isUnlocked INTEGER NOT NULL DEFAULT 0,
+    userId TEXT NOT NULL DEFAULT ''
+);
