@@ -51,7 +51,6 @@ fun LearnScreen(
             TopNavBar(
                 navController = navController,
                 title = "Aprende",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

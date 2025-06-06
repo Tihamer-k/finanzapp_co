@@ -49,3 +49,15 @@ CREATE TABLE IF NOT EXISTS Rewards(
     isUnlocked INTEGER NOT NULL DEFAULT 0,
     userId TEXT NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS Notification(
+    id TEXT NOT NULL PRIMARY KEY,
+    icon TEXT, -- Nuevo campo para el icono
+    title TEXT NOT NULL,
+    message TEXT NOT NULL, -- Renombrado de body a message
+    dateTime TEXT NOT NULL, -- Renombrado de date a dateTime
+    categoryTag TEXT, -- Nuevo campo opcional
+    categoryColor TEXT, -- Nuevo campo opcional
+    isRead INTEGER NOT NULL DEFAULT 0,
+    userId TEXT NOT NULL DEFAULT ''
+);

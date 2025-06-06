@@ -1,5 +1,9 @@
 package com.tihcodes.finanzapp.co.utils
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import compose.icons.AllIcons
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Ghost
 import kotlinx.datetime.LocalDate
 import network.chaintech.kmp_date_time_picker.utils.now
 
@@ -75,5 +79,13 @@ object Validator {
             else -> value.toString()
         }
         return strValue.replace("(\\d)(?=(\\d{3})+(?!\\d))".toRegex(), "$1,")
+    }
+
+    fun randomId(): String {
+        return (100000..999999).random().toString()
+    }
+
+    fun getIconByName(name: String): ImageVector {
+        return TablerIcons.AllIcons.find { it.name == name } ?: TablerIcons.Ghost
     }
 }

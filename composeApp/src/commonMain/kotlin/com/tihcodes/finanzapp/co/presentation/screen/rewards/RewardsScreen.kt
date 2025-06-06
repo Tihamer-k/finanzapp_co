@@ -47,7 +47,6 @@ fun RewardsScreen(
             TopNavBar(
                 navController = navController,
                 title = "Recompensas",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

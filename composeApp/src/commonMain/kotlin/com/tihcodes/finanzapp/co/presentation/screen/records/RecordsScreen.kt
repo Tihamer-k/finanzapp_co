@@ -92,7 +92,6 @@ fun RecordsScreen(
             TopNavBar(
                 navController = navController,
                 title = "Registros",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

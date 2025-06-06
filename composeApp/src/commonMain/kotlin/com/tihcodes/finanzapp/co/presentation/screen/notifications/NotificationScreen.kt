@@ -11,80 +11,55 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.tihcodes.finanzapp.co.domain.model.NotificationItem
-import com.tihcodes.finanzapp.co.domain.model.NotificationSection
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_category
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun NotificationsScreen(
     navController: NavController,
+
 ) {
+    val authViewModel = koinInject<AuthViewModel>()
+    val viewModel = koinInject<AppNotificationViewModel>()
+    val notifications by viewModel.notifications.collectAsState() // Observe notifications
+    val unreadNotifications = notifications.filter { !it.isRead }
+    val readNotifications = notifications.filter { it.isRead }
+    val idUser = authViewModel.currentUser.value?.id ?: ""
+
+    LaunchedEffect(Unit) {
+        viewModel.loadNotifications(idUser)
+    }
+    println("NotificationsScreen - Unread: ${unreadNotifications.size}, Read: ${readNotifications.size}")
+
     Scaffold(
         topBar = {
             TopNavBar(
                 navController = navController,
                 title = "Notificaciones",
-                notificationsCount = 0,
                 showBackButton = true,
             )
         },
-
-        ) { paddingValues ->
-
-        val exampleNotifications = listOf(
-            NotificationSection(
-                title = "Hoy",
-                items = listOf(
-                    NotificationItem(
-                        id = "1",
-                        icon = Res.drawable.ic_category,
-                        title = "Recordatorio!",
-                        message = "In a laoreet purus. Integer turpis quam, laoreet id at nec...",
-                        dateTime = "12/10/2023 12:00",
-                    ),
-                    NotificationItem(
-                        id = "2",
-                        icon = Res.drawable.ic_category,
-                        title = "Nueva Recompensa!",
-                        message = "Vestibulum eu quam nec neque pellentesque...",
-                        dateTime = "12/10/2023 12:00"
-                    )
-                )
-            ),
-            NotificationSection(
-                title = "Yesterday",
-                items = listOf(
-                    NotificationItem(
-                        id = "3",
-                        icon = Res.drawable.ic_category,
-                        title = "Transacciones",
-                        message = "Mercado | Comida | -$100,00",
-                        categoryTag = "Mercado | Comida | -$100,00",
-                        categoryColor = MaterialTheme.colorScheme.primary,
-                        dateTime = "12/10/2023 12:00",
-                    )
-                )
-            )
-        )
-
-        val sections = exampleNotifications
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.primary)
-                .padding(paddingValues) // Respetar el padding del Scaffold
+                .padding(paddingValues)
         ) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -93,25 +68,56 @@ fun NotificationsScreen(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(16.dp)
             ) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Sección de notificaciones no leídas
+                if (unreadNotifications.isNotEmpty()) {
+                    Text(
+                        text = "No leídas",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    LazyColumn(
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(unreadNotifications) { notification ->
+                            NotificationCard(notification = notification)
+                            Button(
+                                onClick = { viewModel.markAsRead(notification.id) },
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
+                                Text(text = "Marcar como leída")
+                            }
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                LazyColumn(
-                    contentPadding = PaddingValues(bottom = 32.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    sections.forEach { section ->
-                        item {
-                            Text(
-                                text = section.title,
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
-                        }
+                // Sección de notificaciones leídas
+                if (readNotifications.isNotEmpty()) {
+                    Text(
+                        text = "Leídas",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
 
-                        items(section.items) { notification ->
+                    LazyColumn(
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(readNotifications) { notification ->
                             NotificationCard(notification = notification)
+                            Button(
+                                onClick = { viewModel.removeNotification(notification.id) },
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
+                                Text(text = "Eliminar")
+                            }
                         }
                     }
                 }

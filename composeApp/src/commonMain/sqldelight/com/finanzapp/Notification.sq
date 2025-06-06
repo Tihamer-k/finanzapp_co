@@ -1,0 +1,15 @@
+getNotificationsByUserId:
+SELECT * FROM Notification WHERE userId = ? ORDER BY dateTime DESC;
+
+insertNotification:
+INSERT INTO Notification(id, icon, title, message, dateTime, categoryTag, categoryColor, isRead, userId)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteNotificationById:
+DELETE FROM Notification WHERE id = ?;
+
+markNotificationAsRead:
+UPDATE Notification SET isRead = 1 WHERE id = ?;
+
+markAllNotificationsAsRead:
+UPDATE Notification SET isRead = 1 WHERE userId = ?;

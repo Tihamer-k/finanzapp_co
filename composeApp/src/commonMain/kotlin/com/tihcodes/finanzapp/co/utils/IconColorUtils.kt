@@ -145,3 +145,42 @@ fun parseTransactionType(typeString: String): TransactionType {
         else -> TransactionType.EXPENSE // Default type
     }
 }
+
+val iconOptions = listOf(
+    Pair("Regalos", Res.drawable.ic_gifts),
+    Pair("Comida", Res.drawable.ic_food),
+    Pair("Transporte", Res.drawable.ic_transport),
+    Pair("Bebés", Res.drawable.ic_baby),
+    Pair("Trabajo", Res.drawable.ic_work),
+    Pair("Viajes", Res.drawable.ic_travel),
+    Pair("Entretenimiento", Res.drawable.ic_entertainmentame),
+    Pair("Monetario", Res.drawable.ic_moneysim),
+    Pair("Medicina", Res.drawable.ic_medicine),
+    Pair("Hogar", Res.drawable.ic_home_expenses),
+    Pair("Despensa", Res.drawable.ic_groceries),
+    Pair("Ahorros", Res.drawable.ic_savings_pig),
+    Pair("Ingresos", Res.drawable.ic_savings)
+)
+
+val colorOptions = listOf(
+    Pair("Rojo", Color(0xFFFF0000)),
+    Pair("Azul", Color(0xFF0000FF)),
+    Pair("Verde", Color(0xFF00FF00)),
+    Pair("Amarillo", Color(0xFFFFFF00)),
+    Pair("Naranja", Color(0xFFFFA500)),
+    Pair("Morado", Color(0xFF800080)),
+    Pair("Rosa", Color(0xFFFFC0CB)),
+    Pair("Cyan", Color(0xFF00FFFF)),
+    Pair("Gris", Color(0xFF808080)),
+    Pair("Negro", Color(0xFF000000)),
+    Pair("Blanco", Color(0xFFFFFFFF)),
+    Pair("Marrón", Color(0xFF8B4513)),
+    Pair("Turquesa", Color(0xFF40E0D0)),
+    Pair("Lima", Color(0xFF32CD32)),
+    Pair("Oro", Color(0xFFFFD700)),
+    Pair("Plata", Color(0xFFC0C0C0)),
+    Pair("Lavanda", Color(0xFFE6E6FA)),
+    Pair("Durazno", Color(0xFFFFE5B4)),
+    Pair("Aguamarina", Color(0xFF7FFFD4)),
+    Pair("Coral", Color(0xFFFF7F50))
+)

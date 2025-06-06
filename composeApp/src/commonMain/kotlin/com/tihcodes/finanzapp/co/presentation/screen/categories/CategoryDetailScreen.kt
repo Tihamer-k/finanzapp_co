@@ -93,7 +93,6 @@ fun CategoryDetailScreen(
             TopNavBar(
                 navController = navController,
                 title = categoryName,
-                notificationsCount = 0,
                 showBackButton = true // Nuevo parámetro para mostrar el botón de back
             )
         },

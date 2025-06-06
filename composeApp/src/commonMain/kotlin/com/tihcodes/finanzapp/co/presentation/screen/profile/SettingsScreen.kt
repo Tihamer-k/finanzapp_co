@@ -35,7 +35,6 @@ fun SettingsScreen(navController: NavHostController) {
             TopNavBar(
                 navController = navController,
                 title = "Configuración",
-                notificationsCount = 0,
                 showBackButton = true,
             )
         }

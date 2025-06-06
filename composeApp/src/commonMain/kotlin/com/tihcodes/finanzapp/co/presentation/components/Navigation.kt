@@ -243,7 +243,7 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
 
         composable("notifications") {
             NotificationsScreen(
-                navController = navController
+                navController = navController,
             )
         }
         composable("profile") {

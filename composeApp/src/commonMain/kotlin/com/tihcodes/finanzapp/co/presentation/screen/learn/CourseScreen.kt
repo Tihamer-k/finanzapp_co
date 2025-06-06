@@ -24,18 +24,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.tihcodes.finanzapp.co.domain.model.NotificationItem
 import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
+import com.tihcodes.finanzapp.co.utils.Validator.randomId
+import com.tihcodes.finanzapp.co.utils.getColorIdentifier
+import compose.icons.TablerIcons
+import compose.icons.tablericons.School
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.onboarding_2_business_plan_amico
+import kotlinx.datetime.LocalDate
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -57,6 +67,7 @@ fun CourseContentScreen(
     val user = viewModel.currentUser.collectAsState().value
     var isCompletedValue by remember { mutableStateOf(isCompleted) }
     val notificationViewModel = koinViewModel<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
 
 
     Scaffold(
@@ -64,7 +75,6 @@ fun CourseContentScreen(
             TopNavBar(
                 navController = navController,
                 title = course.title,
-                notificationsCount = 0,
                 showBackButton = true,
             )
         },
@@ -197,6 +207,18 @@ fun CourseContentScreen(
                                             notificationViewModel.executeNotification(
                                                 title = "Curso Completado",
                                                 description = "¡Felicidades! Has completado el curso: ${course.title}, revisa tu recompensa.",
+                                                )
+                                            appNotificationViewModel.setNotification(
+                                                notification = NotificationItem(
+                                                    id = randomId(),
+                                                    icon = TablerIcons.School.name,
+                                                    title = "Curso Completado",
+                                                    message = "¡Felicidades! Has completado el curso: ${course.title}, revisa tu recompensa.",
+                                                    dateTime = LocalDate.now().toString(),
+                                                    categoryTag = "Curso",
+                                                    categoryColor = getColorIdentifier(Color(0xFF40E0D0)),
+                                                    isRead = false
+                                                )
                                             )
                                         }
                                         navController.navigate("learn") {

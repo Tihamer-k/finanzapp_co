@@ -50,7 +50,6 @@ fun FinanceSimulatorScreen(
             TopNavBar(
                 navController = navController,
                 title = "Simuladores",
-                notificationsCount = 0,
                 showBackButton = true
             )
         },

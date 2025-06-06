@@ -35,6 +35,7 @@ import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TransactionPieChartWithKoalaPlot
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
@@ -57,6 +58,7 @@ fun HomeScreen(
     val userId = user.id
     val courseTracking = koinInject<CourseTrackingViewModel>()
     val notificationViewModel = koinViewModel<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
 
 
     // Detectar si deberíamos mostrar el FAB
@@ -79,6 +81,7 @@ fun HomeScreen(
             categoryRepository.syncCategories(userId)
             transactionRepository.syncTransactions(userId)
             chartViewModel.setUserId(userId)
+            appNotificationViewModel.loadNotifications(userId)
         }
     }
 
@@ -98,7 +101,6 @@ fun HomeScreen(
                 TopNavBar(
                     navController = navController,
                     title = "Inicio",
-                    notificationsCount = 3,
                     showBackButton = false,
                 )
             },

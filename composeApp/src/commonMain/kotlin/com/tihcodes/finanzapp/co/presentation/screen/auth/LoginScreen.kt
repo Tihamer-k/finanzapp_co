@@ -30,18 +30,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.tihcodes.finanzapp.co.domain.model.NotificationItem
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import com.tihcodes.finanzapp.co.utils.Validator
+import com.tihcodes.finanzapp.co.utils.getColorIdentifier
+import compose.icons.TablerIcons
+import compose.icons.tablericons.MoodHappy
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_eye_close
 import finanzapp_co.composeapp.generated.resources.ic_eye_open
 import kotlinx.coroutines.delay
+import kotlinx.datetime.LocalDate
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 
 @Composable
@@ -63,6 +73,8 @@ fun LoginScreen(
     val isFormValid = isEmailValid && isPasswordValid
     var clicked by rememberSaveable { mutableStateOf(false) }
     var signInRes by rememberSaveable { mutableStateOf(false) }
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
+    val notificationViewModel = koinInject<NotificationViewModel>()
 
     Column(
         modifier = Modifier
@@ -196,7 +208,24 @@ fun LoginScreen(
                     clicked = false
                 } else if (signInRes) {
                     onLoginClick()
-                    clicked = false
+                    notificationViewModel.executeNotification(
+                        "Inicio de sesión exitoso",
+                        "Biemvenido a FINANZAPP, ${uiState.name}!",
+                    )
+                    appNotificationViewModel.setNotification(
+                        notification = NotificationItem(
+                            id = "1",
+                            icon = TablerIcons.MoodHappy.name,
+                            title = "Bienvenido",
+                            message = "Gracias por unirte a FINANZAPP.",
+                            dateTime = LocalDate.now().toString(),
+                            categoryTag = "General",
+                            categoryColor = getColorIdentifier(Color(0xFFFFD700)),
+                            isRead = false
+                        )
+                    )
+
+                            clicked = false
                 }
             }
             if (errorMessage.isNotEmpty()) {
@@ -248,22 +277,22 @@ fun LoginScreen(
 //            style = MaterialTheme.typography.bodyMedium,
 //            color = MaterialTheme.colorScheme.onBackground
 //        )
-/*            Spacer(modifier = Modifier.height(16.dp))
+            /*            Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = "O inicia sesión con",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground
-            )
-            Spacer(modifier = Modifier.height(28.dp))
+                        Text(
+                            text = "O inicia sesión con",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Spacer(modifier = Modifier.height(28.dp))
 
-            IconButton(onClick = onGoogleLoginClick) {
-                Image(
-                    painter = painterResource(Res.drawable.ic_google),
-                    contentDescription = "Iniciar con Google",
-                    modifier = Modifier.size(48.dp)
-                )
-            }*/
+                        IconButton(onClick = onGoogleLoginClick) {
+                            Image(
+                                painter = painterResource(Res.drawable.ic_google),
+                                contentDescription = "Iniciar con Google",
+                                modifier = Modifier.size(48.dp)
+                            )
+                        }*/
 
             Spacer(modifier = Modifier.weight(0.1f).fillMaxWidth())
 

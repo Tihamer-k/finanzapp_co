@@ -30,14 +30,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.tihcodes.finanzapp.co.domain.model.NotificationItem
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import com.tihcodes.finanzapp.co.utils.Validator
+import com.tihcodes.finanzapp.co.utils.Validator.randomId
+import com.tihcodes.finanzapp.co.utils.getColorIdentifier
+import compose.icons.TablerIcons
+import compose.icons.tablericons.User
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_calendar
 import kotlinx.datetime.DatePeriod
@@ -48,6 +56,7 @@ import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
 import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
 
 @Composable
 fun EditProfileScreen(
@@ -56,6 +65,8 @@ fun EditProfileScreen(
 ) {
     val uiState = viewModel.uiState.collectAsState().value
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    val notificationViewModel = koinInject<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
 
 
     Scaffold(
@@ -63,7 +74,6 @@ fun EditProfileScreen(
             TopNavBar(
                 navController = navController,
                 title = "Editar Perfil",
-                notificationsCount = 0,
                 showBackButton = true,
             )
         }
@@ -234,6 +244,23 @@ fun EditProfileScreen(
                 Button(
                     onClick = {
                         viewModel.onUpdateUserData()
+                        notificationViewModel.executeNotification(
+                            title = "Perfil Actualizado",
+                            description = "Tus datos de perfil han sido actualizados correctamente.",
+                        )
+                        appNotificationViewModel.setNotification(
+                            notification = NotificationItem(
+                                id = randomId(),
+                                icon = TablerIcons.User.name,
+                                title = "Perfil Actualizado",
+                                message = "Tus datos de perfil han sido actualizados correctamente.",
+                                dateTime = LocalDate.now().toString(),
+                                categoryTag = "profile update",
+                                categoryColor = getColorIdentifier(Color(0xFF800080)),
+                                isRead = false,
+                                userId = uiState.id
+                            )
+                        )
                         navController.popBackStack()
                     },
                     modifier = Modifier
