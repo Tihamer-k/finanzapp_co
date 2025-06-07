@@ -65,6 +65,7 @@ fun BalanceSummary(
                         }
                     }
             }
+
             else -> 0.0
         }
         val filtered = transactions.filter { transaction ->
@@ -77,6 +78,7 @@ fun BalanceSummary(
                     )
                     transaction.date in startOfWeek..now
                 }
+
                 2 -> transaction.date.year == now.year && transaction.date.monthNumber == now.monthNumber // Mes
                 3 -> transaction.date.year == now.year // Año
                 else -> true
@@ -193,11 +195,13 @@ fun BalanceSummary(
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = if (filteredTransactions.isEmpty()) {
-                        formatNumberWithCommas(persistedExpenses)
-                    } else {
-                        formatNumberWithCommas(totalExpenses)
-                    },
+                    text = "-$${
+                        if (filteredTransactions.isEmpty()) {
+                            formatNumberWithCommas(persistedExpenses)
+                        } else {
+                            formatNumberWithCommas(totalExpenses)
+                        }
+                    }",
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.error
                 )

@@ -39,7 +39,6 @@ fun TermsAndConditionsScreen(
             TopNavBar(
                 navController = navController,
                 title = "Términos y condiciones",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

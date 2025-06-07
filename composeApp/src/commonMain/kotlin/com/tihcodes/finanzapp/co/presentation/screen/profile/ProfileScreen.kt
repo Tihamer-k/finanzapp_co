@@ -50,7 +50,6 @@ fun ProfileScreen(
             TopNavBar(
                 navController = navController,
                 title = "Perfil",
-                notificationsCount = 0,
                 showBackButton = true,
             )
         },

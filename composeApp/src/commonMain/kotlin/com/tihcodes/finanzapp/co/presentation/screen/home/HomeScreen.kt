@@ -35,10 +35,13 @@ import com.tihcodes.finanzapp.co.presentation.components.BottomNavBar
 import com.tihcodes.finanzapp.co.presentation.components.ExpandableFab
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.components.TransactionPieChartWithKoalaPlot
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.CourseTrackingViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
@@ -54,6 +57,9 @@ fun HomeScreen(
     val chartViewModel = koinInject<TransactionChartViewModel>()
     val userId = user.id
     val courseTracking = koinInject<CourseTrackingViewModel>()
+    val notificationViewModel = koinViewModel<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
+
 
     // Detectar si deberíamos mostrar el FAB
     val isFabVisible by remember {
@@ -69,14 +75,13 @@ fun HomeScreen(
         // First initialize with default categories
         categoryRepository.initialize(userId)
         transactionRepository.initialize(userId)
-        courseTracking.setUserId(userId)
-
 
         // Then sync with Firestore to get user-specific data
         if (userId.isNotEmpty()) {
             categoryRepository.syncCategories(userId)
             transactionRepository.syncTransactions(userId)
             chartViewModel.setUserId(userId)
+            appNotificationViewModel.loadNotifications(userId)
         }
     }
 
@@ -96,7 +101,6 @@ fun HomeScreen(
                 TopNavBar(
                     navController = navController,
                     title = "Inicio",
-                    notificationsCount = 3,
                     showBackButton = false,
                 )
             },
@@ -165,7 +169,8 @@ fun HomeScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                     TransactionPieChartWithKoalaPlot(
-                        viewModel = chartViewModel
+                        viewModel = chartViewModel,
+                        notificationViewModel = notificationViewModel,
                     )
                     Spacer(modifier = Modifier.height(36.dp))
 

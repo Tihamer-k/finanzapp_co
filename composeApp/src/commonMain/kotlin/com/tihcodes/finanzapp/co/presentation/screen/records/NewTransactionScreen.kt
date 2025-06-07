@@ -33,14 +33,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.NotificationItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionItem
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.domain.repository.TransactionRepository
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
+import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
+import com.tihcodes.finanzapp.co.utils.Validator.randomId
+import com.tihcodes.finanzapp.co.utils.getColorIdentifier
+import compose.icons.TablerIcons
+import compose.icons.tablericons.TrendingDown
+import compose.icons.tablericons.TrendingUp
 import finanzapp_co.composeapp.generated.resources.Res
 import finanzapp_co.composeapp.generated.resources.ic_budget
 import finanzapp_co.composeapp.generated.resources.ic_calendar
@@ -56,6 +66,8 @@ import network.chaintech.kmp_date_time_picker.utils.DateTimePickerView
 import network.chaintech.kmp_date_time_picker.utils.WheelPickerDefaults
 import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,6 +91,9 @@ fun NewTransactionScreen(
         )
     }
     var showDatePicker by remember { mutableStateOf(false) }
+    val notificationViewModel = koinViewModel<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
+
 
     // Use a default userId if the provided userId is empty
     // This is a workaround for the issue where the userId is not being correctly passed to the NewTransactionScreen
@@ -163,7 +178,6 @@ fun NewTransactionScreen(
             TopNavBar(
                 navController = navController,
                 title = type.name,
-                notificationsCount = 0,
                 showBackButton = true,
             )
         },
@@ -248,7 +262,7 @@ fun NewTransactionScreen(
                     titleStyle = MaterialTheme.typography.labelMedium,
                     doneLabelStyle = MaterialTheme.typography.labelMedium,
                     startDate = LocalDate.now(),
-                    selectorProperties = WheelPickerDefaults. selectorProperties(
+                    selectorProperties = WheelPickerDefaults.selectorProperties(
                         borderColor = MaterialTheme.colorScheme.primary.copy(0.7f),
                     ),
                     height = 200.dp,
@@ -378,7 +392,9 @@ fun NewTransactionScreen(
                         }
 
                         // Validar fecha seleccionada
-                        if (selectedDate > Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date) {
+                        if (selectedDate > Clock.System.now()
+                                .toLocalDateTime(TimeZone.currentSystemDefault()).date
+                        ) {
                             isError = true
                             errorMessage = "La fecha no puede ser futura"
                             return@Button
@@ -401,6 +417,34 @@ fun NewTransactionScreen(
 
                         // Navegar hacia atrás
                         navController.popBackStack()
+                        notificationViewModel.executeNotification(
+                            title = "Nueva transacción",
+                            description = "Transacción de ${transaction.type.name} guardada: ${transaction.title}  $${
+                                formatNumberWithCommas(
+                                    transaction.amount
+                                )
+                            }",
+                        )
+
+                        appNotificationViewModel.setNotification(
+                            notification = NotificationItem(
+                                id = randomId(),
+                                icon = if (transaction.type.name == "EXPENSE") {
+                                    TablerIcons.TrendingDown.name
+                                } else TablerIcons.TrendingUp.name,
+                                title = "Nueva transacción",
+                                message = "Transacción de ${transaction.type.name} guardada: ${transaction.title}  $${
+                                    formatNumberWithCommas(
+                                        transaction.amount
+                                    )
+                                }",
+                                dateTime = transaction.date.toString(),
+                                categoryTag = transaction.category,
+                                categoryColor = if (transaction.type.name == "INCOME") {
+                                    getColorIdentifier(Color(0xFF32CD32))
+                                } else getColorIdentifier(Color(0xFFFF7F50)),
+                            )
+                        )
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {

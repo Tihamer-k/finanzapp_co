@@ -12,3 +12,9 @@ UPDATE User
 SET name = ?, surname = ?, phone = ?, date = ?, isAnonymous = ?
 WHERE id = ?;
 
+deleteUser:
+DELETE FROM User
+WHERE id = ?;
+
+deleteAllUsers:
+DELETE FROM User;

@@ -43,23 +43,20 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tihcodes.finanzapp.co.domain.model.CategoryItem
+import com.tihcodes.finanzapp.co.domain.model.NotificationItem
 import com.tihcodes.finanzapp.co.domain.repository.CategoryRepository
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
-import finanzapp_co.composeapp.generated.resources.Res
-import finanzapp_co.composeapp.generated.resources.ic_baby
-import finanzapp_co.composeapp.generated.resources.ic_entertainmentame
-import finanzapp_co.composeapp.generated.resources.ic_food
-import finanzapp_co.composeapp.generated.resources.ic_gifts
-import finanzapp_co.composeapp.generated.resources.ic_groceries
-import finanzapp_co.composeapp.generated.resources.ic_home_expenses
-import finanzapp_co.composeapp.generated.resources.ic_medicine
-import finanzapp_co.composeapp.generated.resources.ic_moneysim
-import finanzapp_co.composeapp.generated.resources.ic_savings
-import finanzapp_co.composeapp.generated.resources.ic_savings_pig
-import finanzapp_co.composeapp.generated.resources.ic_transport
-import finanzapp_co.composeapp.generated.resources.ic_travel
-import finanzapp_co.composeapp.generated.resources.ic_work
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
+import com.tihcodes.finanzapp.co.utils.Validator.randomId
+import com.tihcodes.finanzapp.co.utils.colorOptions
+import com.tihcodes.finanzapp.co.utils.getColorIdentifier
+import com.tihcodes.finanzapp.co.utils.iconOptions
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Confetti
+import kotlinx.datetime.LocalDate
+import network.chaintech.kmp_date_time_picker.utils.now
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
@@ -78,6 +75,9 @@ fun NewCategoryScreen(
     // State for loading indicator
     var isLoading by remember { mutableStateOf(false) }
 
+    val notificationViewModel = koinInject<NotificationViewModel>()
+    val appNotificationViewModel = koinInject<AppNotificationViewModel>()
+
     // Sync categories with Firestore when the screen is loaded
     LaunchedEffect(userId) {
         if (userId.isNotEmpty()) {
@@ -90,7 +90,6 @@ fun NewCategoryScreen(
             TopNavBar(
                 navController = navController,
                 title = "Nueva Categoría",
-                notificationsCount = 0,
                 showBackButton = true
             )
         }
@@ -141,6 +140,23 @@ fun NewCategoryScreen(
                             // Log success and navigate back
                             println("INFO: Created new category: $name with icon $icon and color $color")
                             isLoading = false
+                            notificationViewModel.executeNotification(
+                                title = "Categoría creada",
+                                description = "La categoría '$name' ha sido creada exitosamente.",
+                            )
+                            appNotificationViewModel.setNotification(
+                                notification = NotificationItem(
+                                    id = randomId(),
+                                    icon = TablerIcons.Confetti.name,
+                                    title = "Categoría creada",
+                                    message = "La categoría '$name' ha sido creada exitosamente.",
+                                    dateTime = LocalDate.now().toString(),
+                                    categoryTag = name,
+                                    categoryColor = getColorIdentifier(Color(0xFFFFA500)),
+                                    isRead = false,
+                                    userId = userId
+                                )
+                            )
                             navController.popBackStack()
                         },
                         onCancel = {
@@ -153,45 +169,6 @@ fun NewCategoryScreen(
         }
     }
 }
-
-private val iconOptions = listOf(
-    Pair("Regalos", Res.drawable.ic_gifts),
-    Pair("Comida", Res.drawable.ic_food),
-    Pair("Transporte", Res.drawable.ic_transport),
-    Pair("Bebés", Res.drawable.ic_baby),
-    Pair("Trabajo", Res.drawable.ic_work),
-    Pair("Viajes", Res.drawable.ic_travel),
-    Pair("Entretenimiento", Res.drawable.ic_entertainmentame),
-    Pair("Monetario", Res.drawable.ic_moneysim),
-    Pair("Medicina", Res.drawable.ic_medicine),
-    Pair("Hogar", Res.drawable.ic_home_expenses),
-    Pair("Despensa", Res.drawable.ic_groceries),
-    Pair("Ahorros", Res.drawable.ic_savings_pig),
-    Pair("Ingresos", Res.drawable.ic_savings)
-)
-
-private val colorOptions = listOf(
-    Pair("Rojo", Color(0xFFFF0000)),
-    Pair("Azul", Color(0xFF0000FF)),
-    Pair("Verde", Color(0xFF00FF00)),
-    Pair("Amarillo", Color(0xFFFFFF00)),
-    Pair("Naranja", Color(0xFFFFA500)),
-    Pair("Morado", Color(0xFF800080)),
-    Pair("Rosa", Color(0xFFFFC0CB)),
-    Pair("Cyan", Color(0xFF00FFFF)),
-    Pair("Gris", Color(0xFF808080)),
-    Pair("Negro", Color(0xFF000000)),
-    Pair("Blanco", Color(0xFFFFFFFF)),
-    Pair("Marrón", Color(0xFF8B4513)),
-    Pair("Turquesa", Color(0xFF40E0D0)),
-    Pair("Lima", Color(0xFF32CD32)),
-    Pair("Oro", Color(0xFFFFD700)),
-    Pair("Plata", Color(0xFFC0C0C0)),
-    Pair("Lavanda", Color(0xFFE6E6FA)),
-    Pair("Durazno", Color(0xFFFFE5B4)),
-    Pair("Aguamarina", Color(0xFF7FFFD4)),
-    Pair("Coral", Color(0xFFFF7F50))
-)
 
 @Composable
 fun NewCategoryForm(

@@ -13,3 +13,9 @@ INSERT INTO Rewards (
     isUnlocked,
     userId
 ) VALUES (?, ?, ?, ?, ?, ?);
+
+deleteReward:
+DELETE FROM Rewards WHERE userId = ? AND id = ?;
+
+deleteAllRewards:
+DELETE FROM Rewards;

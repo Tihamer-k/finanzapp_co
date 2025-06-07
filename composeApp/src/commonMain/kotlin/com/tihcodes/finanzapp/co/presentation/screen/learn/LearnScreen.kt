@@ -42,7 +42,7 @@ fun LearnScreen(
     val courses by courseTracking.courses.collectAsState()
     val progress by courseTracking.progress.collectAsState()
 
-    LaunchedEffect(user.id) {
+    LaunchedEffect(Unit) {
         courseTracking.loadCourses(user.id)
     }
 
@@ -51,7 +51,6 @@ fun LearnScreen(
             TopNavBar(
                 navController = navController,
                 title = "Aprende",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

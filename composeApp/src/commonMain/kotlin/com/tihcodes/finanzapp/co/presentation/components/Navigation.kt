@@ -50,12 +50,16 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
             Onboarding(navController = navController)
         }
         composable("pre-login") {
-            PreLoginScreen(navController = navController)
+            PreLoginScreen(
+                navController = navController,
+                userViewModel = authViewModel,
+            )
+
         }
         composable("register") {
             SignUpScreen(
                 viewModel = authViewModel,
-                onRegisterClick = { navController.navigate("login") {
+                onRegisterClick = { navController.navigate("home") {
                     popUpTo("pre-login") { inclusive = true }
                 } },
                 onLoginNavigate = { navController.navigate("login") },
@@ -239,12 +243,14 @@ fun Navigation(authViewModel: AuthViewModel, destination: String) {
 
         composable("notifications") {
             NotificationsScreen(
-                navController = navController
+                navController = navController,
             )
         }
         composable("profile") {
             ProfileScreen(
-                onLogoutClick = { navController.navigate("pre-login") },
+                onLogoutClick = { navController.navigate("pre-login") {
+                    popUpTo("home") { inclusive = true }
+                } },
                 viewModel = authViewModel,
                 navController = navController
             )

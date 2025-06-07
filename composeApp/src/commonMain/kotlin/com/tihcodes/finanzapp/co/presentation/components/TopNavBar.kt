@@ -29,13 +29,13 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.tihcodes.finanzapp.co.domain.model.BottomNavItem
+import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
 import compose.icons.TablerIcons
 import compose.icons.tablericons.ArrowBack
 import compose.icons.tablericons.Bell
 import compose.icons.tablericons.User
 import org.koin.compose.koinInject
-
 
 val itemsTopBar = listOf(
     BottomNavItem(
@@ -54,19 +54,20 @@ val itemsTopBar = listOf(
 fun TopNavBar(
     navController: NavController,
     title: String,
-    notificationsCount: Int,
     modifier: Modifier = Modifier,
     showBackButton: Boolean
 ) {
+    val notificationViewModel: AppNotificationViewModel = koinInject()
+    val unreadCount by notificationViewModel.unreadCount.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val insets = WindowInsets.systemBars.asPaddingValues()
+    val adjustedNotificationsCount = if (currentRoute == "notifications") 0 else unreadCount
 
+    val insets = WindowInsets.systemBars.asPaddingValues()
     val profileItem = itemsTopBar.firstOrNull { it.route == "profile" }
     val notificationsItem = itemsTopBar.firstOrNull { it.route == "notifications" }
-
-    val adjustedNotificationsCount = if (currentRoute == "notifications") 0 else notificationsCount
+    val user = koinInject<AuthViewModel>().currentUser.collectAsState().value
 
     Surface(
         color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -81,7 +82,6 @@ fun TopNavBar(
                 end = 16.dp
             )
     ) {
-        val user = koinInject<AuthViewModel>().currentUser.collectAsState().value
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -89,67 +89,31 @@ fun TopNavBar(
                 .padding(horizontal = 16.dp),
             contentAlignment = Alignment.Center
         ) {
-            // Title
+            // Centered title
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.align(Alignment.Center)
             )
-            if (user != null) {
-                if (user.id.isNotEmpty()) {
-                    if (showBackButton) {
-                        // Back button (left)
-                        IconButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier
-                                .align(Alignment.CenterStart)
-                        ) {
-                            Icon(
-                                imageVector = TablerIcons.ArrowBack,
-                                contentDescription = "Back",
-                                modifier = Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-                    } else {
-                        // Profile icon (left)
-                        profileItem?.let { item ->
-                            val isSelected = item.route == currentRoute
-                            val iconColor by animateColorAsState(
-                                targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
-                                animationSpec = tween(durationMillis = 300)
-                            )
-                            val scale by animateFloatAsState(
-                                targetValue = if (isSelected) 1.2f else 1f,
-                                animationSpec = tween(300)
-                            )
 
-                            IconButton(
-                                onClick = {
-                                    if (!isSelected) {
-                                        navController.navigate(item.route) {
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    }
-                                },
-                                modifier = Modifier
-                                    .align(Alignment.CenterStart)
-                                    .scale(scale)
-                            ) {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.title,
-                                    modifier = Modifier.size(24.dp),
-                                    tint = iconColor
-                                )
-                            }
-                        }
+            if (user?.id?.isNotEmpty() == true) {
+
+                // Left side: Back or Profile
+                if (showBackButton) {
+                    IconButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    ) {
+                        Icon(
+                            imageVector = TablerIcons.ArrowBack,
+                            contentDescription = "Back",
+                            modifier = Modifier.size(20.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
                     }
-
-                    // Notifications icon (right)
-                    notificationsItem?.let { item ->
+                } else {
+                    profileItem?.let { item ->
                         val isSelected = item.route == currentRoute
                         val iconColor by animateColorAsState(
                             targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
@@ -160,41 +124,75 @@ fun TopNavBar(
                             animationSpec = tween(300)
                         )
 
-                        Box(
+                        IconButton(
+                            onClick = {
+                                if (!isSelected) {
+                                    navController.navigate(item.route) {
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                }
+                            },
                             modifier = Modifier
-                                .align(Alignment.CenterEnd)
+                                .align(Alignment.CenterStart)
                                 .scale(scale)
                         ) {
-                            BadgedBox(
-                                badge = {
-                                    if (adjustedNotificationsCount > 0) {
-                                        Badge {
-                                            Text(
-                                                text = if (adjustedNotificationsCount > 9) "9+" else adjustedNotificationsCount.toString(),
-                                                style = MaterialTheme.typography.labelSmall,
-                                                color = MaterialTheme.colorScheme.onPrimary
-                                            )
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.title,
+                                modifier = Modifier.size(24.dp),
+                                tint = iconColor
+                            )
+                        }
+                    }
+                }
+
+                // Right side: Notifications
+                notificationsItem?.let { item ->
+                    val isSelected = item.route == currentRoute
+                    val iconColor by animateColorAsState(
+                        targetValue = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+                    val scale by animateFloatAsState(
+                        targetValue = if (isSelected) 1.2f else 1f,
+                        animationSpec = tween(300)
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .scale(scale)
+                    ) {
+                        BadgedBox(
+                            badge = {
+                                if (adjustedNotificationsCount > 0) {
+                                    Badge {
+                                        Text(
+                                            text = if (adjustedNotificationsCount > 9) "9+" else adjustedNotificationsCount.toString(),
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onPrimary
+                                        )
+                                    }
+                                }
+                            }
+                        ) {
+                            IconButton(
+                                onClick = {
+                                    if (!isSelected) {
+                                        navController.navigate(item.route) {
+                                            launchSingleTop = true
+                                            restoreState = true
                                         }
                                     }
                                 }
                             ) {
-                                IconButton(
-                                    onClick = {
-                                        if (!isSelected) {
-                                            navController.navigate(item.route) {
-                                                launchSingleTop = true
-                                                restoreState = true
-                                            }
-                                        }
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = item.icon,
-                                        contentDescription = item.title,
-                                        modifier = Modifier.size(24.dp),
-                                        tint = iconColor
-                                    )
-                                }
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.title,
+                                    modifier = Modifier.size(24.dp),
+                                    tint = iconColor
+                                )
                             }
                         }
                     }
@@ -203,5 +201,3 @@ fun TopNavBar(
         }
     }
 }
-
-

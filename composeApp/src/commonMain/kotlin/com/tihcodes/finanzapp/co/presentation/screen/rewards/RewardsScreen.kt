@@ -38,7 +38,7 @@ fun RewardsScreen(
     val rewards by courseTracking.rewards.collectAsState()
     val user = viewModel.currentUser.collectAsState().value ?: User()
     LaunchedEffect(Unit) {
-            courseTracking.loadRewards(user.id)
+        courseTracking.loadRewards(user.id)
     }
 
 
@@ -47,7 +47,6 @@ fun RewardsScreen(
             TopNavBar(
                 navController = navController,
                 title = "Recompensas",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

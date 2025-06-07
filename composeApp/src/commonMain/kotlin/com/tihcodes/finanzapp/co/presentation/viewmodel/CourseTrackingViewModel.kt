@@ -93,35 +93,28 @@ class CourseTrackingViewModel(
     }
 
     fun loadCourses(userId: String) {
-        getCourseTrackingByUserId(userId)
-        if (_courseTrackingByUserId.value.isNotEmpty()) {
+        viewModelScope.launch {
+            val userCourseTracking = courseTrackingRepository.getCourseTrackingByUserId(userId)
+            val allCourses = getCourses()
             var unlockNext = false
-            _courses.value = _courses.value.mapIndexed { index, course ->
-                val courseTracking = _courseTrackingByUserId.value.find { it.id == course.id }
+            // Sincroniza los datos de los cursos con los datos de seguimiento del usuario
+            _courses.value = allCourses.mapIndexed { index, course ->
+                val courseTracking = userCourseTracking.find { it.id == course.id }
                 val isCompleted = courseTracking?.isCompleted == 1L
                 val isUnlocked = when {
                     courseTracking != null -> courseTracking.isUnlocked == 1L
-                    index == 0 -> true
+                    index == 0 -> true // El primer curso siempre está desbloqueado
                     else -> unlockNext
                 }
                 val hasPendingQuestions = !isCompleted
                 val result = course.copy(
                     isCompleted = isCompleted,
                     isUnlocked = isUnlocked,
-                    rewardId = courseTracking?.id,
+                    rewardId = courseTracking?.rewardId,
                     hasPendingQuestions = hasPendingQuestions
                 )
                 unlockNext = isCompleted
                 result
-            }
-        } else {
-            // Si no hay datos de seguimiento, desbloquea solo el primer curso
-            _courses.value = _courses.value.mapIndexed { index, course ->
-                course.copy(
-                    isCompleted = false,
-                    isUnlocked = index == 0,
-                    hasPendingQuestions = index == 0 // Solo el primer curso tiene preguntas pendientes
-                )
             }
         }
     }
@@ -194,7 +187,6 @@ class CourseTrackingViewModel(
                 )
             }
         }
-
         _courses.value = updatedCourses
         _rewards.value = updatedRewards
     }

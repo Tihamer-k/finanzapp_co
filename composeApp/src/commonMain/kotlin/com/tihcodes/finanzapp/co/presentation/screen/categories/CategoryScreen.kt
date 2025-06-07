@@ -85,7 +85,6 @@ fun CategoryScreen(
             TopNavBar(
                 navController = navController,
                 title = "Categorías",
-                notificationsCount = 3,
                 showBackButton = false,
             )
         },

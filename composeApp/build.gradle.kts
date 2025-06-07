@@ -12,6 +12,14 @@ plugins {
 }
 
 kotlin {
+    targets.configureEach {
+        compilations.configureEach {
+            compileTaskProvider.get().compilerOptions {
+                freeCompilerArgs.add("-Xexpect-actual-classes")
+            }
+        }
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
@@ -120,5 +128,6 @@ sqldelight {
             packageName.set("com.finanzapp")
             deriveSchemaFromMigrations.set(true)
         }
+        linkSqlite.set(true)
     }
 }

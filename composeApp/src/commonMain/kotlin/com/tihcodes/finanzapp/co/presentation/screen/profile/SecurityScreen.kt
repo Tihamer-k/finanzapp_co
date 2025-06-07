@@ -30,7 +30,6 @@ fun SecurityScreen(
             TopNavBar(
                 navController = navController,
                 title = "Seguridad",
-                notificationsCount = 0,
                 showBackButton = true,
             )
         }

@@ -90,7 +90,7 @@ fun ForgotPasswordScreen(
         ) {
             Spacer(modifier = Modifier.weight(0.1f))
             Text(
-                text = "Olvidaste Tú Contraseña?\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                text = "Olvidaste Tú Contraseña?\nA continuación ingresa tu correo registrado para restablecerla.",
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(horizontal = 16.dp)

@@ -39,7 +39,6 @@ fun PrivacyPolicyScreen(
             TopNavBar(
                 navController = navController,
                 title = "Política de Privacidad",
-                notificationsCount = 0,
                 showBackButton = false,
             )
         },

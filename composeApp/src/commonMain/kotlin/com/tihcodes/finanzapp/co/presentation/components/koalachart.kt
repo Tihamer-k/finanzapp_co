@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tihcodes.finanzapp.co.domain.model.TransactionType
+import com.tihcodes.finanzapp.co.presentation.viewmodel.NotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.TransactionChartViewModel
 import com.tihcodes.finanzapp.co.utils.Validator.formatNumberWithCommas
 import io.github.koalaplot.core.ChartLayout
@@ -46,7 +47,8 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalKoalaPlotApi::class)
 @Composable
 fun TransactionPieChartWithKoalaPlot(
-    viewModel: TransactionChartViewModel
+    viewModel: TransactionChartViewModel,
+    notificationViewModel: NotificationViewModel
 ) {
     val transactionType by viewModel.transactionType.collectAsState()
     val errorMessage by viewModel.errorMessageChart.collectAsState()
@@ -80,7 +82,13 @@ fun TransactionPieChartWithKoalaPlot(
                             if (selected) MaterialTheme.colorScheme.primary
                             else MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
                         )
-                        .clickable { viewModel.toggleType(type) }
+                        .clickable {
+                            viewModel.toggleType(type)
+//                            notificationViewModel.executeNotification(
+//                                "Change Transaction Type",
+//                                "Tipo de transacción cambiado a $label"
+//                            )
+                        }
                         .padding(horizontal = 18.dp, vertical = 8.dp),
                     color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.labelMedium
