@@ -210,7 +210,7 @@ fun LoginScreen(
                     onLoginClick()
                     notificationViewModel.executeNotification(
                         "Inicio de sesión exitoso",
-                        "Biemvenido a FINANZAPP, ${uiState.name}!",
+                        "Bienvenido a FINANZAPP, ${uiState.name}!",
                     )
                     appNotificationViewModel.setNotification(
                         notification = NotificationItem(

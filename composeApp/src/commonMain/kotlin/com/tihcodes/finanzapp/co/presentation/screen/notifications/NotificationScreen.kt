@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,13 +25,16 @@ import androidx.navigation.NavController
 import com.tihcodes.finanzapp.co.presentation.components.TopNavBar
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AppNotificationViewModel
 import com.tihcodes.finanzapp.co.presentation.viewmodel.AuthViewModel
+import compose.icons.TablerIcons
+import compose.icons.tablericons.Check
+import compose.icons.tablericons.Trash
 import org.koin.compose.koinInject
 
 @Composable
 fun NotificationsScreen(
     navController: NavController,
 
-) {
+    ) {
     val authViewModel = koinInject<AuthViewModel>()
     val viewModel = koinInject<AppNotificationViewModel>()
     val notifications by viewModel.notifications.collectAsState() // Observe notifications
@@ -84,13 +86,12 @@ fun NotificationsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(unreadNotifications) { notification ->
-                            NotificationCard(notification = notification)
-                            Button(
-                                onClick = { viewModel.markAsRead(notification.id) },
-                                modifier = Modifier.padding(top = 8.dp)
-                            ) {
-                                Text(text = "Marcar como leída")
-                            }
+                            NotificationCard(
+                                notification = notification,
+                                onClickAction = { viewModel.markAsRead(notification.id) },
+                                iconAction = TablerIcons.Check,
+                                colorAction = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.7f)
+                            )
                         }
                     }
                 }
@@ -111,13 +112,12 @@ fun NotificationsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(readNotifications) { notification ->
-                            NotificationCard(notification = notification)
-                            Button(
-                                onClick = { viewModel.removeNotification(notification.id) },
-                                modifier = Modifier.padding(top = 8.dp)
-                            ) {
-                                Text(text = "Eliminar")
-                            }
+                            NotificationCard(
+                                notification = notification,
+                                onClickAction = { viewModel.removeNotification(notification.id) },
+                                iconAction = TablerIcons.Trash,
+                                colorAction = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+                            )
                         }
                     }
                 }
